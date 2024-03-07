@@ -10,11 +10,15 @@ const Stack = createNativeStackNavigator()
 
 function MainStack() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="Main" component={MainScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="Recap" component={RecapScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="MakeShorts" component={MakeShortsScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="Search" component={SearchScreen} options={{ headerShown: false }} />
+    <Stack.Navigator
+      screenOptions={({ route }) => ({
+        headerShown: false,
+      })}
+    >
+      <Stack.Screen name="Main" component={MainScreen} />
+      <Stack.Screen name="Recap" component={RecapScreen} />
+      <Stack.Screen name="MakeShorts" component={MakeShortsScreen} />
+      <Stack.Screen name="Search" component={SearchScreen} />
     </Stack.Navigator>
   )
 }

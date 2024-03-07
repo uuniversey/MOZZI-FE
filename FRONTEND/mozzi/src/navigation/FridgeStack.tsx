@@ -8,9 +8,13 @@ const Stack = createNativeStackNavigator()
 
 function FridgeStack() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="Fridge" component={FridgeScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="FridgeDetail" component={FridgeDetailScreen} options={{ headerShown: false }} />
+    <Stack.Navigator
+      screenOptions={({ route }) => ({
+        headerShown: false,
+      })}
+    >
+      <Stack.Screen name="Fridge" component={FridgeScreen} />
+      <Stack.Screen name="FridgeDetail" component={FridgeDetailScreen} />
     </Stack.Navigator>
   )
 }

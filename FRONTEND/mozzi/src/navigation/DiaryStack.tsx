@@ -10,11 +10,15 @@ const Stack = createNativeStackNavigator()
 
 function DiaryStack() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="Diary" component={DiaryScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="DiaryDetail" component={DiaryDetailScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="DiaryCreate" component={DiaryCreateScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="DiaryCreateSelect" component={DiaryCreateSelectScreen} options={{ headerShown: false }} />
+    <Stack.Navigator
+      screenOptions={({ route }) => ({
+        headerShown: false,
+      })}
+    >
+      <Stack.Screen name="Diary" component={DiaryScreen} />
+      <Stack.Screen name="DiaryDetail" component={DiaryDetailScreen} />
+      <Stack.Screen name="DiaryCreate" component={DiaryCreateScreen} />
+      <Stack.Screen name="DiaryCreateSelect" component={DiaryCreateSelectScreen} />
     </Stack.Navigator>
   )
 }

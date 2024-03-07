@@ -9,10 +9,14 @@ const Stack = createNativeStackNavigator()
 
 function RecommendStack() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="Recommend" component={RecommendScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="Recipe" component={RecipeScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="RecommendLanding" component={RecommendLandingScreen} options={{ headerShown: false }} />
+    <Stack.Navigator
+      screenOptions={({ route }) => ({
+        headerShown: false,
+      })}
+    >
+      <Stack.Screen name="Recommend" component={RecommendScreen} />
+      <Stack.Screen name="Recipe" component={RecipeScreen} />
+      <Stack.Screen name="RecommendLanding" component={RecommendLandingScreen} />
     </Stack.Navigator>
   )
 }
