@@ -4,6 +4,8 @@ import React from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { useNavigation } from '@react-navigation/native'
 
+import { Calendar } from 'react-native-calendars'
+
 function DiaryScreen () {
 
   const navigation = useNavigation()
@@ -17,6 +19,7 @@ function DiaryScreen () {
 
   return (
     <>
+    <Calendar />
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>DiaryScreen</Text>
         <Button title="Go to Detail" onPress={moveDiaryDetail} />
