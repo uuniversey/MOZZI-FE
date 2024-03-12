@@ -1,12 +1,20 @@
 import React from 'react'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack'
 
 import MainScreen from '../screens/main/MainScreen'
 import RecapScreen from '../screens/main/RecapScreen'
 import MakeShortsScreen from '../screens/main/MakeShortsScreen'
 import SearchScreen from '../screens/search/SearchScreen'
 
-const Stack = createNativeStackNavigator()
+export type TypecreateNativeStackNavigatorParams = {
+  Main: undefined
+  Recap: undefined
+  MakeShorts: undefined
+  Search: undefined
+};
+
+const Stack = createNativeStackNavigator<TypecreateNativeStackNavigatorParams>()
+
 
 function MainStack() {
   return (

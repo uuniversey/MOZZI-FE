@@ -3,6 +3,7 @@ import React from 'react'
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { useNavigation } from '@react-navigation/native'
+import RecommendItemScreen from './RecommendItemScreen'
 
 function RecommendScreen () {
 
@@ -16,13 +17,24 @@ function RecommendScreen () {
     navigation.navigate("RecommendLanding")
   }
 
+  const handleSharePress = () => {
+    console.log('Share button pressed');
+  };
+
+  const handleRetryPress = () => {
+    console.log('Retry button pressed');
+  };
+
   return (
     <>
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>2024년 몇월 몇일 오늘의 저녁 메뉴는?</Text>
-        <Button title="레시피 보러가기" onPress={moveRecipe} />
-        <Button title="다시 추천 받기" onPress={moveRecommendLanding} />
-      </View>
+      <RecommendItemScreen
+        date="2024년 3월 5일,"
+        question="오늘의 저녁 메뉴는?"
+        dishName="라자냐"
+        imageUri="https://via.placeholder.com/200" // Replace with your image URL
+        onSharePress={moveRecipe}
+        onRetryPress={moveRecommendLanding}
+      />
     </>
   )
 }
