@@ -6,46 +6,11 @@ import json
 import random
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
+from django.http import JsonResponse
+
 from .models import MongoFood  # MongoDB 모델 임포트
 import requests
 from django.http import JsonResponse
-
-
-
-# import mysql.connector
-import pymongo
-
-# # MySQL 연결
-# mysql_connection = mysql.connector.connect(
-#     host="localhost",
-#     user="yourusername",
-#     password="yourpassword",
-#     database="yourdatabase"
-# )
-# mysql_cursor = mysql_connection.cursor()
-
-# MongoDB 연결
-mongo_client = pymongo.MongoClient("mongodb://localhost:27017/")
-mongo_db = mongo_client["my_mongodb_database"]
-mongo_collection = mongo_db["mongo_food"]
-
-# MongoDB에서 데이터 가져오기
-mongo_data = mongo_collection.find()
-for i in mongo_data:
-    print(i,22)
-print(mongo_data,11)
-# # MySQL 업데이트
-# for data in mongo_data:
-#     # MongoDB에서 가져온 데이터의 _id를 MySQL 데이터의 id로 변환
-#     mongo_id = str(data.get("_id", {}).get("$oid"))
-#     mysql_recipe = data.get("food_recipe")
-
-#     # MySQL에 업데이트
-#     mysql_cursor.execute("UPDATE datas_food SET food_recipe = %s WHERE id = %s", (mysql_recipe, mongo_id))
-
-
-
-
 
 def save_food_recipe_mongo(request):
     start = 1
