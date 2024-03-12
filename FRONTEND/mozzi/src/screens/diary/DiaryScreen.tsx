@@ -21,7 +21,7 @@ function DiaryScreen () {
     <>
     <Calendar />
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>DiaryScreen</Text>
+        <Text>다이어리</Text>
         <Button title="Go to Detail" onPress={moveDiaryDetail} />
         <Button title="글 작성" onPress={moveDiaryCreate} />
       </View>
