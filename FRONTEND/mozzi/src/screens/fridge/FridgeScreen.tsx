@@ -29,7 +29,6 @@ const Title = styled.Text`
   font-size: 36px;
   font-weight: bold;
   margin-top: 50px;
-  margin-vertical: 20px;
   text-align: left;
   width: 100%;
 `;
