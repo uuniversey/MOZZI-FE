@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native'
+import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native'
 import React, { useState, useRef } from 'react'
 import styled from 'styled-components/native'
 
