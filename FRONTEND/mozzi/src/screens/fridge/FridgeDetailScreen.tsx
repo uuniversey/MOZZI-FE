@@ -1,11 +1,16 @@
-import { View, Text, TouchableOpacity, Image } from 'react-native'
-import React from 'react'
+import { View, Text, TouchableOpacity, Image, TextInput } from 'react-native'
+import React, { useState } from 'react'
 import styled from 'styled-components/native'
 
 import { useNavigation } from '@react-navigation/native'
 
 import note from '../../assets/fridge/note.png'
 import clip from '../../assets/fridge/clip.png'
+
+const Container = styled.View`
+  flex: 1;
+  background-color: #FFFEF2;
+`;
 
 const Title = styled.Text`
   margin-top: 50px;
@@ -27,17 +32,42 @@ const Note = styled.View`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+`
+
+const TitleContainer = styled.View`
+  position: absolute;
+  top: 110;
+  display: flex;
+  align-items: center;
+`
+
+const TitleImg = styled.Image`
+  display: inline;
+  width: 30px;
+  height: 30px;
 `
 
 const MenuItem = styled.Text`
-  position: absolute;
-  top: 100;
+  display: inline;
   font-size: 12px;
 `
+const InputFood = styled.TextInput`
+  width: 350px;
+  border-width: 2px;
+  border-color: #E4E196;
+  border-radius: 5px;
+  padding: 10px 20px 10px 20px;
+  margin-top: 30px;
+  background-color: white;
+  align-self: center;
+`;
 
 function FridgeDetailScreen ({route}) {
+  const [text, setText] = useState('');
   
-  const { item } = route.params;
+  const { item } = route.params; // item을 받음
+  const { name, img } = item;
 
   const navigation = useNavigation()
 
@@ -46,7 +76,7 @@ function FridgeDetailScreen ({route}) {
   }
   
   return (
-    <>
+    <Container>
       <TouchableOpacity onPress={goBack}>
         <Text>냉장고로 돌아가기</Text>
       </TouchableOpacity>
@@ -54,13 +84,19 @@ function FridgeDetailScreen ({route}) {
       <Note>
         <ClipImg source={clip} />
         <NoteImg source={note} />
-        <MenuItem>{item}</MenuItem>
+        <TitleContainer>
+          {img && <TitleImg source={img} />}
+          <MenuItem>{name}</MenuItem>
+        </TitleContainer>      
       </Note>
-
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>FridgeDetailScreen</Text>
-      </View>
-    </>
+      
+      <InputFood
+          onChangeText={setText}
+          value={text}
+          placeholder="재료를 입력해 주세요..."
+      />
+      
+    </Container>
   )
 }
 
