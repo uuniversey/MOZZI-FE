@@ -1,74 +1,158 @@
+import React, { useRef } from 'react';
+import { View, StyleSheet, TouchableOpacity, Dimensions, Animated } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import React from 'react'
+import MainStack from './src/navigation/MainStack';
+import FridgeStack from './src/navigation/FridgeStack';
+import RecommendStack from './src/navigation/RecommendStack';
+import DiaryStack from './src/navigation/DiaryStack';
+import ProfileScreen from './src/screens/profile/ProfileScreen';
+import LandingScreen from './src/screens/landing/LandingScreen';
 
-import { View, Text } from 'react-native'
-import { NavigationContainer } from '@react-navigation/native'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+const Tab = createBottomTabNavigator();
+const windowWidth = Dimensions.get('window').width;
 
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+const App: React.FC = () => {
+  const isLogin: boolean = true;
+  const rotateAnim = useRef(new Animated.Value(0)).current;
 
-// import AppNavigator from './src/navigation/AppNavigator'
+  // 주사위 아이콘의 각도를 회전시키는 함수
+  const rotate = () => {
+    // 회전 애니메이션을 초기화
+    rotateAnim.setValue(0);
+    // 애니메이션 실행
+    Animated.timing(rotateAnim, {
+      toValue: 1,
+      duration: 800,
+      useNativeDriver: true,
+    }).start();
+  };
 
-import MainStack from './src/navigation/MainStack'
-import FridgeStack from './src/navigation/FridgeStack'
-import RecommendStack from './src/navigation/RecommendStack'
-import DiaryStack from './src/navigation/DiaryStack'
-import ProfileScreen from './src/screens/profile/ProfileScreen'
-import LandingScreen from './src/screens/landing/LandingScreen'
+  // rotateAnim 값에 따라 outputRange에서 정의된 각도로 회전
+  const spin = rotateAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
 
-const Tap = createBottomTabNavigator()
-
-function App() {
-  
-  const isLogin : boolean = true
 
   return (
     <>
-      {isLogin ? 
-      <NavigationContainer>
-        <Tap.Navigator
-          screenOptions={({ route }) => ({
-            tabBarHideOnKeyboard: true,
-            tabBarShowLabel: false,
-            headerShown: false,
-            tabBarStyle: {
-              height: 75,
-            },
-            tabBarIcon: ({ focused, size, color }) => {
-              let iconName
-              if (route.name === 'MainTab') {
-                iconName = focused ? 'home' : 'home-outline'
-              } else if (route.name === 'FridgeTab') {
-                iconName = focused ? 'fridge' : 'fridge-outline'
-              } else if (route.name === 'RecommendTab') {
-                iconName = focused
-                  ? 'dice-multiple'
-                  : 'dice-multiple-outline'
-              } else if (route.name === ' DiaryTab') {
-                iconName = focused
-                  ? 'calendar-month'
-                  : 'calendar-month-outline'
-              } else if (route.name === 'Profile') {
-                iconName = focused ? 'person' : 'person-outline'
-              }
+      {isLogin ? (
+        <NavigationContainer>
+          <Tab.Navigator
+            screenOptions={({ route }) => ({
+              tabBarHideOnKeyboard: true,
+              tabBarShowLabel: false,
+              headerShown: false,
+              tabBarStyle: styles.tabBarStyle,
+              tabBarIcon: ({ focused, size }) => {
+                const color = focused ? 'gray' : 'lightgray'; // Update color based on focused state
+                let iconName;
 
-              return <MaterialIcons name={iconName} size={size} color={color} />
-            }
-          })}
-        >
-        {/* <Tap.Navigator tabBar={(props) => <AppNavigator {...props} />}> */}
-          <Tap.Screen name="MainTab" component={MainStack} />
-          <Tap.Screen name="FridgeTab" component={FridgeStack} />
-          <Tap.Screen name="RecommendTab" component={RecommendStack} />
-          <Tap.Screen name='DiaryTab' component={DiaryStack} />
-          <Tap.Screen name="ProfileTab" component={ProfileScreen} />
-        </Tap.Navigator>
-      </NavigationContainer>
-      : 
-      <LandingScreen />
-      }
+                if (route.name === 'MainTab') {
+                  iconName = 'home';
+                } else if (route.name === 'FridgeTab') {
+                  iconName = 'kitchen';
+                } else if (route.name === 'DiaryTab') {
+                  iconName = 'calendar-month';
+                } else if (route.name === 'ProfileTab') {
+                  iconName = 'account-circle';
+                }
+
+                if (route.name === 'RecommendTab') {
+                  return (
+                    <Animated.View style={{ transform: [{ rotate: spin }] }}> {/* Animated View */}
+                      <MaterialCommunityIcons name="casino" size={size} color={color} />
+                    </Animated.View>
+                  );
+                }
+
+                // Choose the correct icon set for each tab
+                const IconComponent = route.name === 'FridgeTab' || route.name === 'DiaryTab' ? MaterialIcons : MaterialCommunityIcons;
+                
+                return <IconComponent name={iconName} size={size} color={color} />;
+              },
+              tabBarButton: (props) => {
+                if (route.name === 'RecommendTab') {
+                  return (
+                    <View style={styles.fabContainer} pointerEvents="box-none">
+                      <TouchableOpacity
+                        style={styles.fabButton}
+                        onPress={() => {
+                          props.onPress();
+                          rotate(); // 주사위 아이콘 회전
+                        }}
+                        activeOpacity={0.9} // 클릭시 투명해지는 효과 없앰
+                      >
+                        <MaterialCommunityIcons 
+                          name="dice-multiple" 
+                          size={40} 
+                          color={props.color} 
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  );
+                } else {
+                  return (
+                    <TouchableOpacity style={styles.regularTab} {...props} />
+                  );
+                }
+              },
+            })}
+          >
+            <Tab.Screen name="MainTab" component={MainStack} />
+            <Tab.Screen name="FridgeTab" component={FridgeStack} />
+            <Tab.Screen name="RecommendTab" component={RecommendStack} />
+            <Tab.Screen name="DiaryTab" component={DiaryStack} />
+            <Tab.Screen name="ProfileTab" component={ProfileScreen} />
+          </Tab.Navigator>
+        </NavigationContainer>
+      ) : (
+        <LandingScreen />
+      )}
     </>
-  )
-}
+  );
+};
 
-export default App
+
+const styles = StyleSheet.create({
+  tabBarStyle: {
+    backgroundColor: '#ffffff',
+    shadowOpacity: 0,
+    elevation: 0,
+    bottom: 0,
+    height: 80,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+  },
+  fabContainer: {
+    top: 8,
+    backgroundColor: '#ffffff',
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  fabButton: {
+    backgroundColor: '#fff9b9',
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 3,
+  },
+  regularTab: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 60 + 20,
+  },
+});
+
+export default App;
