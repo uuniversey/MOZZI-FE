@@ -15,6 +15,11 @@ import sauce from '../../assets/fridge/sauce.png';
 import seafood from '../../assets/fridge/seafood.png';
 import vege from '../../assets/fridge/vege.png';
 
+
+// 화면 크기에 따른 상대적 위치 계산을 위한 변수들
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+
 const fridgeWidth = 340; // 20px margin on each side
 const fridgeHeight = 590; // 가상의 높이, 비율은 조정 필요
 const shelfHeight = fridgeHeight / 5; // 선반의 높이
