@@ -29,7 +29,7 @@ const Title = styled.Text`
   font-size: 36px;
   font-weight: bold;
   margin-top: 50px;
-  margin-vertical: 20px;
+  margin-bottom: 20px;
   text-align: left;
   width: 100%;
 `;
@@ -139,7 +139,7 @@ const FridgeScreen = () => {
       </StyledSvg>
 
       {/* 아이템들 */}
-      <TouchableItem top={170} left={80} onPress={() => navigateToFridgeDetail('정육/계란류')}>
+      <TouchableItem top={170} left={80} onPress={() => navigateToFridgeDetail({'정육/계란류'})}>
         <ImageIcon source={meat} />
         <ShelfItemText>정육/계란류</ShelfItemText>
       </TouchableItem>
