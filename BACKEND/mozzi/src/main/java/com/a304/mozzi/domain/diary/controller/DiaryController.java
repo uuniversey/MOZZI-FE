@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.a304.mozzi.domain.diary.dto.DiaryDto;
 import com.a304.mozzi.domain.diary.model.Diary;
 import com.a304.mozzi.domain.diary.service.DiaryService;
 import com.a304.mozzi.domain.user.model.UserModel;
 import com.a304.mozzi.domain.user.service.UserService;
+import com.a304.mozzi.global.dto.ResponseDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,26 +39,48 @@ public class DiaryController {
     private final UserService userService;
     @GetMapping("/mydiary")
     public ResponseEntity<List<DiaryDto>> GetMyDiary(){
+
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
         String username = userDetails.getUsername();
+
+
         Optional<UserModel> userOptional = userService.findByUserCode(username);
                 UserModel user = null;
                 if (userOptional.isPresent()) {
                     user = userOptional.get();
                 }
+
+
         List<Diary> Diaries = diaryService.findByUser(user);
         List<DiaryDto> DiariesDto = diaryService.toDtoList(Diaries);
         // 
         return  ResponseEntity.status(HttpStatus.OK).body(DiariesDto);
     }
 
-    @PostMapping("/path")
-    public String postMethodName(@RequestBody String entity) {
+    @PostMapping("/myDiary")
+    public ResponseDto postMethodName(@RequestBody MultipartFile file) {
         //TODO: process POST request
-        
-        return entity;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+        Optional<UserModel> userOptional = userService.findByUserCode(username);
+        UserModel user = null;
+        if (userOptional.isPresent()) {
+            user = userOptional.get();
+        }
+
+        String sourceFileName = file.getOriginalFilename();
+        String sourceFileNameExtension = FilenameUtils.getExtension(sourceFileName).toLowerCase();
+        String fileUrl = "이미지 저장 주소";
+        String destinationFileName = RandomStringUtils.randomAlphabetic(32) + "." + sourceFileNameExtension;
+        File destinationFile = new File(fileUrl + destinationFileName);
+        destinationFile.getParentFile().mkdirs();
+        file.transferTo(destinationFile);
+
+
+        return ;
     }
     
 }
