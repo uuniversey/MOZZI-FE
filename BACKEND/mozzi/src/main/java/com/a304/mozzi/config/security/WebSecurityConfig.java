@@ -24,7 +24,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
-
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomUserDetailService customUserDetailService;
 
@@ -61,8 +60,9 @@ public class WebSecurityConfig {
 
     // @Bean
     // public String getUserName() throws Exception {
-    //     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    //     UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-    //     return userDetails.getUsername();
+    // Authentication authentication =
+    // SecurityContextHolder.getContext().getAuthentication();
+    // UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+    // return userDetails.getUsername();
     // }
-} 
+}

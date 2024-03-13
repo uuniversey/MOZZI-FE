@@ -90,7 +90,7 @@ public class KakaoApi {
 
         String responseBody = response.getBody();
 
-        log.info(responseBody);
+//        log.info(responseBody);
         Gson gson = new Gson();
         OAuthToken oAuthToken = gson.fromJson(responseBody, OAuthToken.class);
 
