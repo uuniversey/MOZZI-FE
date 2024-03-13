@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native'
 const Container = styled.View`
   flex: 1;
   background-color: #FFFEF2;
-`;
+`
 
 const Title = styled.Text`
   font-size: 20px;
