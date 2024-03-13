@@ -1,17 +1,17 @@
-import React, { useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Animated } from 'react-native';
+import { useNavigation } from '@react-navigation/native'
+import React, { useRef, useEffect } from 'react'
+import { View, Text, StyleSheet, Image, TouchableOpacity, Animated } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 
-const ShortsLandingScreen: React.FC = () => {
+const RecapLandingScreen: React.FC = () => {
   // const rootNavigation = useRootNavigation<'Main'>();
-  const animatedValue = useRef(new Animated.Value(0)).current;
+  const animatedValue = useRef(new Animated.Value(0)).current
+  const navigation = useNavigation()
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      // 5초 후에 실행할 작업을 여기에 넣음
-      // 예를 들어, 다른 화면으로 이동:
-      // rootNavigation.replace('ShortsDownload');
-    }, 5000); // 5초 = 5000밀리초
+      navigation.navigate("MakeShorts")
+    }, 5000) // 5초 = 5000밀리초
 
     // 컴포넌트가 언마운트될 때 타이머를 정리함
     Animated.loop(
@@ -22,7 +22,7 @@ const ShortsLandingScreen: React.FC = () => {
           useNativeDriver: true,
         }),
       ]),
-    ).start();
+    ).start()
 
     return () => clearTimeout(timer);
     
@@ -31,9 +31,9 @@ const ShortsLandingScreen: React.FC = () => {
   const translateX = animatedValue.interpolate({
     inputRange: [0, 1],
     outputRange: [-50, 300], 
-  });
+  })
 
-  const rotateAnim = useRef(new Animated.Value(0)).current;
+  const rotateAnim = useRef(new Animated.Value(0)).current
 
   useEffect(() => {
     const startAnimation = () => {
@@ -49,7 +49,7 @@ const ShortsLandingScreen: React.FC = () => {
           useNativeDriver: true,
         }),
       ]).start(() => startAnimation()); 
-    };
+    }
 
     startAnimation();
   }, [rotateAnim]);
@@ -57,7 +57,7 @@ const ShortsLandingScreen: React.FC = () => {
   const spin = rotateAnim.interpolate({
     inputRange: [0, 1],
     outputRange: ['-20deg', '20deg'],
-  });
+  })
   
 
   return (
@@ -69,14 +69,14 @@ const ShortsLandingScreen: React.FC = () => {
       </TouchableOpacity>
       <View>
         <Animated.Image
-          source={require('../assets/recommend/ladle.png')}
+          source={require('../../assets/recommend/ladle.png')}
           style={[
             styles.filmReel,
             { transform: [{ rotate: spin }] }, 
           ]}
         />
         <Image
-          source={require('../assets/recommend/pot.png')}
+          source={require('../../assets/recommend/pot.png')}
           style={styles.image}
         />
       </View>
@@ -92,8 +92,8 @@ const ShortsLandingScreen: React.FC = () => {
       />
     </View>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     left: 130,
     top: -30,
   },
-});
+})
 
 
-export default ShortsLandingScreen;
+export default RecapLandingScreen
