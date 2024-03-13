@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Foods
+from .models import Foods,Category
 from .serializers import FoodSerializer 
 import requests
 import json
@@ -11,7 +11,7 @@ import re
 from .models import MongoFood  # MongoDB 모델 임포트
 import requests
 from django.http import JsonResponse
-
+from django.core import serializers
 
 from .models import MongoFood, Food
 # 식재료 뽑기
@@ -40,7 +40,7 @@ def migrate_food_recipe_from_mongo_to_mysql(request):
     # MongoDB에서 가져온 데이터를 MySQL 모델의 food_recipe 필드에 저장
     for index, mongo_food in enumerate(mongo_foods, start=1):
         # Django의 Food 모델에 MongoDB에서 가져온 데이터의 ObjectId를 그대로 저장합니다.
-        Food.objects.create(
+        Foods.objects.create(
             food_recipe=str(mongo_food.id),  # MongoDB의 ObjectId를 문자열로 변환하여 저장합니다.
             # 나머지 필드는 기본값으로 설정됩니다.
         )
@@ -56,13 +56,12 @@ def save_food_recipe_mongo(request):
     data = response.json()
 
     for item in data['COOKRCP01']['row']:
-        food_recipe = ""
+        food_recipe = {}
         for key, value in item.items():
-            if key.startswith("MANUAL"):
-                food_recipe += f"{value}\n"  # MANUAL로 시작하는 모든 키의 값을 합침
+                food_recipe[key] = value  # MANUAL로 시작하는 모든 키의 값을 합침
         
         # MongoDB에 저장
-        mongo_food = MongoFood(food_recipe=food_recipe.strip())
+        mongo_food = MongoFood(food_recipe=food_recipe)
         mongo_food.save()
 
     return JsonResponse({'message':'okay'})
@@ -168,10 +167,69 @@ def recipe_detail(request):
         # MongoDB의 레시피 ID 반환
         print(1)
         print(food_recipe_id)
-        return JsonResponse({'mongo_food': {
-            'id': str(mongo_food.id),
-            'food_recipe': mongo_food.food_recipe,
-            # 필요한 다른 필드들을 추가할 수 있음
+        return JsonResponse({'data': {
+            # 'id': str(mongo_food.id),
+            'RCP_PARTS_DTLS': mongo_food.food_recipe["RCP_PARTS_DTLS"],
+            'RCP_PAT2': mongo_food.food_recipe["RCP_PAT2"],
+            'RCP_NM': mongo_food.food_recipe["RCP_NM"],
+            'ATT_FILE_NO_MK': mongo_food.food_recipe["ATT_FILE_NO_MK"],
+            'ATT_FILE_NO_MAIN': mongo_food.food_recipe["ATT_FILE_NO_MAIN"],
+            'RCP_NA_TIP': mongo_food.food_recipe["RCP_NA_TIP"],
+            'MANUAL_IMG01': mongo_food.food_recipe["MANUAL_IMG01"],
+            'MANUAL_IMG02': mongo_food.food_recipe["MANUAL_IMG02"],
+            'MANUAL_IMG03': mongo_food.food_recipe["MANUAL_IMG03"],
+            'MANUAL_IMG04': mongo_food.food_recipe["MANUAL_IMG04"],
+            'MANUAL_IMG05': mongo_food.food_recipe["MANUAL_IMG05"],
+            'MANUAL_IMG06': mongo_food.food_recipe["MANUAL_IMG06"],
+            'MANUAL_IMG07': mongo_food.food_recipe["MANUAL_IMG07"],
+            'MANUAL_IMG08': mongo_food.food_recipe["MANUAL_IMG08"],
+            'MANUAL_IMG09': mongo_food.food_recipe["MANUAL_IMG09"],
+            'MANUAL_IMG10': mongo_food.food_recipe["MANUAL_IMG10"],
+            'MANUAL_IMG11': mongo_food.food_recipe["MANUAL_IMG11"],
+            'MANUAL_IMG12': mongo_food.food_recipe["MANUAL_IMG12"],
+            'MANUAL_IMG13': mongo_food.food_recipe["MANUAL_IMG13"],
+            'MANUAL_IMG14': mongo_food.food_recipe["MANUAL_IMG14"],
+            'MANUAL_IMG15': mongo_food.food_recipe["MANUAL_IMG15"],
+            'MANUAL_IMG16': mongo_food.food_recipe["MANUAL_IMG16"],
+            'MANUAL_IMG17': mongo_food.food_recipe["MANUAL_IMG17"],
+            'MANUAL_IMG18': mongo_food.food_recipe["MANUAL_IMG18"],
+            'MANUAL_IMG19': mongo_food.food_recipe["MANUAL_IMG19"],
+            'MANUAL_IMG20': mongo_food.food_recipe["MANUAL_IMG20"],
+
+            'MANUAL01': mongo_food.food_recipe["MANUAL01"],
+            'MANUAL02': mongo_food.food_recipe["MANUAL02"],
+            'MANUAL03': mongo_food.food_recipe["MANUAL03"],
+            'MANUAL04': mongo_food.food_recipe["MANUAL04"],
+            'MANUAL05': mongo_food.food_recipe["MANUAL05"],
+            'MANUAL06': mongo_food.food_recipe["MANUAL06"],
+            'MANUAL07': mongo_food.food_recipe["MANUAL07"],
+            'MANUAL08': mongo_food.food_recipe["MANUAL08"],
+            'MANUAL09': mongo_food.food_recipe["MANUAL09"],
+            'MANUAL10': mongo_food.food_recipe["MANUAL10"],
+            'MANUAL11': mongo_food.food_recipe["MANUAL11"],
+            'MANUAL12': mongo_food.food_recipe["MANUAL12"],
+            'MANUAL13': mongo_food.food_recipe["MANUAL13"],
+            'MANUAL14': mongo_food.food_recipe["MANUAL14"],
+            'MANUAL15': mongo_food.food_recipe["MANUAL15"],
+            'MANUAL16': mongo_food.food_recipe["MANUAL16"],
+            'MANUAL17': mongo_food.food_recipe["MANUAL17"],
+            'MANUAL18': mongo_food.food_recipe["MANUAL18"],
+            'MANUAL19': mongo_food.food_recipe["MANUAL19"],
+            'MANUAL20': mongo_food.food_recipe["MANUAL20"],
+        
+
+            
         }})
     except MongoFood.DoesNotExist:
         return JsonResponse({'레시피': '음식을 찾을 수 없습니다'})
+
+def get_recipe_list(request):
+    foods = Foods.objects.all()
+    data = []
+    for food in foods:
+        food_data = {
+            "foodName": food.food_name,
+            "photoUrl": food.food_pic
+        }
+        data.append(food_data)
+    return JsonResponse({'foods': data})

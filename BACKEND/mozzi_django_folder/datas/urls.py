@@ -7,4 +7,5 @@ urlpatterns = [
     path('random_food/',views.get_random_food),
     path('mongo_to_mysql/',views.migrate_food_recipe_from_mongo_to_mysql),
     path('recipe_detail/',views.recipe_detail),
+    path('get_recipe_list/',views.get_recipe_list),
 ]

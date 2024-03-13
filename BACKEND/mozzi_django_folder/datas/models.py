@@ -1,8 +1,8 @@
 from django.db import models
-from mongoengine import Document, StringField
+from mongoengine import Document, DictField
 
 class MongoFood(Document):
-    food_recipe = StringField(max_length=10000)  # 예시로 최대 길이를 1000으로 지정하였습니다.
+    food_recipe = DictField()  # 예시로 최대 길이를 1000으로 지정하였습니다.
 
 # Create your models here.
 class Food(models.Model):
@@ -39,3 +39,4 @@ class Foods(models.Model):
 class Category(models.Model):
     category_name = models.CharField(max_length=20)
     category_pic = models.CharField(max_length=200)
+
