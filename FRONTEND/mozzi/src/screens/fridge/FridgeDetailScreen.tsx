@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native'
+import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native'
 import React, { useState, useRef } from 'react'
 import styled from 'styled-components/native'
 
@@ -66,6 +66,8 @@ const InputContainer = styled.View`
 const MyFood = styled.ScrollView`
   position: absolute;
   top: 170;
+  width: 280px;
+  height: 300px;
 `
 
 const MyFoodText = styled.Text`
@@ -141,7 +143,11 @@ function FridgeDetailScreen ({route}) {
           <MenuItem>{name}</MenuItem>
         </TitleContainer>
         <MyFood ref={scrollViewRef}>
-          <MyFoodText>{savedText}</MyFoodText>
+          {/* 여기서 savedText를 바로 표시하는 대신,
+               개별 텍스트 항목을 각각의 MyFoodText로 렌더링합니다. */}
+          {savedText.split('\n').map((item, index) => (
+            <MyFoodText key={index}>{item}</MyFoodText>
+          ))}
         </MyFood>
       </Note>
 
