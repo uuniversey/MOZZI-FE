@@ -59,10 +59,10 @@ public class WebSecurityConfig {
                 .and().build();
     }
 
-    @Bean
-    public String getUserName() throws Exception {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return userDetails.getUsername();
-    }
+    // @Bean
+    // public String getUserName() throws Exception {
+    //     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    //     UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+    //     return userDetails.getUsername();
+    // }
 } 

@@ -17,6 +17,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,11 +37,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 @RequestMapping("auth")
 @CrossOrigin(origins = "http://localhost:3000")
+
+
 public class UserController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private  final KakaoApi kakaoApi;
     private  final JwtIssuer jwtIssuer;
+    private final BCryptPasswordEncoder passwordEncoder;
     @GetMapping("Oauth2/KakaoLogin")
     public ResponseEntity<java.util.Map<String,String>>  ClientKakaoLogin() {
         //TODO: process POST request
@@ -90,9 +94,9 @@ public class UserController {
                     user = userOptional.get();
                 }
                                 
-                
+                log.info(passwordEncoder.encode("mozzi"));
                 var authentication = authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(kakaoOpenIdToken.getSub(), null));
+                        new UsernamePasswordAuthenticationToken(kakaoOpenIdToken.getSub(), "mozzi"));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 var principal = (UserPrincipal) authentication.getPrincipal();
 
