@@ -33,3 +33,9 @@ class Foods(models.Model):
     food_category = models.CharField(max_length = 5)
     food_today_views = models.IntegerField()
     food_category_count = models.IntegerField()
+
+
+
+class Category(models.Model):
+    category_name = models.CharField(max_length=20)
+    category_pic = models.CharField(max_length=200)
