@@ -6,7 +6,8 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import { launchImageLibrary } from 'react-native-image-picker'
 import { format } from 'date-fns'
 import DateTimePickerModal from 'react-native-modal-datetime-picker'
-
+import { Header } from '../../components/Header/Header'
+import axios from 'axios'
 
 function DiaryCreateScreen () {
   
@@ -23,28 +24,24 @@ function DiaryCreateScreen () {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const showDatePicker = () => {
-    setDatePickerVisibility(true);
-  };
+    setDatePickerVisibility(true)
+  }
 
   const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-  };
+    setDatePickerVisibility(false)
+  }
 
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const handleConfirm = (date: Date) => {
-    console.warn("A date has been picked: ", date);
+    console.warn("A date has been picked: ", date)
     setSelectedDate(date)
-    hideDatePicker();
-  };
+    hideDatePicker()
+  }
 
-  // const rootNavigation = useRootNavigation<'Main'>();
-  // type ImagePickerResponse = {
-  //   assets?: {
-  //     uri?: string;
-  //   }[];
-  // };
 
-  const [imageUri, setImageUri] = useState<string | undefined>();
+  const [imageUri, setImageUri] = useState<string | undefined>()
+  const [imageType, setImageType] = useState<string | undefined>()
+  const [imageName, setImageName] = useState<string | undefined>()
 
   const handleChoosePhoto = () => {
     launchImageLibrary({
@@ -54,26 +51,59 @@ function DiaryCreateScreen () {
       includeBase64: Platform.OS === 'android',
     }, (response) => {
       if (response.assets && response.assets[0].uri) {
-        console.log(response.assets[0].uri);
-        setImageUri(response.assets[0].uri);
+        console.log(response.assets[0].uri)
+        setImageUri(response.assets[0].uri)
+        setImageType(response.assets[0].type)
+        // 파일명 한글이라 오류 날 경우, 임의로 파일명 부여할 것
+        setImageName(response.assets[0].fileName)
       } else if (response.didCancel) {
-        console.log('User cancelled image picker');
+        console.log('User cancelled image picker')
       } else if (response.errorCode) {
-        console.error('ImagePicker Error: ', response.errorMessage);
+        console.error('ImagePicker Error: ', response.errorMessage)
       }
-    });
-  };
+    })
+  }
+
   
+  const formData = new FormData()
+    if (selectedDate) {
+      formData.append('date', format(selectedDate, 'yyyy-MM-dd'))
+    }
+    // formData.append('nickName', nickName)
+    if (imageUri && imageType && imageName) {
+      // 안드로이드에서는 파일 경로의 수정이 필요함
+      const imagePath = Platform.OS === 'android' ? imageUri.replace('file://', '') : imageUri
+      
+      formData.append('image', {
+        name: imageName,
+        type: imageType,
+        uri: imagePath,
+      })
+    }
+
+  const createDiary = async () => {
+    try {
+      const response = await axios.post('http://10.0.2.2:8000/maker/video_yk/', formData, {
+        headers: {
+          Accept: '*/*',
+          'Content-type': 'multipart/form-data',
+        },
+        transformRequest: data => data,
+      })
+      console.log(response.data)
+    } catch (error) {
+      //응답 실패
+      console.error(error);
+    }
+  }
+
+
   return (
     <>
-      <TouchableOpacity onPress={goBack}>
-        <Text>뒤로가기</Text>
-      </TouchableOpacity>
+      <Header>
+        <Header.Icon iconName="chevron-back" onPress={goBack} />
+      </Header>
       <View style={styles.container}>
-        {/* <Header>
-          <Header.Title title="글작성" />
-          <Header.Icon iconName="close" onPress={rootNavigation.goBack} />
-        </Header> */}
         <View style={styles.dateContainer}>
           <TouchableOpacity onPress={showDatePicker} style={styles.calendarButton}>
             <Icon name="calendar-month" size={32}/>
@@ -90,11 +120,11 @@ function DiaryCreateScreen () {
           onCancel={hideDatePicker}
         />
         <View style={styles.imageContainer}>
-          <View style={styles.imageInnerContainer}>
+          <TouchableOpacity style={styles.imageInnerContainer} onPress={handleChoosePhoto}>
             {imageUri ? (
               <Image
                 source={{ uri: imageUri }}
-                style={{ width: '100%', height: '100%' }} // Adjust the size as needed
+                style={{ width: '100%', height: '100%' }} 
               />
             ) : (
               
@@ -103,7 +133,7 @@ function DiaryCreateScreen () {
               </TouchableOpacity>
               
             )}
-          </View>
+           </TouchableOpacity>
         </View>
         <TouchableOpacity style={styles.recipeButton}
           onPress={moveDiaryCreateSelect} >
@@ -222,7 +252,7 @@ const styles = StyleSheet.create({
   calendarButtonText: {
     fontSize: 24, 
   },
-});
+})
 
 
 export default DiaryCreateScreen
