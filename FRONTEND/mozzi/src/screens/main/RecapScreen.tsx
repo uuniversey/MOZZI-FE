@@ -55,6 +55,8 @@ const RecipeCard = ({ title, imageSource, day }: RecipeCardProps) => {
 const Container = styled.View`
   flex: 1;
   background-color: #FFFEF2;
+  margin-right: 10;
+  margin-left: 10;
 `
 
 const HeaderText = styled.Text`
@@ -124,8 +126,8 @@ function RecapScreen() {
     }
   }
 
-  const moveMakeShorts = () => {
-    navigation.navigate("RecapLanding")
+  const SelectShortsImage = () => {
+    navigation.navigate("SelectShortsImage")
     // callMakeVideoApi('baloo365', 1)
   }
 
@@ -140,10 +142,10 @@ function RecapScreen() {
 
   return (
     <>
+      <Header>
+        <Header.Icon iconName="chevron-back" onPress={goBack} />
+      </Header>
       <Container>
-        <Header>
-          <Header.Icon iconName="chevron-back" onPress={goBack} />
-        </Header>
         <HeaderText>나의 모찌 기록</HeaderText>
         {myRecipes.map((recipe, index) => (
           <RecipeCard
@@ -155,7 +157,7 @@ function RecapScreen() {
           />
         ))}
         <ActionButton 
-          onPress={moveMakeShorts}>
+          onPress={SelectShortsImage}>
           <IconEntypo name="video" size={50} color="#000" />
           <ButtonText>쇼츠 만들기</ButtonText>
         </ActionButton>

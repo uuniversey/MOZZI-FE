@@ -121,10 +121,10 @@ function MakeShortsScreen () {
 
   return (
     <>
+      <Header>
+        <Header.Icon iconName="chevron-back" onPress={goRecap} />
+      </Header>
       <Container>
-        <Header>
-          <Header.Icon iconName="chevron-back" onPress={goRecap} />
-        </Header>
         <HeaderText>쇼츠 만들기</HeaderText>
         <PlayButton>
           <Icon name="play-circle" size={60} color="#000" />

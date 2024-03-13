@@ -14,13 +14,15 @@ type CompoundComposition = {
 
 const Container = styled.View<{ paddingTop: number }>`
   padding-top: ${({ paddingTop }) => paddingTop}px;
+  background-color: #FFFEF2;
 `
 
 const HeaderContainer = styled.View<{ width: number }>`
   width: ${({ width }) => width}px;
   height: 40px;
-  margin-top: 15px;
+  margin-top: 20px;
   margin-left: 22px;
+  background-color: #FFFEF2;
 `
 
 export const Header: React.FC<{

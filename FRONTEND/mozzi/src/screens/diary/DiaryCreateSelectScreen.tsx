@@ -45,10 +45,10 @@ function DiaryCreateSelectScreen () {
 
   return (
     <>
-      <View style={styles.container}>
       <Header>
         <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
       </Header>
+      <View style={styles.container}>
       <View style={styles.searchSection}>
         <Icon name="search" size={20} color="#000" style={styles.searchIcon} />
         {/* <AutocompleteDropdown

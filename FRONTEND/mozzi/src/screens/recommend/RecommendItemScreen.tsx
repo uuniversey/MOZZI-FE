@@ -24,30 +24,32 @@ const RecommendItemScreen = ({
   const navigation = useNavigation()
 
   return (
-    <Container>
+    <>
       <Header>
         <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
       </Header>
-      <TextContainer>
-        <DateText>{date}</DateText>
-        <QuestionText>{question}</QuestionText>
-      </TextContainer>
-      <DishImage source={{ uri: imageUri }} />
-      <DishNameText>{dishName}</DishNameText>
-      <Line />
-      <ButtonContainer>
-        <TimerContainer>
-          <Icon name="timer" size={20} color="#000" />
-          <TimeText>1시간</TimeText>
-        </TimerContainer>
-        <RecipeButton onPress={onSharePress}>
-          <ButtonText>레시피 보러가기</ButtonText>
-        </RecipeButton>
-        <RetryButton onPress={onRetryPress}>
-          <ButtonText>다시 추천 받기</ButtonText>
-        </RetryButton>
-      </ButtonContainer>
-    </Container>
+      <Container>
+        <TextContainer>
+          <DateText>{date}</DateText>
+          <QuestionText>{question}</QuestionText>
+        </TextContainer>
+        <DishImage source={{ uri: imageUri }} />
+        <DishNameText>{dishName}</DishNameText>
+        <Line />
+        <ButtonContainer>
+          <TimerContainer>
+            <Icon name="timer" size={20} color="#000" />
+            <TimeText>1시간</TimeText>
+          </TimerContainer>
+          <RecipeButton onPress={onSharePress}>
+            <ButtonText>레시피 보러가기</ButtonText>
+          </RecipeButton>
+          <RetryButton onPress={onRetryPress}>
+            <ButtonText>다시 추천 받기</ButtonText>
+          </RetryButton>
+        </ButtonContainer>
+      </Container>
+    </>
   )
 }
 

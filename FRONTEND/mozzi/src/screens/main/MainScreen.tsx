@@ -11,7 +11,7 @@ const Container = styled.View`
 `
 
 const ContentContainer = styled.View`
-  padding-top: 60px;
+  padding-top: 40px;
   padding-left: 22px;
   padding-right: 22px;
 `
@@ -122,10 +122,10 @@ function MainScreen() {
 
   return (
     <>
+      <Header>
+        <Header.Icon iconName="search" onPress={moveSearch} />
+      </Header>
       <Container>
-        <Header>
-          <Header.Icon iconName="search" onPress={moveSearch} />
-        </Header>
         <ContentContainer>
           <Greeting>환영해요, 아우엉님 님!</Greeting>
           {/* <Greeting>환영해요, {userName} 님!</Greeting> */}

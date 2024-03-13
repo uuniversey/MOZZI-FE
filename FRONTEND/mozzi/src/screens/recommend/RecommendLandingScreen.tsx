@@ -72,10 +72,10 @@ function RecommendLandingScreen() {
 
   return (
     <>
+      <Header>
+        <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
+      </Header>
       <Container>
-        <Header>
-          <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
-        </Header>
         <InnerContainer>
           <DiceImage source={require('../../assets/recommend/pizza.jpg')} />
           <Description>아우엉님 님의 {'\n'}레시피를 찾고 있어요!</Description>

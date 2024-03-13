@@ -69,7 +69,7 @@ function DiaryCreateScreen () {
     if (selectedDate) {
       formData.append('date', format(selectedDate, 'yyyy-MM-dd'))
     }
-    formData.append('nickName', nickName)
+    // formData.append('nickName', nickName)
     if (imageUri && imageType && imageName) {
       // 안드로이드에서는 파일 경로의 수정이 필요함
       const imagePath = Platform.OS === 'android' ? imageUri.replace('file://', '') : imageUri
@@ -100,10 +100,10 @@ function DiaryCreateScreen () {
 
   return (
     <>
+      <Header>
+        <Header.Icon iconName="chevron-back" onPress={goBack} />
+      </Header>
       <View style={styles.container}>
-        <Header>
-          <Header.Icon iconName="chevron-back" onPress={goBack} />
-        </Header>
         <View style={styles.dateContainer}>
           <TouchableOpacity onPress={showDatePicker} style={styles.calendarButton}>
             <Icon name="calendar-month" size={32}/>
