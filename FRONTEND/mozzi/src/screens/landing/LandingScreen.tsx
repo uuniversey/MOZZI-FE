@@ -2,6 +2,9 @@ import React, { useEffect, useRef } from 'react';
 import { Animated, TouchableOpacity, Image } from 'react-native';
 import styled from 'styled-components/native';
 
+import KakaoLogins from '@react-native-seoul/kakao-login';
+import useLoginStore from '../../store/LoginStore';
+
 import kakao from '../../assets/landing/kakao-login-icon.png';
 import wave from '../../assets/landing/wave-bg.png';
 
@@ -61,6 +64,21 @@ const LoginContainer = styled.View`
 const AnimatedLoginButton = Animated.createAnimatedComponent(TouchableOpacity);
 
 function LandingScreen() {
+  const { login } = useLoginStore()
+
+  const kakaoLogin = async () => {
+    try {
+      const res = await KakaoLogins.login();
+      await login(res.accessToken);
+    } catch (error) {
+      if (error.code === 'E_CANCELLED_OPERATION') {
+        console.log('Login cancelled');
+      } else {
+        console.error(error);
+      }
+    }
+  };
+
   // const fadeAnims = useRef(
   //   Array.from({ length: 9 }, () => new Animated.Value(0))
   // ).current;
@@ -90,9 +108,6 @@ function LandingScreen() {
     fadeIn(loginFadeAnim, lastIconDelay);
   }, []);
 
-  const kakaoLogin = () => {
-    console.log('카카오 로그인으로 대체해');
-  };
 
   // 위치와 크기 정보
   const positions = [
