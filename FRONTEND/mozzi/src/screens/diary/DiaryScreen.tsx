@@ -10,7 +10,7 @@ import { Calendar } from 'react-native-calendars'
 const Container = styled.View`
   flex: 1;
   background-color: #FFFEF2;
-`;
+`
 
 const Title = styled.Text`
   font-size: 36px;
@@ -33,12 +33,14 @@ const Btn = styled.TouchableOpacity`
 `
 
 const MyCalendar = styled(Calendar)`
+  width: 350px;
+  height: 590px;
   margin: 0px 20px 0px 20px;
 `
 
 const DayStyle = styled.View`
   width: 50px;
-  height: 60px;
+  height: 65px;
   align-items: center;
   background-color: ${(props) => (props.isSelected ? '#c6e4ee' : 'transparent')};
 `
@@ -53,8 +55,8 @@ function DiaryScreen () {
 
   const navigation = useNavigation()
 
-  const moveDiaryDetail = () => {
-    navigation.navigate("DiaryDetail")
+  const moveDiaryDetail = (date) => {
+    navigation.navigate("DiaryDetail", {date: date})
   }
   const moveDiaryCreate = () => {
     navigation.navigate("DiaryCreate")
@@ -78,21 +80,19 @@ function DiaryScreen () {
             }
 
             return (
-              <DayStyle isSelected={state === 'selected'}>
-                <Text style={{textAlign: 'center', color: textColor}}>{date.day}</Text>
-                {state !== 'disabled' && (
-                  <CalendarImage
-                    source={require('../../assets/recommend/pizza.jpg')}
-                  />
-                )}
-              </DayStyle>
+              <TouchableOpacity onPress={() => moveDiaryDetail(date)}>
+                <DayStyle isSelected={state === 'selected'}>
+                  <Text style={{textAlign: 'center', color: textColor}}>{date.day}</Text>
+                  {state !== 'disabled' && (
+                    <CalendarImage
+                      source={require('../../assets/recommend/pizza.jpg')}
+                    />
+                  )}
+                </DayStyle>
+              </TouchableOpacity>
             )
           }}
         />
-
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <Button title="Go to Detail" onPress={moveDiaryDetail} />
-        </View>
       </Container>
     </>
   )
