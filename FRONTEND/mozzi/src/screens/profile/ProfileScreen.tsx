@@ -11,12 +11,21 @@ interface UserProfileState {
   isVegan: string
 }
 
+const Container = styled.View`
+  flex: 1;
+  background-color: #FFFEF2;
+`
+
 const Title = styled.Text`
   font-size: 36px;
   font-weight: bold;
-  margin-top: 50px;
+  margin: 50px 0px 0px 40px;
   text-align: left;
   width: 100%;
+`
+
+const Body = styled.View`
+  margin: 0px 40px 0px 40px;
 `
 
 const Label = styled.Text`
@@ -25,11 +34,9 @@ const Label = styled.Text`
 
 const StyledInput = styled.TextInput`
   height: 40px;
-  margin: 12px;
-  padding: 10px;
+  margin: 10px 0px 10px 0px;
   border-bottom-width: 1px;
   border-bottom-color: silver;
-
 `
 
 function ProfileScreen () {
@@ -54,42 +61,44 @@ function ProfileScreen () {
 
   return (
     <>
-      <Title>내 정보</Title>
-      <View>
-        <Label>이메일</Label>
-        <StyledInput
-          placeholder="이메일을 입력하세요"
-          value={form.email}
-          onChangeText={handleEmailChange}
-          autoCapitalize="none"
-          keyboardType="email-address"
-        />
-        <Label>알레르기 정보</Label>
-        <StyledInput
-          placeholder="알레르기 정보를 입력하세요"
-          value={form.allergyInfo}
-          onChangeText={handleAllergyInfoChange}
-        />
-        <Label>좋아하는 음식</Label>
-        <StyledInput
-          placeholder="좋아하는 음식을 입력하세요"
-          value={form.favoriteFood}
-          onChangeText={handleFavoriteFoodChange}
-        />
-        <Label>싫어하는 음식</Label>
-        <StyledInput
-          placeholder="싫어하는 음식을 입력하세요"
-          value={form.dislikedFood}
-          onChangeText={handleDislikedFoodChange}
-        />
-        <Label>비건 여부</Label>
-        <StyledInput
-          placeholder="예/아니오로 입력하세요"
-          value={form.isVegan}
-          onChangeText={handleIsVeganChange}
-        />
-        <Button title="저장" onPress={handleSubmit} />
-      </View>
+      <Container>
+        <Title>내 정보</Title>
+        <Body>
+          <Label>이메일</Label>
+          <StyledInput
+            placeholder="이메일을 입력하세요"
+            value={form.email}
+            onChangeText={handleEmailChange}
+            autoCapitalize="none"
+            keyboardType="email-address"
+          />
+          <Label>알레르기 정보</Label>
+          <StyledInput
+            placeholder="알레르기 정보를 입력하세요"
+            value={form.allergyInfo}
+            onChangeText={handleAllergyInfoChange}
+          />
+          <Label>좋아하는 음식</Label>
+          <StyledInput
+            placeholder="좋아하는 음식을 입력하세요"
+            value={form.favoriteFood}
+            onChangeText={handleFavoriteFoodChange}
+          />
+          <Label>싫어하는 음식</Label>
+          <StyledInput
+            placeholder="싫어하는 음식을 입력하세요"
+            value={form.dislikedFood}
+            onChangeText={handleDislikedFoodChange}
+          />
+          <Label>비건 여부</Label>
+          <StyledInput
+            placeholder="예/아니오로 입력하세요"
+            value={form.isVegan}
+            onChangeText={handleIsVeganChange}
+          />
+          <Button title="저장" onPress={handleSubmit} />
+        </Body>
+      </Container>
     </>
   )
 }
