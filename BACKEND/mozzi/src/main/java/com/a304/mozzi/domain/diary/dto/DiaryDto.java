@@ -1,5 +1,6 @@
 package com.a304.mozzi.domain.diary.dto;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -7,13 +8,15 @@ import java.util.stream.Collectors;
 import com.a304.mozzi.domain.diary.model.Diary;
 
 import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 @Builder
-public class DiaryDto {
-
+public class DiaryDto{
     
-    String foodName;
-    String photoUrl;
-    LocalDate photoDate;
+    private Integer id;
+    private String foodName;
+    private String photoUrl;
+    private LocalDate photoDate;
 
 }

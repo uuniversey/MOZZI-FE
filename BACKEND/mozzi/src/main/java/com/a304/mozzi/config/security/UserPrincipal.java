@@ -5,18 +5,20 @@ package com.a304.mozzi.config.security;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 import java.util.Collection;
+import java.util.Collections;
 
 
 @Builder
 @AllArgsConstructor
 public class UserPrincipal implements UserDetails {
+
     @Getter
     private final Integer userId;
     @Getter
@@ -28,7 +30,7 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        return authorities == null ? Collections.emptyList() : authorities;
     }
 
 
@@ -39,7 +41,7 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public String getPassword() {
-        return "";
+        return "$2a$10$2I639JrOZYalstefvnrcK..Xlf8yUY2Opb385BI6plCuNqEAX/50O";
     }
 
     @Override
