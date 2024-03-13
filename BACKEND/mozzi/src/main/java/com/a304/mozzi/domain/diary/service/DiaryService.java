@@ -29,10 +29,15 @@ public class DiaryService {
         return diaryRepositoty.save(diary);
     }
 
+    public Integer getTotalCount(Integer userId) {
+        return diaryRepositoty.getTotalCount(userId);
+    }
     public List<Diary> findByUser(UserModel user)
     {
         return  diaryRepositoty.findByUser(user);
     }
+
+
       
     public List<DiaryDto> toDtoList(List<Diary> diaries)
     {
@@ -46,5 +51,12 @@ public class DiaryService {
             .photoUrl(entity.getDiaryPhoto())
             .build())
         .collect(Collectors.toList());
+    }
+
+    public void deleteByDiaryId(Integer diaryId)
+    {
+        Diary diary = diaryRepositoty.findById(diaryId)
+                .orElseThrow(() -> new IllegalArgumentException("Diary with id " + diaryId + " not found"));
+        diaryRepositoty.deleteById(diaryId);
     }
 }
