@@ -94,13 +94,3 @@ function DiaryDetailScreen ({ route }) {
 }
 
 export default DiaryDetailScreen
-
-
-
-const dummyfood = [
-  { "id": 1,  "foodName": "김치 볶음밥" , "photoUrl" : 1 , "photoDate" : "2024-01-12"},
-  { "id": 2, "foodName": "라면" , "photoUrl" : 0 , "photoDate" : "2024-01-12"},
-  { "id": 3, "foodName": "볶음면" , "photoUrl" : 0 , "photoDate" : "2024-01-13"},
-  { "id": 4, "foodName": "라면" , "photoUrl" : 0 , "photoDate" : "2024-01-14"},
-  { "id": 5, "foodName": "라면" , "photoUrl" : 0 , "photoDate" : "2024-01-15"},
- ]
