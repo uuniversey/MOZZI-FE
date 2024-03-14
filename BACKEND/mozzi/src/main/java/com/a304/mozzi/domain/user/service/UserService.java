@@ -2,6 +2,9 @@ package com.a304.mozzi.domain.user.service;
 
 import com.a304.mozzi.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.a304.mozzi.domain.user.model.UserModel;
@@ -45,5 +48,35 @@ public class UserService {
         // user.setRole("ROLE_ADMIN");
         // user.setExtraInfo("My DD");
         return Optional.ofNullable(user);
+    }
+
+    public  UserModel  findCurrentUser()
+    {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+        Optional<UserModel> userOptional = findByUserCode(username);
+
+        UserModel user = null;
+        if (userOptional.isPresent()) {
+            user = userOptional.get();
+        }
+        return user;
+    }
+
+    public  void setUserIsVegan(UserModel user, boolean  isVegan){
+        if (isVegan) {
+            user.setUserIsvegan(1);
+        } else {
+            user.setUserIsvegan(0);
+        }
+        userRepository.save(user);
+    }
+
+    public void setUserNickname(UserModel user, String nickname){
+        user.setUserNickname(nickname);
+        userRepository.save(user);
+
+
     }
 }

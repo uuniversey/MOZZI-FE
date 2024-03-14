@@ -18,18 +18,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
+import java.util.*;
 
 
 @Slf4j
@@ -44,7 +36,7 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
     private  final KakaoApi kakaoApi;
     private  final JwtIssuer jwtIssuer;
-    private final BCryptPasswordEncoder passwordEncoder;
+
     @GetMapping("Oauth2/KakaoLogin")
     public ResponseEntity<java.util.Map<String,String>>  ClientKakaoLogin() {
         //TODO: process POST request
@@ -93,8 +85,7 @@ public class UserController {
                 if (userOptional.isPresent()) {
                     user = userOptional.get();
                 }
-                                
-                log.info(passwordEncoder.encode("mozzi"));
+
                 var authentication = authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(kakaoOpenIdToken.getSub(), "mozzi"));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -115,5 +106,21 @@ public class UserController {
                     .badRequest()
                     .body(responseDTO);
         }
+    }
+
+    @PatchMapping("/setvegan")
+    ResponseEntity<?> setVegan(@RequestParam boolean isVegan){
+        UserModel user = userService.findCurrentUser();
+        userService.setUserIsVegan(user, isVegan);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @PatchMapping("/setnickname")
+    ResponseEntity<?> setNickname(@RequestParam String nickname){
+        UserModel user = userService.findCurrentUser();
+        userService.setUserNickname(user, nickname);
+        Map<String, String> result = new HashMap<>();
+        result.put("nickname", nickname);
+        return ResponseEntity.ok().body(result);
     }
 }

@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import com.a304.mozzi.domain.foods.model.Food;
+import com.a304.mozzi.domain.foods.service.FoodService;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.http.HttpStatus;
@@ -38,6 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 public class DiaryController {
     private final DiaryService diaryService;
     private final UserService userService;
+    private final FoodService foodService;
     @GetMapping("/mydiary")
     public ResponseEntity<List<DiaryDto>> GetMyDiary(){
 
@@ -86,14 +89,23 @@ public class DiaryController {
                 // 에러 처리 로직 추가
             }
 
-            destinationFile.getParentFile().mkdirs();
+            if (!destinationFile.getParentFile().exists()) {
+                if (!destinationFile.getParentFile().mkdirs()) {
+                    log.error("Failed to create directories for file: {}", destinationFile.getPath());
+                    // 에러 처리 로직 추가
+                }
+            }
+
+//            destinationFile.getParentFile().mkdirs();
 
             log.info(destinationFileName);
             photo.transferTo(destinationFile);
-            
+
+            Food food = foodService.findFoodByFoodName(foodName);
             Diary diary = Diary.builder()
                 .user(user)
                 .diaryPhoto(fileUrl + destinationFileName)
+                .foodId(food)
                 .build();
                 
             Diary registeredDiary = diaryService.create(diary);
@@ -108,12 +120,17 @@ public class DiaryController {
         }
     }
 
+
+
     @DeleteMapping("/mydiary")
     public ResponseEntity<?> deleteMyDiary(@RequestParam Integer id)
     {
         diaryService.deleteByDiaryId(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
     }
+
+
+
     @GetMapping("/gettwodiaries")
     public ResponseEntity<?> getTwiDiaries(){
         // 해당유저의 최대 테이블 개수를 알아야겠지

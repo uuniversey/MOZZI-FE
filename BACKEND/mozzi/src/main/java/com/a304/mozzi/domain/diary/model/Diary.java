@@ -1,20 +1,17 @@
 package com.a304.mozzi.domain.diary.model;
 
+import com.a304.mozzi.domain.foods.model.Food;
 import com.a304.mozzi.domain.user.model.UserModel;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Table(name = "diary")
 @Entity
@@ -33,5 +30,15 @@ public class Diary {
     @JoinColumn(name = "user_id")
     private UserModel user;
     private String diaryPhoto;
-    
+    @Column(name = "diary_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private LocalDateTime diaryDate;
+    @ManyToOne
+    @JoinColumn(name = "food_id")
+    private Food foodId;
+    @PrePersist
+    public void prePersist() {
+        this.diaryDate = LocalDateTime.now();
+    }
 }
+
+
