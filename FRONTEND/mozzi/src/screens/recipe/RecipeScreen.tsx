@@ -3,8 +3,10 @@ import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import styled from 'styled-components/native'
 
+import { Header } from '../../components/Header/Header'
+
 import { useNavigation } from '@react-navigation/native'
-import { PanGestureHandler, State } from 'react-native-gesture-handler'
+import { GestureHandlerRootView, PanGestureHandler, State } from 'react-native-gesture-handler'
 
 const Container = styled.View`
   flex: 1;
@@ -62,7 +64,47 @@ function RecipeScreen () {
   const [ idx, setIdx ] = useState(1)
   const [ strIdx, setStrIdx ] = useState('01')
   const [ isLast, setIsLast ] = useState(false)
-  
+
+  const [translateY, setTranslateY] = useState(new Animated.Value(0))
+  const [lastTranslateY, setLastTranslateY] = useState(0) // 마지막 translationY 값을 저장할 상태
+
+  const onGestureEvent = Animated.event(
+    [{ nativeEvent: { translationY: translateY } }],
+    {
+      useNativeDriver: true,
+      listener: event => {
+        setLastTranslateY(event.nativeEvent.translationY)
+      },
+    },
+  )
+
+  const onHandlerStateChange = (event) => {
+    if (event.nativeEvent.oldState === State.ACTIVE) {
+      const nextIdx = (parseInt(strIdx)+1).toString().padStart(2, '0')
+
+      if (lastTranslateY < 0 && dummyData[`MANUAL${nextIdx}`] !== "" ) {
+        setIdx(prevIdx => {
+          const nextIdx = prevIdx + 1
+          setStrIdx(nextIdx.toString().padStart(2, '0'))
+          return nextIdx
+        })
+      } else if (lastTranslateY > 0 && nextIdx !== '02') {
+        setIdx(prevIdx => {
+          const nextIdx = prevIdx - 1
+          setStrIdx(nextIdx.toString().padStart(2, '0'))
+          return nextIdx
+        })
+      }
+      
+      setLastTranslateY(0)
+
+      Animated.spring(translateY, {
+        toValue: 0,
+        useNativeDriver: true,
+      }).start()
+    }
+  }
+
   const goBack = () => {
     navigation.goBack()
   }
@@ -86,37 +128,41 @@ function RecipeScreen () {
   
   return (
     <>
-    <PanGestureHandler>
-      <Animated.View>
-        <View>
-          {/* 컨텐츠 */}
-        </View>
-      </Animated.View>
-    </PanGestureHandler>
-
-    <Container>
-      <TouchableOpacity onPress={goBack}>
-        <Icon name="keyboard-arrow-left" size={35} color="black" />
-      </TouchableOpacity>
-
-      <View>
-        <Title>{dummyData.RCP_NM}</Title>
-        <Order>{dummyData[`MANUAL${strIdx}`]}</Order>
-        <Body>  
-          <FoodImage
-            source={{ uri: dummyData[`MANUAL_IMG${strIdx}`] }}
-          />
-        </Body>
-        <Tip>TIP: {dummyData.RCP_NA_TIP}</Tip>
-        {isLast ? 
-          '' :
-          <Btn onPress={moveOrder}>
-            <Icon name="keyboard-double-arrow-down" size={50} color="silver" />
-          </Btn> 
-        }
-      </View>
-    
-    </Container>
+      <Container>
+        <Header>
+          <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
+        </Header>
+        
+        <GestureHandlerRootView>
+          <PanGestureHandler
+            onGestureEvent={onGestureEvent}
+            onHandlerStateChange={onHandlerStateChange}>
+            <Animated.View
+              style={{
+                transform: [{ translateY: translateY }],
+              }}>
+              
+              <View>
+                <Title>{dummyData.RCP_NM}</Title>
+                <Order>{dummyData[`MANUAL${strIdx}`]}</Order>
+                <Body>  
+                  <FoodImage
+                    source={{ uri: dummyData[`MANUAL_IMG${strIdx}`] }}
+                  />
+                </Body>
+                <Tip>TIP: {dummyData.RCP_NA_TIP}</Tip>
+                {isLast ? 
+                  '' :
+                  <Btn onPress={moveOrder}>
+                    <Icon name="keyboard-double-arrow-down" size={50} color="silver" />
+                  </Btn> 
+                }
+              </View>
+            
+            </Animated.View>
+          </PanGestureHandler>
+        </GestureHandlerRootView>
+      </Container>
     </>
   )
 }

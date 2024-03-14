@@ -3,6 +3,8 @@ import React from 'react'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import styled from 'styled-components/native'
 
+import { Header } from '../../components/Header/Header'
+
 import { useNavigation } from '@react-navigation/native'
 
 const Container = styled.View`
@@ -67,9 +69,10 @@ function DiaryDetailScreen ({ route }) {
   return (
     <>
       <Container>
-        <TouchableOpacity onPress={goBack}>
-          <Icon name="keyboard-arrow-left" size={35} color="black" />
-        </TouchableOpacity>
+        <Header>
+          <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
+        </Header>
+
         <View>
           <Title> <Dot>●   </Dot> {date.year}년 {date.month}월 {date.day}일 요리 일기</Title>
         </View>
@@ -91,3 +94,13 @@ function DiaryDetailScreen ({ route }) {
 }
 
 export default DiaryDetailScreen
+
+
+
+const dummyfood = [
+  { "id": 1,  "foodName": "김치 볶음밥" , "photoUrl" : 1 , "photoDate" : "2024-01-12"},
+  { "id": 2, "foodName": "라면" , "photoUrl" : 0 , "photoDate" : "2024-01-12"},
+  { "id": 3, "foodName": "볶음면" , "photoUrl" : 0 , "photoDate" : "2024-01-13"},
+  { "id": 4, "foodName": "라면" , "photoUrl" : 0 , "photoDate" : "2024-01-14"},
+  { "id": 5, "foodName": "라면" , "photoUrl" : 0 , "photoDate" : "2024-01-15"},
+ ]

@@ -45,6 +45,12 @@ const DayStyle = styled.View`
   background-color: ${(props) => (props.isSelected ? '#c6e4ee' : 'transparent')};
 `
 
+const DayNum = styled.Text`
+  align-items: center;
+  color: ${props => props.textColor};
+  font-weight: ${props => props.isToday ? 'bold' : 'normal'};
+`
+
 const CalendarImage = styled.Image`
   width: 95%;
   height: 95%;
@@ -73,16 +79,19 @@ function DiaryScreen () {
         <MyCalendar
           dayComponent={({date, state}) => {
             let textColor = '#000' // 기본 텍스트 색상
+
             if (state === 'disabled') {
               textColor = '#d9e1e8' // 비활성화된 날짜(저번달/다음달 날짜)의 색상
             } else if (state === 'today') {
-              textColor = '#00adf5' // 오늘 날짜의 색상
+              textColor = 'red'
             }
 
             return (
               <TouchableOpacity onPress={() => moveDiaryDetail(date)}>
                 <DayStyle isSelected={state === 'selected'}>
-                  <Text style={{textAlign: 'center', color: textColor}}>{date.day}</Text>
+                <DayNum textColor={textColor} isToday={state === 'today'}>
+                  {date.day}
+                </DayNum>
                   {state !== 'disabled' && (
                     <CalendarImage
                       source={require('../../assets/recommend/pizza.jpg')}
