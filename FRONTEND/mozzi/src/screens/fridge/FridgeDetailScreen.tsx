@@ -4,6 +4,7 @@ import styled from 'styled-components/native'
 
 import { useNavigation } from '@react-navigation/native'
 
+import { Header } from '../../components/Header/Header'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import note from '../../assets/fridge/note.png'
@@ -118,10 +119,6 @@ function FridgeDetailScreen ({route}) {
 
   const navigation = useNavigation()
 
-  const goBack = () => {
-   navigation.goBack()
-  }
-
   const handleSend = () => {
     // 전송 버튼을 눌렀을 때 텍스트 상태 초기화 및 위치 조정
     setSavedText(savedText + text + '\n');
@@ -131,9 +128,9 @@ function FridgeDetailScreen ({route}) {
   
   return (
     <Container behavior={Platform.OS === "ios" ? "padding" : "height"}>
-      <TouchableOpacity onPress={goBack}>
-        <Text>냉장고로 돌아가기</Text>
-      </TouchableOpacity>
+        <Header>
+          <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
+        </Header>
       
       <Note>
         <ClipImg source={clip} />

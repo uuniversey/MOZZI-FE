@@ -2,6 +2,9 @@ import { View, Text, TouchableOpacity, Image } from 'react-native'
 import React from 'react'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import styled from 'styled-components/native'
+import Share from 'react-native-share'
+import RNFS from 'react-native-fs';
+import Stamp from './Stamp'
 
 import { Header } from '../../components/Header/Header'
 
@@ -58,13 +61,25 @@ function DiaryDetailScreen ({ route }) {
   const { date } = route.params
   const navigation = useNavigation()
 
-  const goBack = () => {
-   navigation.goBack()
-  }
 
-  const moveShared = () => {
-    navigation.navigate("")
-  }
+  const moveShared = async () => {
+    // const shareOptions = {
+    //   message: '이미지를 공유합니다.',
+    //   url: 'data:image/png;base64,<BASE64_IMAGE_STRING>', // 이미지 base64 문자열 또는 경로
+    // };
+
+    const shareOptions = {
+      message: '이미지를 공유합니다.',
+      url: require('../../assets/recommend/chicken.jpg'), // 로컬 이미지 경로
+    };
+
+    try {
+      const ShareResponse = await Share.open(shareOptions);
+      console.log(JSON.stringify(ShareResponse));
+    } catch (error) {
+      console.log('Error =>', error);
+    }
+  };
 
   return (
     <>
@@ -80,9 +95,10 @@ function DiaryDetailScreen ({ route }) {
         <Body>
           <View>
             <FoodTitle>비비큐 황금올리브</FoodTitle>
-            <FoodImage
+            {/* <FoodImage
               source={require('../../assets/recommend/chicken.jpg')}
-            />
+            /> */}
+            <Stamp source={require('../../assets/recommend/chicken.jpg')} />
           </View>
           <Btn onPress={moveShared}>
             <Icon name="ios-share" size={24} color="black" />
