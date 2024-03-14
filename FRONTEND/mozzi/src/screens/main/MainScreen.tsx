@@ -106,8 +106,13 @@ function MainScreen() {
     }
   }
 
-  const handleCardPress = () => {
-    navigation.navigate("DiaryDetail", { recipe: recipe })
+  // const handleCardPress = () => {
+  //   // navigation.navigate("DiaryDetail", { recipe: recipe })
+  //   navigation.navigate("DiaryDetail")
+  // }
+
+  const moveDiaryDetail = (date) => {
+    navigation.navigate("DiaryDetail", {date: date})
   }
 
   // 오늘의 최다 조회수 레시피인데
@@ -130,7 +135,7 @@ function MainScreen() {
           <Greeting>환영해요, 아우엉님 님!</Greeting>
           {/* <Greeting>환영해요, {userName} 님!</Greeting> */}
           <Question>오늘은 어떤 레시피를 도전할까요?</Question>
-          <TouchableOpacity onPress={handleCardPress}>
+          <TouchableOpacity>
             <Card>
               <MealQuestion>오늘 모찌에서 {"\n"}가장 많이 사랑받은 레시피는?</MealQuestion>
               <StyledImage
