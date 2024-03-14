@@ -2,6 +2,10 @@ import React, { useEffect, useRef } from 'react';
 import { Animated, TouchableOpacity, Image } from 'react-native';
 import styled from 'styled-components/native';
 
+import { useNavigation } from '@react-navigation/native';
+import KakaoLogins, {login as kakaoLoginFunc, getProfile} from '@react-native-seoul/kakao-login';
+import useLoginStore from '../../store/LoginStore';
+
 import kakao from '../../assets/landing/kakao-login-icon.png';
 import wave from '../../assets/landing/wave-bg.png';
 
@@ -61,6 +65,34 @@ const LoginContainer = styled.View`
 const AnimatedLoginButton = Animated.createAnimatedComponent(TouchableOpacity);
 
 function LandingScreen() {
+  const navigation = useNavigation();
+  const { login: storeLogin } = useLoginStore()
+
+  
+  const kakaoLogin = async () => {
+    try {
+      // 여기에서 함수 이름을 kakaoLoginFunc로 변경했습니다.
+      const res = await kakaoLoginFunc();
+      console.log('로그인 성공!:', JSON.stringify(res));
+      console.log(res); // 반환되는 객체 확인
+      // accessToken을 전달하기 전에 res가 정상인지 확인
+      if (res) {
+        // 성공적으로 토큰을 받아오고 로그인 처리
+        await storeLogin(res.accessToken);
+        // 로그인 후 LandingInputScreen으로 이동
+        navigation.navigate('LandingInput');
+      } else {
+        console.log('Login response is undefined');
+      }
+    } catch (error) {
+      if (error.code === 'E_CANCELLED_OPERATION') {
+        console.log('Login cancelled')
+      } else {
+        console.error(error)
+      }
+    }
+  };
+
   // const fadeAnims = useRef(
   //   Array.from({ length: 9 }, () => new Animated.Value(0))
   // ).current;
@@ -90,9 +122,6 @@ function LandingScreen() {
     fadeIn(loginFadeAnim, lastIconDelay);
   }, []);
 
-  const kakaoLogin = () => {
-    console.log('카카오 로그인으로 대체해');
-  };
 
   // 위치와 크기 정보
   const positions = [

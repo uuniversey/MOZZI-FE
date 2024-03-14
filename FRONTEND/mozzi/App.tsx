@@ -10,7 +10,8 @@ import FridgeStack from './src/navigation/FridgeStack';
 import RecommendStack from './src/navigation/RecommendStack';
 import DiaryStack from './src/navigation/DiaryStack';
 import ProfileScreen from './src/screens/profile/ProfileScreen';
-import LandingScreen from './src/screens/landing/LandingScreen';
+// import LandingScreen from './src/screens/landing/LandingScreen';
+import LoginStack from './src/navigation/LoginStack';
 
 const Tab = createBottomTabNavigator();
 const windowWidth = Dimensions.get('window').width;
@@ -112,7 +113,9 @@ const App: React.FC = () => {
           </Tab.Navigator>
         </NavigationContainer>
       ) : (
-        <LandingScreen />
+        <NavigationContainer>
+          <LoginStack />
+        </NavigationContainer>
       )}
     </>
   );
