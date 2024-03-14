@@ -8,4 +8,5 @@ urlpatterns = [
     path('mongo_to_mysql/',views.migrate_food_recipe_from_mongo_to_mysql),
     path('recipe_detail/',views.recipe_detail),
     path('get_recipe_list/',views.get_recipe_list),
+    path('get_ingredient_list/',views.get_ingredient_list),
 ]

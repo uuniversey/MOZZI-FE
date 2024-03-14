@@ -233,22 +233,27 @@ def get_recipe_list(request):
         }
         data.append(food_data)
     return JsonResponse({'foods': data})
-import os
-from .models import Ingredient
 
-# 스크립트 파일의 절대 경로를 가져옴
-script_dir = os.path.dirname(os.path.abspath(__file__))
+def get_ingredient_list(request):
+    ingredients = Ingredient.objects.all()
+    ingredient_names = [ingredient.ingredient_name for ingredient in ingredients]
+    return JsonResponse({'data': {'ingredients': ingredient_names}},json_dumps_params={'ensure_ascii': False})
+# import os
+# from .models import Ingredient
 
-# 1.txt 파일의 절대 경로를 생성
-file_path = os.path.join(script_dir, '1.txt')
+# # 스크립트 파일의 절대 경로를 가져옴
+# script_dir = os.path.dirname(os.path.abspath(__file__))
 
-with open(file_path, 'r', encoding="utf-8") as file:
-    for line in file:
-        # 줄을 '$' 기준으로 나누기
-        parts = line.strip().split('$')
-        # 오른쪽 값이 존재하면 오른쪽 값을 사용하고, 그렇지 않으면 왼쪽 값을 사용
-        ingredient_name = parts[-1].strip()
+# # 1.txt 파일의 절대 경로를 생성
+# file_path = os.path.join(script_dir, '1.txt')
+
+# with open(file_path, 'r', encoding="utf-8") as file:
+#     for line in file:
+#         # 줄을 '$' 기준으로 나누기
+#         parts = line.strip().split('$')
+#         # 오른쪽 값이 존재하면 오른쪽 값을 사용하고, 그렇지 않으면 왼쪽 값을 사용
+#         ingredient_name = parts[-1].strip()
         
-        # 이미 있는지 확인하고 없으면 추가
-        if ingredient_name and not Ingredient.objects.filter(ingredient_name=ingredient_name).exists():
-            Ingredient.objects.create(ingredient_name=ingredient_name)
+#         # 이미 있는지 확인하고 없으면 추가
+#         if ingredient_name and not Ingredient.objects.filter(ingredient_name=ingredient_name).exists():
+#             Ingredient.objects.create(ingredient_name=ingredient_name)
