@@ -3,7 +3,7 @@ import React from 'react'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import styled from 'styled-components/native'
 import Share from 'react-native-share'
-import RNFS from 'react-native-fs';
+
 import Stamp from './Stamp'
 
 import { Header } from '../../components/Header/Header'
@@ -62,24 +62,20 @@ function DiaryDetailScreen ({ route }) {
   const navigation = useNavigation()
 
 
-  const moveShared = async () => {
-    // const shareOptions = {
-    //   message: '이미지를 공유합니다.',
-    //   url: 'data:image/png;base64,<BASE64_IMAGE_STRING>', // 이미지 base64 문자열 또는 경로
-    // };
-
-    const shareOptions = {
-      message: '이미지를 공유합니다.',
-      url: require('../../assets/recommend/chicken.jpg'), // 로컬 이미지 경로
-    };
-
-    try {
-      const ShareResponse = await Share.open(shareOptions);
-      console.log(JSON.stringify(ShareResponse));
-    } catch (error) {
-      console.log('Error =>', error);
-    }
+  const shareOptions = {
+    message: '모찌 레시피로 만든 요리예요 ❤', // 공유할 메시지
+    url: '../../assets/recommend/chicken.jpg', 
   };
+  
+  // 공유 함수
+  const moveShared = async () => {
+    try {
+      const result = await Share.open(shareOptions);
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <>
