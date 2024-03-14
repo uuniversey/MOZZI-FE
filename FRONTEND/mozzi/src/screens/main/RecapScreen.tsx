@@ -55,8 +55,8 @@ const RecipeCard = ({ title, imageSource, day }: RecipeCardProps) => {
 const Container = styled.View`
   flex: 1;
   background-color: #FFFEF2;
-  margin-right: 10;
-  margin-left: 10;
+  padding-right: 10px;
+  padding-left: 10px;
 `
 
 const HeaderText = styled.Text`
