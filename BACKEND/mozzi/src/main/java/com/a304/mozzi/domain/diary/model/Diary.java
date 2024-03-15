@@ -30,7 +30,7 @@ public class Diary {
     @JoinColumn(name = "user_id")
     private UserModel user;
     private String diaryPhoto;
-    @Column(name = "diary_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "diary_date", nullable = false)
     private LocalDateTime diaryDate;
     @ManyToOne
     @JoinColumn(name = "food_id")

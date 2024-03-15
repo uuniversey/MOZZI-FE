@@ -2,6 +2,10 @@ package com.a304.mozzi.domain.diary.controller;
 
 
 import java.io.File;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,22 +46,13 @@ public class DiaryController {
     private final UserService userService;
     private final FoodService foodService;
     @GetMapping("/mydiary")
-    public ResponseEntity<List<DiaryDto>> GetMyDiary(){
+    public ResponseEntity<List<DiaryDto>> GetMyDiary(
+            @RequestParam("foodYear") String foodYear,
+            @RequestParam("foodMonth") String foodMonth
+    ){
 
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String username = userDetails.getUsername();
-
-
-        Optional<UserModel> userOptional = userService.findByUserCode(username);
-                UserModel user = null;
-                if (userOptional.isPresent()) {
-                    user = userOptional.get();
-                }
-
-        List<Diary> Diaries = diaryService.findByUser(user);
-        
+        UserModel user = userService.findCurrentUser();
+        List<Diary> Diaries = diaryService.findByUserAndDiaryDate(user.getUserId(), foodYear, foodMonth);
         List<DiaryDto> DiariesDto = diaryService.toDtoList(Diaries);
         return  ResponseEntity.status(HttpStatus.OK).body(DiariesDto);
     }
@@ -82,12 +77,8 @@ public class DiaryController {
             String sourceFileName = photo.getOriginalFilename();
             String sourceFileNameExtension = FilenameUtils.getExtension(sourceFileName).toLowerCase();
             String fileUrl = "C:\\Users\\SSAFY\\Downloads\\GOODCODE\\S2A304\\BACKEND\\public\\";
-            String destinationFileName = RandomStringUtils.randomAlphabetic(32) + "." + sourceFileNameExtension;
+            String destinationFileName = RandomStringUtils.randomAlphabetic(5) + "_" + username + "_" + photoDate + "." + sourceFileNameExtension;
             File destinationFile = new File(fileUrl + destinationFileName);
-            if (!destinationFile.getParentFile().mkdirs()) {
-                log.error("Failed to create directories for file: {}", destinationFile.getPath());
-                // 에러 처리 로직 추가
-            }
 
             if (!destinationFile.getParentFile().exists()) {
                 if (!destinationFile.getParentFile().mkdirs()) {
@@ -98,13 +89,29 @@ public class DiaryController {
 
 //            destinationFile.getParentFile().mkdirs();
 
-            log.info(destinationFileName);
             photo.transferTo(destinationFile);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//            log.info(photoDate);
+
+//
+//            try {
+//                LocalDateTime parsedDateTime = LocalDateTime.parse(photoDate, formatter);
+//                log.info("Parsed LocalDateTime: " + parsedDateTime.toString());
+//
+//                // 이후 로직 계속...
+//            } catch (DateTimeParseException e) {
+//                log.error("Failed to parse photoDate: " + photoDate, e);
+//                // 예외 처리 로직 추가
+//            }
+            LocalDate parsedDate = LocalDate.parse(photoDate, formatter);
+            LocalDateTime parsedDateTime = parsedDate.atStartOfDay();
+
 
             Food food = foodService.findFoodByFoodName(foodName);
             Diary diary = Diary.builder()
                 .user(user)
                 .diaryPhoto(fileUrl + destinationFileName)
+                .diaryDate(parsedDateTime)
                 .foodId(food)
                 .build();
                 

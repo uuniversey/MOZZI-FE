@@ -18,4 +18,8 @@ public interface DiaryRepositoty extends JpaRepository<Diary, Integer>{
 
     @Query(value = "select count(*) from diary where diary.user_id = :userId", nativeQuery = true)
     Integer getTotalCount(Integer userId);
+
+    @Query(value = "select * from diary where diary.user_id = :userId and year(diary_date) = :foodYear and month(diary_date) = :foodMonth", nativeQuery = true)
+    List<Diary> findByUserAndDiaryDate(Integer userId, String foodYear, String foodMonth);
+
 } 

@@ -3,6 +3,11 @@ package com.a304.mozzi.domain.user.controller;
 import com.a304.mozzi.config.jwt.JwtIssuer;
 import com.a304.mozzi.config.kakao.KakaoApi;
 import com.a304.mozzi.config.security.UserPrincipal;
+import com.a304.mozzi.domain.foods.model.Food;
+import com.a304.mozzi.domain.foods.service.FoodService;
+import com.a304.mozzi.domain.user.customfood.dto.UserFoodInpDto;
+import com.a304.mozzi.domain.user.customfood.model.UserFood;
+import com.a304.mozzi.domain.user.customfood.repository.UserFoodRepository;
 import com.a304.mozzi.domain.user.dto.LoginResponseDto;
 import com.a304.mozzi.domain.user.model.UserModel;
 import com.a304.mozzi.domain.user.service.UserService;
@@ -11,6 +16,7 @@ import com.a304.mozzi.global.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -36,7 +42,8 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
     private  final KakaoApi kakaoApi;
     private  final JwtIssuer jwtIssuer;
-
+    private  final FoodService foodService;
+    private final   UserFoodRepository userFoodRepository;
     @GetMapping("Oauth2/KakaoLogin")
     public ResponseEntity<java.util.Map<String,String>>  ClientKakaoLogin() {
         //TODO: process POST request
@@ -122,5 +129,24 @@ public class UserController {
         Map<String, String> result = new HashMap<>();
         result.put("nickname", nickname);
         return ResponseEntity.ok().body(result);
+    }
+
+    @PostMapping("/signup/addfood")
+    ResponseEntity<?> setFoodPreference(@RequestParam List<UserFoodInpDto> listInp){
+        UserModel user = userService.findCurrentUser();
+
+        for (UserFoodInpDto userFoodInpDto : listInp)
+        {
+            Food food = foodService.findFoodByFoodName(userFoodInpDto.getFoodName());
+            UserFood userFood = UserFood.builder()
+                    .food(food)
+                    .user(user)
+                    .userFoodPreference(userFoodInpDto.getValue())
+                    .build();
+            userFoodRepository.save(userFood);
+        }
+
+
+    
     }
 }
