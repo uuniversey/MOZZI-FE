@@ -3,7 +3,6 @@ spring:
     url: jdbc:mysql://a304.site:3306/mozzi
     username: ssafy
     password: ssafy
-    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     properties:
       hibernate:
