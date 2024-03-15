@@ -104,8 +104,8 @@ function MakeShortsScreen () {
   
   const hasStoragePermission = async () => {
     if (Platform.OS === 'android') {
-      const hasPermission = await PermissionsAndroid.check(
-        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
+      const hasPermission = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
+        
       )
       // console.log('hi')
       if (!hasPermission) {
