@@ -40,8 +40,12 @@ class Category(models.Model):
     category_name = models.CharField(max_length=20)
     category_pic = models.CharField(max_length=200)
 
+    def __str__(self):
+        return self.category_name
+
 class Ingredient(models.Model):
     ingredient_name = models.CharField(max_length=50, unique=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)  # Category 모델의 외래 키
 
     def __str__(self):
         return self.ingredient_name

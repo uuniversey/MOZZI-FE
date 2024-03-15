@@ -27,7 +27,7 @@ def get_ingredients(start, last):
             # 정규표현식을 사용하여 숫자와 숫자 뒤에 붙은 문자열을 제거
             ingredient_name = re.sub(r'\d+(\S+)', '', ingredient)
             ingredient_name = ingredient_name.strip()  # 좌우 공백 제거
-            print(ingredient_name)
+            # print(ingredient_name)
            
      
             
@@ -238,22 +238,54 @@ def get_ingredient_list(request):
     ingredients = Ingredient.objects.all()
     ingredient_names = [ingredient.ingredient_name for ingredient in ingredients]
     return JsonResponse({'data': {'ingredients': ingredient_names}},json_dumps_params={'ensure_ascii': False})
+
+
+def get_ingredient_list_per_category(request):
+    body_unicode = request.body.decode('utf-8')
+    lines = body_unicode.split("\n")
+
+    categories = None
+    for i in range(len(lines)):
+        if lines[i] == '\r':
+            categories = lines[i+1]
+            break
+    
+    ingredients = Ingredient.objects.all()
+    print(type(ingredients),len(ingredients))
+    # 결과를 출력
+
+    print(ingredients)
+    for ingredient in ingredients:
+        print(ingredient.ingredient_name)
+    
+        
+        return JsonResponse({'data':11})
+    
+
+
+
+
+
+
 # import os
-# from .models import Ingredient
 
 # # 스크립트 파일의 절대 경로를 가져옴
 # script_dir = os.path.dirname(os.path.abspath(__file__))
 
 # # 1.txt 파일의 절대 경로를 생성
-# file_path = os.path.join(script_dir, '1.txt')
+# file_path = os.path.join(script_dir, 'category.txt')
 
 # with open(file_path, 'r', encoding="utf-8") as file:
 #     for line in file:
-#         # 줄을 '$' 기준으로 나누기
-#         parts = line.strip().split('$')
-#         # 오른쪽 값이 존재하면 오른쪽 값을 사용하고, 그렇지 않으면 왼쪽 값을 사용
-#         ingredient_name = parts[-1].strip()
+#         line = line.rstrip()  # 개행 문자 제거
+#         food_name = line.split(',')[0]
+#         category_number = line.split(',')[1].replace("'",'').strip()
         
-#         # 이미 있는지 확인하고 없으면 추가
-#         if ingredient_name and not Ingredient.objects.filter(ingredient_name=ingredient_name).exists():
-#             Ingredient.objects.create(ingredient_name=ingredient_name)
+        
+       
+#         ingredients = Ingredient.objects.filter(ingredient_name=food_name, category_id=1)
+#         ingredients.update(category_id=int(category_number))
+#         # if category_number == 0 and food_name
+#         # # 이미 있는지 확인하고 없으면 추가
+#         # if line and not Category.objects.filter(category_name=line).exists():
+#         #     Category.objects.create(category_name=line)
