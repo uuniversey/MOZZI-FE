@@ -24,6 +24,7 @@ const HeaderText = styled.Text`
 `
 
 const Body = styled.View`
+  position: relative;
   align-self: center;
   align-items: center;
   justify-content: center;
@@ -31,6 +32,16 @@ const Body = styled.View`
   height: 350px;
   border-radius: 20px;
   background-color: #F9F7BB;
+`
+const FoodTitle = styled.Text`
+  /* background-color: white; */
+  padding: 5px;
+  position: absolute;
+  font-size: 16px;
+  font-weight: bold;
+  z-index: 1001;
+  left: 5%;
+  top: 5%;
 `
 
 const FoodImage = styled.Image`
@@ -152,6 +163,11 @@ const Stamp = ({ navigation, route }) => {
 
   // 이미지 공유 함수
   const shareEditedImg = async () => {
+    if (!(Platform.OS === 'android') && !(await hasStoragePermission())) {
+      console.log('hi')
+      return
+    }  
+
     try {
       // viewRef를 이용하여 현재 보여지는 화면을 캡쳐
       const uri = await captureRef(viewRef.current, {
@@ -181,10 +197,14 @@ const Stamp = ({ navigation, route }) => {
         <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
       </Header>
 
+      
+
       <Container>
         <HeaderText>공유 프레임 선택하기</HeaderText>
 
         <Body ref={viewRef}>
+          {/* store에서 불러온 food title로 수정하면 됨 */}
+          <FoodTitle>비비큐 황금올리브</FoodTitle> 
           <FoodImage
             source={require('../../assets/recommend/chicken.jpg')}
           />
