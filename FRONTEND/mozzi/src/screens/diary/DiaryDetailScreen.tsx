@@ -58,10 +58,6 @@ function DiaryDetailScreen ({ route }) {
   const { date } = route.params
   const navigation = useNavigation()
 
-  const goBack = () => {
-   navigation.goBack()
-  }
-
   const moveShared = () => {
     navigation.navigate("")
   }

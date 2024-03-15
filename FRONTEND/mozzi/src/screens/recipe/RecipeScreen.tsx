@@ -7,6 +7,7 @@ import { Header } from '../../components/Header/Header'
 
 import { useNavigation } from '@react-navigation/native'
 import { GestureHandlerRootView, PanGestureHandler, State } from 'react-native-gesture-handler'
+import { Image } from 'react-native-svg'
 
 const Container = styled.View`
   flex: 1;
@@ -17,7 +18,7 @@ const Title = styled.Text`
   font-size: 36px;
   font-weight: bold;
   align-self: center;
-  margin: 50px 0px 50px 0px;
+  margin: 50px 0px 10px 0px;
 `
 
 const Order = styled.Text`
@@ -55,6 +56,14 @@ const Btn = styled.TouchableOpacity`
   width: 50px;
   height: 50px;
   border-radius: 28px;
+`
+
+const Line = styled.View`
+  border-bottom-color: #000;
+  border-bottom-width: 1px;
+  width: 50%;
+  align-self: center;
+  margin-bottom: 40px;
 `
 
 function RecipeScreen () {
@@ -105,15 +114,20 @@ function RecipeScreen () {
     }
   }
 
-  const goBack = () => {
-    navigation.goBack()
-  }
-
   // !!!!참고!!!! 렌더링 문제 해결 솔루션 - 뎁스를 하나 더 들어가서 한다.
   const moveOrder = () => {
     setIdx(prevIdx => {
       const nextIdx = prevIdx + 1
       setStrIdx(nextIdx.toString().padStart(2, '0'))
+
+      // Animated.spring(translateY, {
+      //   toValue: 0, // 예를 들어, -100만큼 Y축으로 이동시킵니다. 필요에 따라 조정할 수 있습니다.
+      //   useNativeDriver: true,
+      // }).start(() => {
+      //   // 애니메이션 완료 후 translateY를 초기화
+      //   translateY.setValue(0)
+      // })
+  
       return nextIdx
     })
   }
@@ -123,7 +137,9 @@ function RecipeScreen () {
     if (dummyData[`MANUAL${nextIdx}`] === "" || nextIdx == '21')
       {
         setIsLast(true)
-      }
+      } else {
+        setIsLast(false)
+    }
   }, [strIdx])
   
   return (
@@ -144,6 +160,7 @@ function RecipeScreen () {
               
               <View>
                 <Title>{dummyData.RCP_NM}</Title>
+                <Line />
                 <Order>{dummyData[`MANUAL${strIdx}`]}</Order>
                 <Body>  
                   <FoodImage

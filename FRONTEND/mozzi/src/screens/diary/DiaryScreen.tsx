@@ -5,7 +5,16 @@ import styled from 'styled-components/native'
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { useNavigation } from '@react-navigation/native'
-import { Calendar } from 'react-native-calendars'
+import { Calendar, DateData } from 'react-native-calendars'
+
+interface DayStyleProps {
+  isSelected: boolean;
+}
+
+interface DayNumProps {
+  textColor: string;
+  isToday: boolean;
+}
 
 const Container = styled.View`
   flex: 1;
@@ -38,14 +47,14 @@ const MyCalendar = styled(Calendar)`
   margin: 0px 20px 0px 20px;
 `
 
-const DayStyle = styled.View`
+const DayStyle = styled.View<DayStyleProps>`
   width: 50px;
   height: 65px;
   align-items: center;
   background-color: ${(props) => (props.isSelected ? '#c6e4ee' : 'transparent')};
 `
 
-const DayNum = styled.Text`
+const DayNum = styled.Text<DayNumProps>`
   align-items: center;
   color: ${props => props.textColor};
   font-weight: ${props => props.isToday ? 'bold' : 'normal'};
@@ -61,7 +70,7 @@ function DiaryScreen () {
 
   const navigation = useNavigation()
 
-  const moveDiaryDetail = (date) => {
+  const moveDiaryDetail = (date: Date) => {
     navigation.navigate("DiaryDetail", {date: date})
   }
   const moveDiaryCreate = () => {

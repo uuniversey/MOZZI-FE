@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { View, Text, TextInput, Button } from 'react-native'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 import styled from 'styled-components/native'
 
@@ -39,6 +40,20 @@ const StyledInput = styled.TextInput`
   border-bottom-color: silver;
 `
 
+const Btn = styled.TouchableOpacity`
+  background-color: #F9F7BB;
+  border-radius: 10px;
+  width: 80px;
+  height: 35px;
+  justify-content: center;
+  align-self: flex-end;
+`
+
+const BtnText = styled.Text`
+  font-size: 16px;
+  text-align: center;
+`
+
 function ProfileScreen () {
 
   const [form, setForm] = useState<UserProfileState>({
@@ -55,7 +70,7 @@ function ProfileScreen () {
   const handleDislikedFoodChange = (dislikedFood: string) => setForm({ ...form, dislikedFood })
   const handleIsVeganChange = (isVegan: string) => setForm({ ...form, isVegan })
 
-  const handleSubmit = () => {
+  const editProfile = () => {
     console.log('Form Data:', form)
   }
 
@@ -96,7 +111,9 @@ function ProfileScreen () {
             value={form.isVegan}
             onChangeText={handleIsVeganChange}
           />
-          <Button title="저장" onPress={handleSubmit} />
+          <Btn onPress={editProfile}>
+            <BtnText>수정</BtnText>
+          </Btn>
         </Body>
       </Container>
     </>

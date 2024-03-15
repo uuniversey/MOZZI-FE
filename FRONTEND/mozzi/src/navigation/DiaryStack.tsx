@@ -6,7 +6,14 @@ import DiaryDetailScreen from '../screens/diary/DiaryDetailScreen'
 import DiaryCreateScreen from '../screens/diary/DiaryCreateScreen'
 import DiaryCreateSelectScreen from '../screens/diary/DiaryCreateSelectScreen'
 
-const Stack = createNativeStackNavigator()
+type RootStackParamList = {
+  Diary: undefined; // 파라미터가 없는 경우
+  DiaryDetail: { date: Date };
+  DiaryCreate: undefined;
+  DiaryCreateSelect: undefined;
+}
+
+const Stack = createNativeStackNavigator<RootStackParamList>()
 
 function DiaryStack() {
   return (
