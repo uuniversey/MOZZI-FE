@@ -43,6 +43,20 @@ const P = styled.Text`
   margin: 30px 0px 30px 0px;
 `
 
+const Btn = styled.TouchableOpacity`
+  background-color: #F9F7BB;
+  border-radius: 10px;
+  width: 80px;
+  height: 35px;
+  justify-content: center;
+  align-self: flex-end;
+`
+
+const BtnText = styled.Text`
+  font-size: 16px;
+  text-align: center;
+`
+
 function LandingInputScreen() {
   const [form, setForm] = useState<UserProfileState>({
     email: '',
@@ -58,7 +72,7 @@ function LandingInputScreen() {
   const handleDislikedFoodChange = (dislikedFood: string) => setForm({ ...form, dislikedFood })
   const handleIsVeganChange = (isVegan: string) => setForm({ ...form, isVegan })
 
-  const handleSubmit = () => {
+  const editProfile = () => {
     console.log('Form Data:', form)
   }
 
@@ -98,7 +112,9 @@ function LandingInputScreen() {
             value={form.isVegan}
             onChangeText={handleIsVeganChange}
           />
-          <Button title="완료" onPress={handleSubmit} />
+          <Btn onPress={editProfile}>
+            <BtnText>수정</BtnText>
+          </Btn>
         </View>
       </Container>
     </>

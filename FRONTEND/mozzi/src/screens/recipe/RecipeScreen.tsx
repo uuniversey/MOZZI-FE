@@ -120,14 +120,6 @@ function RecipeScreen () {
       const nextIdx = prevIdx + 1
       setStrIdx(nextIdx.toString().padStart(2, '0'))
 
-      // Animated.spring(translateY, {
-      //   toValue: 0, // 예를 들어, -100만큼 Y축으로 이동시킵니다. 필요에 따라 조정할 수 있습니다.
-      //   useNativeDriver: true,
-      // }).start(() => {
-      //   // 애니메이션 완료 후 translateY를 초기화
-      //   translateY.setValue(0)
-      // })
-  
       return nextIdx
     })
   }
