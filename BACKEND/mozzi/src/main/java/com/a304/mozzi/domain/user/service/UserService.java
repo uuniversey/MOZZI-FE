@@ -1,5 +1,8 @@
 package com.a304.mozzi.domain.user.service;
 
+import com.a304.mozzi.domain.ingredients.model.IngredientsModel;
+import com.a304.mozzi.domain.user.customingredient.model.UserIngredientModel;
+import com.a304.mozzi.domain.user.customingredient.repository.UserIngredientRepository;
 import com.a304.mozzi.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -25,6 +28,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserFoodRepository userFoodRepository;
+    private final UserIngredientRepository userIngredientRepository;
 
     public UserModel create(final UserModel userModel) {
         if (userModel == null || userModel.getUserCode() == null) {
@@ -89,6 +93,16 @@ public class UserService {
 
     public void userFoodDeleteByUserFoodId(UserFood userFood) {
         userFoodRepository.deleteById(userFood.getUserFoodId());
+    }
+
+    public UserIngredientModel findUserIngredientModelByUserAndIngredients(UserModel user, IngredientsModel ingredientsModel)
+    {
+        return userIngredientRepository.findUserIngredientModelByUserAndIngredients(user, ingredientsModel);
+    }
+
+    public void userIngredientModelDelete(UserIngredientModel userIngredientModel)
+    {
+        userIngredientRepository.delete(userIngredientModel);
     }
 
 }

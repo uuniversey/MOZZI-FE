@@ -10,5 +10,8 @@ import lombok.Setter;
 @Setter
 @Getter
 public class LoginResponseDto {
-    private  String accessToken;
+    private String accessToken;
+    private String refreshToken;
+    private Boolean isRegistered;
+    private String nickname;
 }

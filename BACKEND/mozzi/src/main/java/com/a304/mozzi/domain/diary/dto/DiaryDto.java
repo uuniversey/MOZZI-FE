@@ -9,8 +9,10 @@ import com.a304.mozzi.domain.diary.model.Diary;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 @Builder
 public class DiaryDto{
     

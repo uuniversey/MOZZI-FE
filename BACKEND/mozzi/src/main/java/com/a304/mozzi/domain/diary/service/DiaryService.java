@@ -50,6 +50,7 @@ public class DiaryService {
         return diaries.stream()
         .map(entity -> DiaryDto.builder()
             .id(entity.getDiaryId())
+            .foodName(entity.getFoodId().getFoodName())
             .photoUrl(entity.getDiaryPhoto())
             .build())
         .collect(Collectors.toList());
