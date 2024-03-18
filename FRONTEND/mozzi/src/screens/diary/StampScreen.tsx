@@ -34,7 +34,8 @@ const Body = styled.View`
   background-color: #F9F7BB;
 `
 const FoodTitle = styled.Text`
-  /* background-color: white; */
+  color: white;
+  box-shadow: 0px 0px 5px #444;
   padding: 5px;
   position: absolute;
   font-size: 16px;
@@ -105,7 +106,7 @@ const Stamp = ({ navigation, route }) => {
   // 선택 가능한 프레임 목록
   // 프레임 이미지 경로를 객체로 관리
   const frameImages = {
-    '프레임1': require('../../assets/frames/frame1.png'),
+    '기본': require('../../assets/frames/frame1.png'),
     '프레임2': require('../../assets/frames/frame2.png'),
     '프레임3': require('../../assets/frames/frame3.png'),
   };
