@@ -10,4 +10,8 @@ urlpatterns = [
     path('get_recipe_list/',views.get_recipe_list),
     path('get_ingredient_list/',views.get_ingredient_list),
     path('get_ingredient_list_per_category/',views.get_ingredient_list_per_category),
+    path('get_highest_viewed_food/',views.get_highest_viewed_food),
+    path('save_ingredient/',views.save_ingredient),
+    path('save_category/',views.save_category),
+    path('save_ingredients_category/',views.save_ingredients_category),
 ]

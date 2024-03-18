@@ -13,7 +13,7 @@ import requests
 from django.http import JsonResponse
 from django.core import serializers
 
-from .models import MongoFood, Food
+from .models import MongoFood
 # 식재료 뽑기
 def get_ingredients(start, last):
     URL = f"http://openapi.foodsafetykorea.go.kr/api/2055492edca74694aa38/COOKRCP01/json/{start}/{last}"
@@ -37,14 +37,38 @@ def migrate_food_recipe_from_mongo_to_mysql(request):
     # MongoDB에서 데이터 가져오기
     mongo_foods = MongoFood.objects.all()
 
+    # MySQL의 id 값을 관리하기 위한 변수
+    mysql_id = 1
+
     # MongoDB에서 가져온 데이터를 MySQL 모델의 food_recipe 필드에 저장
-    for index, mongo_food in enumerate(mongo_foods, start=1):
-        # Django의 Food 모델에 MongoDB에서 가져온 데이터의 ObjectId를 그대로 저장합니다.
-        Foods.objects.create(
-            food_recipe=str(mongo_food.id),  # MongoDB의 ObjectId를 문자열로 변환하여 저장합니다.
-            # 나머지 필드는 기본값으로 설정됩니다.
-        )
- 
+    for mongo_food in mongo_foods:
+        # 이미 해당 ID의 레코드가 MySQL에 있는지 확인
+        try:
+            food = Foods.objects.get(id=mysql_id)
+            # 이미 레코드가 존재한다면 해당 필드만 업데이트
+            food.food_recipe = str(mongo_food.id)
+            food.save()
+        except Foods.DoesNotExist:
+            # 레코드가 존재하지 않는다면 새로운 레코드 생성
+            Foods.objects.create(
+                id=mysql_id,
+                food_name=mongo_food.food_name,
+                food_recipe=str(mongo_food.id),  # MongoDB의 ObjectId를 문자열로 변환하여 저장
+                food_views=mongo_food.food_views,  # MongoDB의 해당 필드 값을 그대로 사용
+                food_pic=mongo_food.food_pic,
+                food_salty_rate=mongo_food.food_salty_rate,
+                food_sweet_rate=mongo_food.food_sweet_rate,
+                food_bitter_rate=mongo_food.food_bitter_rate,
+                food_sour_rate=mongo_food.food_sour_rate,
+                food_umami_rate=mongo_food.food_umami_rate,
+                food_spicy_rate=mongo_food.food_spicy_rate,
+                food_category=mongo_food.food_category,
+                food_today_views=mongo_food.food_today_views,
+                food_category_count=mongo_food.food_category_count,
+            )
+
+        # MySQL의 id 값을 증가시킴
+        mysql_id += 1
 
     return JsonResponse("Migration of food_recipe from MongoDB to MySQL is completed.")
 
@@ -154,19 +178,24 @@ def recipe_detail(request):
             break
     
     # 가져온 값 출력
+    print()
     print("Received food name:", food_name.strip(),food_name)
-
+    print()
     try:
+      
+        foodsss = Foods.objects.all()
+      
         food = Foods.objects.get(food_name=food_name.strip())
+     
         food_recipe_id = food.food_recipe  # MongoDB의 레시피 ID
+    
     except Foods.DoesNotExist:
         return JsonResponse({'message': '음식을 찾을 수 없습니다'})
     # MongoDB에서 레시피 ID에 해당하는 레시피를 검색
     try:
         mongo_food = MongoFood.objects.get(id=food_recipe_id)
         # MongoDB의 레시피 ID 반환
-        print(1)
-        print(food_recipe_id)
+   
         return JsonResponse({'data': {
             # 'id': str(mongo_food.id),
             'RCP_PARTS_DTLS': mongo_food.food_recipe["RCP_PARTS_DTLS"],
@@ -251,41 +280,92 @@ def get_ingredient_list_per_category(request):
             break
     
     ingredients = Ingredient.objects.all()
-    print(type(ingredients),len(ingredients))
-    # 결과를 출력
-
-    print(ingredients)
+    foods = []
     for ingredient in ingredients:
-        print(ingredient.ingredient_name)
+        if str(ingredient.category_id) in categories:
+            foods.append(ingredient.ingredient_name)
+    
     
         
-        return JsonResponse({'data':11})
+    return JsonResponse({'data': {"foods" : foods}})
     
 
+def get_highest_viewed_food(request):
+    # food_today_views 열에서 가장 높은 값을 가진 행을 가져옵니다.
+    highest_viewed_food = Foods.objects.order_by('-food_today_views').first()
+
+    # 결과를 JsonResponse로 반환합니다.
+    if highest_viewed_food:
+        return JsonResponse({"data": {"foodName": highest_viewed_food.food_name, "photo" : highest_viewed_food.food_pic }} )
+
+import os
+
+# 스크립트 파일의 절대 경로를 가져옴
+script_dir = os.path.dirname(os.path.abspath(__file__))
+
+def save_category(request):
+    # 파일에서 카테고리를 읽어와서 저장합니다.
+    file_path = os.path.join(script_dir, 'categories.txt')
+    with open(file_path, 'r', encoding='utf-8') as file:
+        for line in file:
+            # 줄에서 문자열을 읽어와서 공백을 제거합니다.
+            category_name = line.strip()
+            
+            # 데이터베이스에 이미 존재하는지 확인합니다.
+            if not Category.objects.filter(category_name=category_name).exists():
+                # 존재하지 않으면 새로운 객체를 생성하여 데이터베이스에 저장합니다.
+                Category.objects.create(category_name=category_name)
+
+    return JsonResponse({'message': 'ok'})
+
+def save_ingredient(request):
+  
+    file_path = os.path.join(script_dir, '1.txt')
+  
+    with open(file_path, 'r', encoding='utf-8') as file:
+        for line in file:
+            # 줄에서 문자열을 $를 기준으로 분할합니다.
+            if '$' in line:
+                _, ingredient_name = line.strip().split('$')
+                
+                # 데이터베이스에 이미 존재하는지 확인합니다.
+                if not Ingredient.objects.filter(ingredient_name=ingredient_name).exists():
+                    # 존재하지 않으면 새로운 객체를 생성하여 데이터베이스에 저장합니다.
+                    Ingredient.objects.create(ingredient_name=ingredient_name, category_id=1)
+            else:
+                ingredient_name = line.strip()
+                # 데이터베이스에 이미 존재하는지 확인합니다.
+                if not Ingredient.objects.filter(ingredient_name=ingredient_name).exists():
+                    # 존재하지 않으면 새로운 객체를 생성하여 데이터베이스에 저장합니다.
+                    Ingredient.objects.create(ingredient_name=ingredient_name, category_id=1)
+
+
+    return JsonResponse({'message': 'ok'})
 
 
 
 
 
-# import os
+def save_ingredients_category(request):
+    # 파일에서 데이터를 읽어옵니다.
+    file_path = os.path.join(script_dir, 'category.txt')
+    with open(file_path, 'r', encoding='utf-8') as file:
+        for line in file:
+            # 줄에서 문자열을 읽어와서 ','를 기준으로 분할합니다.
+            ingredient_name, category_id_str = line.strip().split(',')
 
-# # 스크립트 파일의 절대 경로를 가져옴
-# script_dir = os.path.dirname(os.path.abspath(__file__))
+            # 카테고리 ID를 정수형으로 변환합니다.
+            category_id = int(category_id_str.replace("'",''))
 
-# # 1.txt 파일의 절대 경로를 생성
-# file_path = os.path.join(script_dir, 'category.txt')
+            # 카테고리를 가져옵니다.
+            ingredient = Ingredient.objects.get(ingredient_name = ingredient_name)
 
-# with open(file_path, 'r', encoding="utf-8") as file:
-#     for line in file:
-#         line = line.rstrip()  # 개행 문자 제거
-#         food_name = line.split(',')[0]
-#         category_number = line.split(',')[1].replace("'",'').strip()
-        
-        
-       
-#         ingredients = Ingredient.objects.filter(ingredient_name=food_name, category_id=1)
-#         ingredients.update(category_id=int(category_number))
-#         # if category_number == 0 and food_name
-#         # # 이미 있는지 확인하고 없으면 추가
-#         # if line and not Category.objects.filter(category_name=line).exists():
-#         #     Category.objects.create(category_name=line)
+            # 재료가 이미 존재하는지 확인합니다.
+            ingredient.category_id = category_id
+            ingredient.save()
+    return JsonResponse({'message':'ok'})
+
+mongo_foods = MongoFood.objects.all()
+with open('mongo.txt', 'w', encoding='utf-8') as file:
+    for mongo in mongo_foods:
+        file.write(mongo.food_recipe['RCP_PARTS_DTLS'] + '\n\n')
