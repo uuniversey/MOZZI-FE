@@ -19,6 +19,7 @@ interface DayNumProps {
 const Container = styled.View`
   flex: 1;
   background-color: #FFFEF2;
+  align-items: center;
 `
 
 const Title = styled.Text`
@@ -42,7 +43,7 @@ const Btn = styled.TouchableOpacity`
 `
 
 const MyCalendar = styled(Calendar)`
-  width: 350px;
+  width: 370px;
   height: 590px;
   margin: 0px 20px 0px 20px;
 `

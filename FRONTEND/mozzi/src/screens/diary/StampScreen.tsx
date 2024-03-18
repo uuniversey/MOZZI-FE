@@ -1,0 +1,238 @@
+import React, { useState, useRef } from 'react'
+import { View, Image, TouchableOpacity, Text, PermissionsAndroid, ToastAndroid } from 'react-native';
+import Share from 'react-native-share'
+import Snackbar from 'react-native-snackbar'
+import { CameraRoll } from '@react-native-camera-roll/camera-roll'
+import { captureRef } from 'react-native-view-shot'
+import { Header } from '../../components/Header/Header'
+import styled from 'styled-components/native'
+
+const Container = styled(View)`
+  flex: 1;
+  background-color: #FFFEF2;
+  align-items: center;
+`;
+
+const HeaderText = styled.Text`
+  font-size: 32px;
+  font-weight: bold;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  align-self: flex-start;
+  padding-left: 28px;
+  padding-right: 28px;
+`
+
+const Body = styled.View`
+  position: relative;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
+  width: 350px;
+  height: 350px;
+  border-radius: 20px;
+  background-color: #F9F7BB;
+`
+const FoodTitle = styled.Text`
+  /* background-color: white; */
+  padding: 5px;
+  position: absolute;
+  font-size: 16px;
+  font-weight: bold;
+  z-index: 1001;
+  left: 5%;
+  top: 5%;
+`
+
+const FoodImage = styled.Image`
+  width: 350px;
+  height: 350px;
+`
+
+const FramesContainer = styled(View)`
+  width: 350px;
+  flex-direction: row;
+  justify-content: space-around;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 30px;
+`;
+
+const FrameButton = styled.TouchableOpacity`
+  background-color: #E4E196;
+  border-radius: 10px;
+  padding: 10px;
+  width: 100px;
+`
+
+const FrameText = styled.Text`
+  text-align: center;
+`
+
+const ShareButton = styled(TouchableOpacity)`
+  width: 85%;
+  border-radius: 20px;
+  padding: 16px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  margin-left: 16px;
+  margin-right: 16px;
+  align-items: center;
+  border-color: rgba(0, 0, 0, 0.2);
+  background-color: #F9F7BB;
+  border-width: 2px;
+  elevation: 2;
+`;
+
+const ShareButtonText = styled(Text)`
+  font-size: 16px;
+  font-weight: bold;
+`;
+
+const FrameImage = styled.Image`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+`;
+
+const Stamp = ({ navigation, route }) => {
+  const { photo } = route.params;
+  const viewRef = useRef();
+  const [selectedFrame, setSelectedFrame] = useState('프레임1');
+
+  // 선택 가능한 프레임 목록
+  // 프레임 이미지 경로를 객체로 관리
+  const frameImages = {
+    '프레임1': require('../../assets/frames/frame1.png'),
+    '프레임2': require('../../assets/frames/frame2.png'),
+    '프레임3': require('../../assets/frames/frame3.png'),
+  };
+
+  // 권한 확인
+  const hasStoragePermission = async () => {
+    if (Platform.OS === 'android') {
+      const hasPermission = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
+        
+      )
+      // console.log('hi')
+      if (!hasPermission) {
+        const status = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
+        )
+        return status === PermissionsAndroid.RESULTS.GRANTED
+      }
+      return true
+    }
+    return true
+  }
+  
+  // 사진 저장 함수
+  const saveEditedImg = async () => {
+    if (!(Platform.OS === 'android') && !(await hasStoragePermission())) {
+      console.log('hi')
+      return
+    }  
+
+    try {
+      // viewRef를 이용하여 현재 보여지는 화면을 캡쳐
+      const uri = await captureRef(viewRef.current, {
+        format: 'png',
+        quality: 0.8,
+      });
+      console.log('캡처된 이미지 URI:', uri)
+
+      // 캡쳐된 이미지를 갤러리에 저장
+      const result = await CameraRoll.save(uri, { type: 'photo' })
+      console.log('갤러리에 저장된 이미지:', result)
+
+      // 저장 성공 알림
+      Snackbar.show({
+        text: '사진이 갤러리에 저장되었습니다.',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+    } catch (error) {
+      console.error('사진 저장 중 오류 발생:', error)
+      Snackbar.show({
+        text: '사진을 저장하는 중 오류가 발생했습니다.',
+        duration: Snackbar.LENGTH_SHORT,
+      });
+    }
+  };
+
+  // 이미지 공유 함수
+  const shareEditedImg = async () => {
+    if (!(Platform.OS === 'android') && !(await hasStoragePermission())) {
+      console.log('hi')
+      return
+    }  
+
+    try {
+      // viewRef를 이용하여 현재 보여지는 화면을 캡쳐
+      const uri = await captureRef(viewRef.current, {
+        format: 'png',
+        quality: 0.8,
+      });
+      console.log('캡처된 이미지 URI:', uri)
+
+      // 캡쳐된 이미지를 공유 옵션에 설정
+      const shareOptions = {
+        title: '공유 프레임 선택하기',
+        url: uri,
+      };
+
+      // 공유 실행
+      const result = await Share.open(shareOptions)
+      console.log('공유 결과:', result)
+    } catch (error) {
+      console.error('이미지 공유 중 오류 발생:', error)
+    }
+  };
+
+
+  return (
+    <>
+      <Header>
+        <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
+      </Header>
+
+      
+
+      <Container>
+        <HeaderText>공유 프레임 선택하기</HeaderText>
+
+        <Body ref={viewRef}>
+          {/* store에서 불러온 food title로 수정하면 됨 */}
+          <FoodTitle>비비큐 황금올리브</FoodTitle> 
+          <FoodImage
+            source={require('../../assets/recommend/chicken.jpg')}
+          />
+          {/* <FoodImage source={photo} /> */}
+          {/* 선택된 프레임을 이미지 위에 표시 */}
+          {selectedFrame && (
+            <FrameImage source={frameImages[selectedFrame]} resizeMode="contain" />
+          )}
+        </Body>
+
+        <FramesContainer>
+          {Object.keys(frameImages).map((frame, index) => (
+            <FrameButton key={index} onPress={() => setSelectedFrame(frame)}>
+              <FrameText>{frame}</FrameText>
+            </FrameButton>
+          ))}
+        </FramesContainer>
+
+        {/* 이미지 공유하기 버튼 */}
+        <ShareButton onPress={shareEditedImg}>
+          <ShareButtonText>공유하기</ShareButtonText>
+        </ShareButton>
+        <ShareButton onPress={saveEditedImg}>
+          <ShareButtonText>저장하기</ShareButtonText>
+        </ShareButton>
+      </Container>
+    </>
+  );
+};
+
+export default Stamp;

@@ -8,6 +8,7 @@ import { Header } from '../../components/Header/Header'
 const Container = styled.View`
   flex: 1;
   background-color: #FFFEF2;
+  align-items: center;
 `
 
 const ContentContainer = styled.View`

@@ -17,10 +17,6 @@ function DiaryCreateSelectScreen () {
 
   const navigation = useNavigation() 
 
-  const goBack = () => {
-    navigation.goBack()
-   }
-
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [filteredData, setFilteredData] = useState<Recipe[]>([]);
 
