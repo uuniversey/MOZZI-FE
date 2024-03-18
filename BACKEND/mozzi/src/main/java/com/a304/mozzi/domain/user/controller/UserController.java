@@ -29,46 +29,46 @@ import org.springframework.web.bind.annotation.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
-
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("auth")
 @CrossOrigin(origins = "http://localhost:3000")
 
-
 public class UserController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
-    private  final KakaoApi kakaoApi;
-    private  final JwtIssuer jwtIssuer;
-    private  final FoodService foodService;
-    private final   UserFoodRepository userFoodRepository;
-    @GetMapping("Oauth2/KakaoLogin")
-    public ResponseEntity<java.util.Map<String,String>>  ClientKakaoLogin() {
-        //TODO: process POST request
-    //     RestTemplate restTemplate = new RestTemplate();
-    //     ResponseEntity<String> response = restTemplate.getForEntity("https://kauth.kakao.com/oauth/authorize", String.class);
-    //     return response;
-    java.util.Map<String, String> links = new HashMap<>();
-    links.put("link", "https://kauth.kakao.com/oauth/authorize");
-    links.put("redirect", "http://localhost:8080/auth/Oauth2/KakaoToken");
-    // links.put("redirect", "http://localhost:3000/auth");
-    
-    return ResponseEntity.status(HttpStatus.OK).body(links);
+    private final KakaoApi kakaoApi;
+    private final JwtIssuer jwtIssuer;
+    private final FoodService foodService;
+    private final UserFoodRepository userFoodRepository;
+
+    @GetMapping("/Oauth2/KakaoLogin")
+    public ResponseEntity<java.util.Map<String, String>> ClientKakaoLogin() {
+        // TODO: process POST request
+        // RestTemplate restTemplate = new RestTemplate();
+        // ResponseEntity<String> response =
+        // restTemplate.getForEntity("https://kauth.kakao.com/oauth/authorize",
+        // String.class);
+        // return response;
+        java.util.Map<String, String> links = new HashMap<>();
+        links.put("link", "https://kauth.kakao.com/oauth/authorize");
+        links.put("redirect", "http://localhost:8080/auth/Oauth2/KakaoToken");
+        // links.put("redirect", "http://localhost:3000/auth");
+
+        return ResponseEntity.status(HttpStatus.OK).body(links);
     }
 
     @GetMapping("/Oauth2/KakaoToken")
     public ResponseEntity<?> login(@RequestParam("code") String code) {
-        try
-        {
+        try {
             // log.info(code);
             KakaoApi.OAuthToken token = kakaoApi.getOAuthToken(code);
             String str = token.getId_token();
             String[] whatIneed = str.split("\\.");
-            KakaoApi.KakaoOpenIdToken kakaoOpenIdToken = kakaoApi.getOpenIdToken(new String(Base64.getDecoder().decode(whatIneed[1]), StandardCharsets.UTF_8));
-            if (!userService.existsByUserCode(kakaoOpenIdToken.getSub()))
-            {
+            KakaoApi.KakaoOpenIdToken kakaoOpenIdToken = kakaoApi
+                    .getOpenIdToken(new String(Base64.getDecoder().decode(whatIneed[1]), StandardCharsets.UTF_8));
+            if (!userService.existsByUserCode(kakaoOpenIdToken.getSub())) {
 
                 UserModel user = UserModel.builder()
                         .userCode(kakaoOpenIdToken.getSub())
@@ -77,16 +77,14 @@ public class UserController {
                 UserModel registerUserModel = userService.create(user);
                 var MyAccesstoken = jwtIssuer.issue(registerUserModel.getUserId(),
                         registerUserModel.getUserCode(),
-//                        Arrays.stream(registerUserModel.getRole().split(", "))
-//                                .collect((Collectors.toList()))
+                        // Arrays.stream(registerUserModel.getRole().split(", "))
+                        // .collect((Collectors.toList()))
                         List.of("ROLE_GUEST")
 
                 );
                 LoginResponseDto loginReqponse = LoginResponseDto.builder().accessToken(MyAccesstoken).build();
                 return ResponseEntity.ok().body(loginReqponse);
-            }
-            else
-            {
+            } else {
                 Optional<UserModel> userOptional = userService.findByUserCode(kakaoOpenIdToken.getSub());
                 UserModel user = null;
                 if (userOptional.isPresent()) {
@@ -106,8 +104,7 @@ public class UserController {
                         .accessToken(MyAccesstoken)
                         .build());
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             ResponseDto responseDTO = ResponseDto.builder().error(e.getMessage()).build();
             return ResponseEntity
                     .badRequest()
@@ -115,15 +112,15 @@ public class UserController {
         }
     }
 
-    @PatchMapping("/setvegan")
-    ResponseEntity<?> setVegan(@RequestParam boolean isVegan){
+    @PatchMapping("/signup/setvegan")
+    ResponseEntity<?> setVegan(@RequestParam boolean isVegan) {
         UserModel user = userService.findCurrentUser();
         userService.setUserIsVegan(user, isVegan);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @PatchMapping("/setnickname")
-    ResponseEntity<?> setNickname(@RequestParam String nickname){
+    @PatchMapping("/signup/setnickname")
+    ResponseEntity<?> setNickname(@RequestParam String nickname) {
         UserModel user = userService.findCurrentUser();
         userService.setUserNickname(user, nickname);
         Map<String, String> result = new HashMap<>();
@@ -131,22 +128,39 @@ public class UserController {
         return ResponseEntity.ok().body(result);
     }
 
-    @PostMapping("/signup/addfood")
-    ResponseEntity<?> setFoodPreference(@RequestParam List<UserFoodInpDto> listInp){
-        UserModel user = userService.findCurrentUser();
-
-        for (UserFoodInpDto userFoodInpDto : listInp)
-        {
-            Food food = foodService.findFoodByFoodName(userFoodInpDto.getFoodName());
-            UserFood userFood = UserFood.builder()
-                    .food(food)
-                    .user(user)
-                    .userFoodPreference(userFoodInpDto.getValue())
-                    .build();
-            userFoodRepository.save(userFood);
+    @PostMapping("/signup/setfood")
+    ResponseEntity<?> addFoodPreference(@RequestParam List<UserFoodInpDto> listInp) {
+        try {
+            UserModel user = userService.findCurrentUser();
+            for (UserFoodInpDto userFoodInpDto : listInp) {
+                Food food = foodService.findFoodByFoodName(userFoodInpDto.getFoodName());
+                UserFood userFood = UserFood.builder()
+                        .food(food)
+                        .user(user)
+                        .userFoodPreference(userFoodInpDto.getValue())
+                        .build();
+                userFoodRepository.save(userFood);
+            }
+            return ResponseEntity.ok(HttpStatus.CREATED);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
 
-
-    
     }
+
+    @DeleteMapping("/signup/setfood")
+    ResponseEntity<?> removeFoodPreference(@RequestParam List<UserFoodInpDto> listInp) {
+        try {
+            UserModel user = userService.findCurrentUser();
+            for (UserFoodInpDto userFoodInpDto : listInp) {
+                Food food = foodService.findFoodByFoodName(userFoodInpDto.getFoodName());
+                UserFood userFood = userService.findUserFoodByUserAndFood(user, food);
+                userFoodRepository.save(userFood);
+            }
+            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }

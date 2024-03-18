@@ -1,6 +1,5 @@
 package com.a304.mozzi.domain.diary.controller;
 
-
 import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -34,7 +33,6 @@ import com.a304.mozzi.global.dto.ResponseMessageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -45,27 +43,24 @@ public class DiaryController {
     private final DiaryService diaryService;
     private final UserService userService;
     private final FoodService foodService;
+
     @GetMapping("/mydiary")
     public ResponseEntity<List<DiaryDto>> GetMyDiary(
             @RequestParam("foodYear") String foodYear,
-            @RequestParam("foodMonth") String foodMonth
-    ){
+            @RequestParam("foodMonth") String foodMonth) {
 
         UserModel user = userService.findCurrentUser();
         List<Diary> Diaries = diaryService.findByUserAndDiaryDate(user.getUserId(), foodYear, foodMonth);
         List<DiaryDto> DiariesDto = diaryService.toDtoList(Diaries);
-        return  ResponseEntity.status(HttpStatus.OK).body(DiariesDto);
+        return ResponseEntity.status(HttpStatus.OK).body(DiariesDto);
     }
 
     @PostMapping("/mydiary")
     public ResponseMessageDto postMyDiary(
-             @RequestParam("photo") MultipartFile photo,
+            @RequestParam("photo") MultipartFile photo,
             @RequestParam("photoDate") String photoDate,
-            @RequestParam("foodName") String foodName
-    ) 
-    {
-        try 
-        {
+            @RequestParam("foodName") String foodName) {
+        try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String username = userDetails.getUsername();
@@ -77,7 +72,8 @@ public class DiaryController {
             String sourceFileName = photo.getOriginalFilename();
             String sourceFileNameExtension = FilenameUtils.getExtension(sourceFileName).toLowerCase();
             String fileUrl = "C:\\Users\\SSAFY\\Downloads\\GOODCODE\\S2A304\\BACKEND\\public\\";
-            String destinationFileName = RandomStringUtils.randomAlphabetic(5) + "_" + username + "_" + photoDate + "." + sourceFileNameExtension;
+            String destinationFileName = RandomStringUtils.randomAlphabetic(5) + "_" + username + "_" + photoDate + "."
+                    + sourceFileNameExtension;
             File destinationFile = new File(fileUrl + destinationFileName);
 
             if (!destinationFile.getParentFile().exists()) {
@@ -87,59 +83,51 @@ public class DiaryController {
                 }
             }
 
-//            destinationFile.getParentFile().mkdirs();
+            // destinationFile.getParentFile().mkdirs();
 
             photo.transferTo(destinationFile);
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//            log.info(photoDate);
+            // log.info(photoDate);
 
-//
-//            try {
-//                LocalDateTime parsedDateTime = LocalDateTime.parse(photoDate, formatter);
-//                log.info("Parsed LocalDateTime: " + parsedDateTime.toString());
-//
-//                // 이후 로직 계속...
-//            } catch (DateTimeParseException e) {
-//                log.error("Failed to parse photoDate: " + photoDate, e);
-//                // 예외 처리 로직 추가
-//            }
+            //
+            // try {
+            // LocalDateTime parsedDateTime = LocalDateTime.parse(photoDate, formatter);
+            // log.info("Parsed LocalDateTime: " + parsedDateTime.toString());
+            //
+            // // 이후 로직 계속...
+            // } catch (DateTimeParseException e) {
+            // log.error("Failed to parse photoDate: " + photoDate, e);
+            // // 예외 처리 로직 추가
+            // }
             LocalDate parsedDate = LocalDate.parse(photoDate, formatter);
             LocalDateTime parsedDateTime = parsedDate.atStartOfDay();
 
-
             Food food = foodService.findFoodByFoodName(foodName);
             Diary diary = Diary.builder()
-                .user(user)
-                .diaryPhoto(fileUrl + destinationFileName)
-                .diaryDate(parsedDateTime)
-                .foodId(food)
-                .build();
-                
+                    .user(user)
+                    .diaryPhoto(fileUrl + destinationFileName)
+                    .diaryDate(parsedDateTime)
+                    .foodId(food)
+                    .build();
+
             Diary registeredDiary = diaryService.create(diary);
 
             ResponseMessageDto responseMessageDto = ResponseMessageDto.builder().message("201").build();
             return responseMessageDto;
-        }
-        catch (Exception e) 
-        {
+        } catch (Exception e) {
             ResponseMessageDto responseMessageDto = ResponseMessageDto.builder().message("404").build();
             return responseMessageDto;
         }
     }
 
-
-
     @DeleteMapping("/mydiary")
-    public ResponseEntity<?> deleteMyDiary(@RequestParam Integer id)
-    {
+    public ResponseEntity<?> deleteMyDiary(@RequestParam Integer id) {
         diaryService.deleteByDiaryId(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
     }
 
-
-
     @GetMapping("/gettwodiaries")
-    public ResponseEntity<?> getTwiDiaries(){
+    public ResponseEntity<?> getTwiDiaries() {
         // 해당유저의 최대 테이블 개수를 알아야겠지
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
@@ -153,8 +141,7 @@ public class DiaryController {
         List<Diary> Diaries = diaryService.findByUser(user);
         List<Diary> retDiaries = new ArrayList<Diary>();
 
-        if (Diaries.size() > 2)
-        {
+        if (Diaries.size() > 2) {
             Random random = new Random();
 
             // 리스트에서 인덱스 두 개를 랜덤하게 선택
@@ -162,12 +149,10 @@ public class DiaryController {
             int index2 = random.nextInt(Diaries.size());
             retDiaries.add(Diaries.get(index1));
             retDiaries.add(Diaries.get(index2));
-        } else if (Diaries.size() == 1){
+        } else if (Diaries.size() == 1) {
             retDiaries.add(Diaries.get(0));
         }
-
         List<DiaryDto> DiariesDto = diaryService.toDtoList(retDiaries);
-        return  ResponseEntity.status(HttpStatus.OK).body(DiariesDto);
+        return ResponseEntity.status(HttpStatus.OK).body(DiariesDto);
     }
-    
 }
