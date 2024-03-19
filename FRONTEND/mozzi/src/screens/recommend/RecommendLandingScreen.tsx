@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { Animated } from 'react-native'
 import styled from 'styled-components/native'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { Header } from '../../components/Header/Header'
 
 const Container = styled.View`
@@ -45,7 +45,9 @@ const InnerBar = styled(Animated.View)`
 `
 
 function RecommendLandingScreen() {
-  const navigation = useNavigation();
+  const navigation = useNavigation()
+  const route = useRoute()
+  const nextIndex = route.params.nextIndex
 
   const goBack = () => {
     navigation.goBack();
@@ -54,6 +56,10 @@ function RecommendLandingScreen() {
   const animatedValue = useRef(new Animated.Value(0)).current
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      navigation.navigate("Recommend", { index: nextIndex })
+    }, 3500) // 5초 = 5000밀리초
+
     Animated.loop(
       Animated.sequence([
         Animated.timing(animatedValue, {
@@ -62,8 +68,11 @@ function RecommendLandingScreen() {
           useNativeDriver: true,
         }),
       ]),
-    ).start();
-  }, [animatedValue])
+    ).start()
+
+    return () => clearTimeout(timer)
+
+  }, [animatedValue, navigation])
 
   const translateX = animatedValue.interpolate({
     inputRange: [0, 1],
