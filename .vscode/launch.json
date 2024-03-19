@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-MozziApplication<mozzi>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.a304.mozzi.MozziApplication",
+            "projectName": "mozzi",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

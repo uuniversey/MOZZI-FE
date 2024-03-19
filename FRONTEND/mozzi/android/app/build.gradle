@@ -69,6 +69,19 @@ def enableProguardInReleaseBuilds = false
  */
 def jscFlavor = 'org.webkit:android-jsc:+'
 
+apply plugin: "com.android.application"
+
+// .env 파일에서 환경변수를 가져오기 위해 react-native-config 플러그인을 적용
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
+
+// ↓ 추가한 코드 ↓ --------------------------------
+project.ext.envConfigFiles = [
+    debug: ".env.debug",
+    release: ".env",
+    anothercustombuild: ".env.staging",
+]
+// ↑ 추가한 코드 ↑ --------------------------------
+
 android {
     ndkVersion rootProject.ext.ndkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -81,6 +94,10 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        // dotenv.gradle 파일을 통해 가져온 환경변수를 참조
+        buildConfigField 'String', 'KAKAO_NATIVE_APP_KEY', "\"${project.env.get("KAKAO_NATIVE_APP_KEY") ?: "default_value"}\""
+        // `react-native-config` 라이브러리에서 환경 변수 가져오기
+        resValue "string", "kakao_app_key", project.env.get("KAKAO_NATIVE_APP_KEY")
     }
     signingConfigs {
         debug {
