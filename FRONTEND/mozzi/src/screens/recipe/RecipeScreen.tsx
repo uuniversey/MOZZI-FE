@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import styled from 'styled-components/native'
 
+import SpeechToText from './SpeechToText'
+import TextToSpeech from './TextToSppeech'
 import { Header } from '../../components/Header/Header'
 
 import { useNavigation } from '@react-navigation/native'
@@ -141,6 +143,9 @@ function RecipeScreen () {
           <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
         </Header>
         
+        <SpeechToText />
+        <TextToSpeech text={dummyData[`MANUAL${strIdx}`]} />
+
         <GestureHandlerRootView>
           <PanGestureHandler
             onGestureEvent={onGestureEvent}
