@@ -13,6 +13,18 @@ import ProfileScreen from './src/screens/profile/ProfileScreen';
 // import LandingScreen from './src/screens/landing/LandingScreen';
 import LoginStack from './src/navigation/LoginStack';
 
+// App.tsx 파일 상단에 다음을 추가
+import { setCustomText } from 'react-native-global-props';
+
+const customTextProps = {
+  style: {
+    fontFamily: 'MaruBuri-Regular', // 실제 폰트 파일 내 정의된 이름 사용
+  }
+};
+
+// 전역 폰트 설정 적용
+setCustomText(customTextProps)
+
 const Tab = createBottomTabNavigator();
 const windowWidth = Dimensions.get('window').width;
 
@@ -42,6 +54,7 @@ const App: React.FC = () => {
 
   return (
     <>
+      
       {isLogin ? (
         <NavigationContainer>
           <Tab.Navigator

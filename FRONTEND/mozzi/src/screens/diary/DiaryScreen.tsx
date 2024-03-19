@@ -19,15 +19,26 @@ interface DayNumProps {
 const Container = styled.View`
   flex: 1;
   background-color: #FFFEF2;
+
+`
+
+const JustifyView = styled.View`
+  width: 350px;
+  display: flex;
+  flex-direction: row;
   align-items: center;
+  margin: 50px 0px 20px 40px;
+`
+
+const BtnContainer = styled.View`
+  margin-top: 10px;
+  margin-left: 20px;
 `
 
 const Title = styled.Text`
   font-size: 36px;
   font-weight: bold;
-  margin: 50px 0px 20px 40px;
   text-align: left;
-  width: 100%;
 `
 
 const Btn = styled.TouchableOpacity`
@@ -35,11 +46,8 @@ const Btn = styled.TouchableOpacity`
   justify-content: center;
   width: 30px;
   height: 30px;
-  background-color: black;
   border-radius: 28px;
-  position: absolute;
-  top: 65px;
-  right: 100px;
+  background-color: black;
 `
 
 const MyCalendar = styled(Calendar)`
@@ -81,10 +89,14 @@ function DiaryScreen () {
   return (
     <>
       <Container>
-        <Title>나의 요리 달력</Title>
-        <Btn onPress={moveDiaryCreate}>
-          <Icon name="add" size={24} color="white" />
-        </Btn>
+        <JustifyView>
+          <Title>나의 요리 달력</Title>
+          <BtnContainer>
+            <Btn onPress={moveDiaryCreate}>
+              <Icon name="add" size={24} color="white" />
+            </Btn>
+          </BtnContainer>
+        </JustifyView>
 
         <MyCalendar
           dayComponent={({date, state}) => {

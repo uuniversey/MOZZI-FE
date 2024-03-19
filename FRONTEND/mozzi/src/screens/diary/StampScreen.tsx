@@ -34,16 +34,33 @@ const Body = styled.View`
   background-color: #F9F7BB;
 `
 const FoodTitle = styled.Text`
-  color: white;
-  box-shadow: 0px 0px 5px #444;
   padding: 5px;
   position: absolute;
   font-size: 16px;
   font-weight: bold;
   z-index: 1001;
   left: 5%;
-  top: 5%;
-`
+  top: ${({ frameType }) => {
+    switch (frameType) {
+      case '화이트':
+        return '5%';
+      case '스페셜':
+        return '87%';
+      default:
+        return '5%';
+    }
+  }};
+  color: ${({ frameType }) => {
+    switch (frameType) {
+      case '화이트':
+        return 'white';
+      case '스페셜':
+        return 'black';
+      default:
+        return 'black';
+    }
+  }};
+`;
 
 const FoodImage = styled.Image`
   width: 350px;
@@ -106,9 +123,9 @@ const Stamp = ({ navigation, route }) => {
   // 선택 가능한 프레임 목록
   // 프레임 이미지 경로를 객체로 관리
   const frameImages = {
-    '기본': require('../../assets/frames/frame1.png'),
-    '프레임2': require('../../assets/frames/frame2.png'),
-    '프레임3': require('../../assets/frames/frame3.png'),
+    '기본': require('../../assets/frames/defaultframe.png'),
+    '화이트': require('../../assets/frames/whiteframe.png'),
+    '스페셜': require('../../assets/frames/speacialframe.png'),
   };
 
   // 권한 확인
@@ -205,7 +222,7 @@ const Stamp = ({ navigation, route }) => {
 
         <Body ref={viewRef}>
           {/* store에서 불러온 food title로 수정하면 됨 */}
-          <FoodTitle>비비큐 황금올리브</FoodTitle> 
+          <FoodTitle frameType={selectedFrame}>비비큐 황금올리브</FoodTitle> 
           <FoodImage
             source={require('../../assets/recommend/chicken.jpg')}
           />
