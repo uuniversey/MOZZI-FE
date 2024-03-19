@@ -55,7 +55,7 @@ const App: React.FC = () => {
   return (
     <>
       
-      {isLogin ? (
+      {!isLogin ? (
         <NavigationContainer>
           <Tab.Navigator
             screenOptions={({ route }) => ({
