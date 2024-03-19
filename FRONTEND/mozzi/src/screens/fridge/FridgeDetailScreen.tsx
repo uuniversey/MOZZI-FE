@@ -1,9 +1,10 @@
-import { View, Text, TouchableOpacity, Image, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native'
+import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native'
 import React, { useState, useRef } from 'react'
 import styled from 'styled-components/native'
 
 import { useNavigation } from '@react-navigation/native'
 
+import { Header } from '../../components/Header/Header'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import note from '../../assets/fridge/note.png'
@@ -66,6 +67,8 @@ const InputContainer = styled.View`
 const MyFood = styled.ScrollView`
   position: absolute;
   top: 170;
+  width: 280px;
+  height: 300px;
 `
 
 const MyFoodText = styled.Text`
@@ -116,10 +119,6 @@ function FridgeDetailScreen ({route}) {
 
   const navigation = useNavigation()
 
-  const goBack = () => {
-   navigation.goBack()
-  }
-
   const handleSend = () => {
     // 전송 버튼을 눌렀을 때 텍스트 상태 초기화 및 위치 조정
     setSavedText(savedText + text + '\n');
@@ -129,9 +128,9 @@ function FridgeDetailScreen ({route}) {
   
   return (
     <Container behavior={Platform.OS === "ios" ? "padding" : "height"}>
-      <TouchableOpacity onPress={goBack}>
-        <Text>냉장고로 돌아가기</Text>
-      </TouchableOpacity>
+        <Header>
+          <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
+        </Header>
       
       <Note>
         <ClipImg source={clip} />
@@ -141,7 +140,11 @@ function FridgeDetailScreen ({route}) {
           <MenuItem>{name}</MenuItem>
         </TitleContainer>
         <MyFood ref={scrollViewRef}>
-          <MyFoodText>{savedText}</MyFoodText>
+          {/* 여기서 savedText를 바로 표시하는 대신,
+               개별 텍스트 항목을 각각의 MyFoodText로 렌더링합니다. */}
+          {savedText.split('\n').map((item, index) => (
+            <MyFoodText key={index}>{item}</MyFoodText>
+          ))}
         </MyFood>
       </Note>
 

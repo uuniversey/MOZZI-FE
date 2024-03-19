@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import { useNavigation } from '@react-navigation/native'
 
 import Autocomplete from 'react-native-autocomplete-input'
+import { Header } from '../../components/Header/Header'
 
 interface Recipe {
   id: number;
@@ -15,10 +16,6 @@ interface Recipe {
 function DiaryCreateSelectScreen () {
 
   const navigation = useNavigation() 
-
-  const goBack = () => {
-    navigation.goBack()
-   }
 
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [filteredData, setFilteredData] = useState<Recipe[]>([]);
@@ -44,13 +41,10 @@ function DiaryCreateSelectScreen () {
 
   return (
     <>
-      <TouchableOpacity onPress={goBack}>
-          <Text>뒤로가기</Text>
-        </TouchableOpacity>
+      <Header>
+        <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
+      </Header>
       <View style={styles.container}>
-      {/* <Header>
-        <Header.Icon iconName="chevron-back" onPress={rootNavigation.goBack} />
-      </Header> */}
       <View style={styles.searchSection}>
         <Icon name="search" size={20} color="#000" style={styles.searchIcon} />
         {/* <AutocompleteDropdown
