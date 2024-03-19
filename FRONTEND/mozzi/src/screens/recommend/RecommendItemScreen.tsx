@@ -38,8 +38,8 @@ const RecommendItemScreen = ({
         <Line />
         <ButtonContainer>
           <TimerContainer>
-            <Icon name="timer" size={20} color="#000" />
-            <TimeText>1시간</TimeText>
+            {/* <Icon name="timer" size={20} color="#000" />
+            <TimeText>1시간</TimeText> */}
           </TimerContainer>
           <RecipeButton onPress={onSharePress}>
             <ButtonText>레시피 보러가기</ButtonText>

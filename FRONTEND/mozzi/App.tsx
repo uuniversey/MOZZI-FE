@@ -17,8 +17,8 @@ const Tab = createBottomTabNavigator();
 const windowWidth = Dimensions.get('window').width;
 
 const App: React.FC = () => {
-  const isLogin: boolean = true;
-  // const isLogin: boolean = false;
+  // const isLogin: boolean = true;
+  const isLogin: boolean = false;
   const rotateAnim = useRef(new Animated.Value(0)).current;
 
   // 주사위 아이콘의 각도를 회전시키는 함수
