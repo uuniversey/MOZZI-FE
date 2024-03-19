@@ -1,0 +1,25 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/MaruBuri-Bold.ttf",
+      "sha1": "2668b0299b1fe643763fa840bac95f26faca084a"
+    },
+    {
+      "path": "src/assets/fonts/MaruBuri-ExtraLight.ttf",
+      "sha1": "e9f23280feb6de98c36ce591d89dd6f43b75fcdc"
+    },
+    {
+      "path": "src/assets/fonts/MaruBuri-Light.ttf",
+      "sha1": "b991bf247083f10db8cb232408719bd99b7300a2"
+    },
+    {
+      "path": "src/assets/fonts/MaruBuri-Regular.ttf",
+      "sha1": "6da0d4b6d7e7d65336dcb3e7e6b0a5707531ccc0"
+    },
+    {
+      "path": "src/assets/fonts/MaruBuri-SemiBold.ttf",
+      "sha1": "8a8b27eefd3db0bc764b6f0201fca26d061680d4"
+    }
+  ]
+}
