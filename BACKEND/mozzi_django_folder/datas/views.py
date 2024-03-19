@@ -30,8 +30,7 @@ def get_ingredients(start, last):
             # print(ingredient_name)
            
      
-            
-
+        
 
 def migrate_food_recipe_from_mongo_to_mysql(request):
     # MongoDB에서 데이터 가져오기
@@ -366,6 +365,11 @@ def save_ingredients_category(request):
     return JsonResponse({'message':'ok'})
 
 mongo_foods = MongoFood.objects.all()
-with open('mongo.txt', 'w', encoding='utf-8') as file:
+with open('mongo1.txt', 'w', encoding='utf-8') as file:
     for mongo in mongo_foods:
-        file.write(mongo.food_recipe['RCP_PARTS_DTLS'] + '\n\n')
+        file.write(mongo.food_recipe['RCP_PARTS_DTLS'].replace('\n',',') + '\n\n')
+
+# mongo_foods = MongoFood.objects.all()
+# with open('mongo.txt', 'w', encoding='utf-8') as file:
+#     for mongo in mongo_foods:
+#         file.write(mongo.food_recipe['RCP_PARTS_DTLS'] + '\n\n')
