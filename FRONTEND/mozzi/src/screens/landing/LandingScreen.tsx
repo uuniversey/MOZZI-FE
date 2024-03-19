@@ -91,7 +91,7 @@ function LandingScreen() {
         console.error(error)
       }
     }
-  };
+  }
 
   // const fadeAnims = useRef(
   //   Array.from({ length: 9 }, () => new Animated.Value(0))
