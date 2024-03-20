@@ -225,6 +225,7 @@ function DiaryCreateScreen () {
           mode="date"
           onConfirm={handleConfirm}
           onCancel={hideDatePicker}
+          accentColor="#F9F7BB"
         />
         <ImageContainer>
           <ImageInnerContainer onPress={handleChoosePhoto}>

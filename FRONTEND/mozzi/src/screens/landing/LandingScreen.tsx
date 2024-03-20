@@ -70,6 +70,7 @@ function LandingScreen() {
   const { login: storeLogin } = useLoginStore()
 
   const kakaoLogin = async () => {
+    console.log("테스팅 중")
     try {
       // 여기에서 함수 이름을 kakaoLoginFunc로 변경했습니다.
       const res = await kakaoLoginFunc();
