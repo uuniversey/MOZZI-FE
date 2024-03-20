@@ -1,11 +1,12 @@
 import React, { useState, useRef } from 'react'
-import { View, Image, TouchableOpacity, Text, PermissionsAndroid, ToastAndroid } from 'react-native';
+import { View, Image, TouchableOpacity, PermissionsAndroid, ToastAndroid } from 'react-native';
 import Share from 'react-native-share'
 import Snackbar from 'react-native-snackbar'
 import { CameraRoll } from '@react-native-camera-roll/camera-roll'
 import { captureRef } from 'react-native-view-shot'
 import { Header } from '../../components/Header/Header'
 import styled from 'styled-components/native'
+import { defaultFontText as Text } from '../../components/Fonts/Text';
 
 const Container = styled(View)`
   flex: 1;
@@ -14,6 +15,7 @@ const Container = styled(View)`
 `;
 
 const HeaderText = styled.Text`
+  font-family: 'MaruBuri-Bold';
   font-size: 32px;
   font-weight: bold;
   margin-top: 20px;
@@ -118,7 +120,7 @@ const FrameImage = styled.Image`
 const Stamp = ({ navigation, route }) => {
   const { photo } = route.params;
   const viewRef = useRef();
-  const [selectedFrame, setSelectedFrame] = useState('프레임1');
+  const [selectedFrame, setSelectedFrame] = useState('기본');
 
   // 선택 가능한 프레임 목록
   // 프레임 이미지 경로를 객체로 관리
@@ -219,6 +221,7 @@ const Stamp = ({ navigation, route }) => {
 
       <Container>
         <HeaderText>공유 프레임 선택하기</HeaderText>
+        <Text>전역 폰트 테스트</Text>
 
         <Body ref={viewRef}>
           {/* store에서 불러온 food title로 수정하면 됨 */}
