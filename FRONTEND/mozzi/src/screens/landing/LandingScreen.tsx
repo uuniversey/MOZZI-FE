@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, TouchableOpacity, Image } from 'react-native';
 import styled from 'styled-components/native';
+import axios from 'axios';
 
 import { useNavigation } from '@react-navigation/native';
 import KakaoLogins, {login as kakaoLoginFunc, getProfile} from '@react-native-seoul/kakao-login';
@@ -68,7 +69,6 @@ function LandingScreen() {
   const navigation = useNavigation();
   const { login: storeLogin } = useLoginStore()
 
-  
   const kakaoLogin = async () => {
     try {
       // 여기에서 함수 이름을 kakaoLoginFunc로 변경했습니다.
@@ -91,7 +91,28 @@ function LandingScreen() {
         console.error(error)
       }
     }
-  };
+  }
+  
+  // const signInWithKakao = async (): Promise<void> => {
+  //   try {
+  //     const token = await kakaoLoginFunc();
+  //     setResult(JSON.stringify(token));
+  //   } catch (err) {
+  //     console.error('login err', err);
+  //   }
+  // };
+
+  // // 테스트 코드
+  // const sendRequest = async () => {
+  //   try {
+  //     const response = await axios.get('https://a304.site/api/mozzi/test');
+  //     console.log('성공:', response.data);
+  //   } catch (error) {
+  //     console.error('에러:', error);
+  //   }
+  // };  
+  // // sendRequest 함수 호출
+  // sendRequest();
 
   // const fadeAnims = useRef(
   //   Array.from({ length: 9 }, () => new Animated.Value(0))
