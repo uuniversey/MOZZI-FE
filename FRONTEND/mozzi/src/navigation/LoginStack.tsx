@@ -14,7 +14,7 @@ function LoginStack() {
         headerShown: false,
       })}
     >
-      <Stack.Screen name="TestLogin" component={TestLogin} />
+      {/* <Stack.Screen name="TestLogin" component={TestLogin} /> */}
       <Stack.Screen name="Landing" component={LandingScreen} />
       <Stack.Screen name="LandingInput" component={LandingInputScreen} />
       {/* <Stack.Screen name="TestLogin" component={TestLogin} /> */}

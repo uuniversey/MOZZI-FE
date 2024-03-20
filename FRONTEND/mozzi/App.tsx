@@ -18,7 +18,7 @@ import { setCustomText } from 'react-native-global-props';
 
 const customTextProps = {
   style: {
-    fontFamily: 'MaruBuri-Regular', // 실제 폰트 파일 내 정의된 이름 사용
+    fontFamily: 'NanumMyeongjo', // 실제 폰트 파일 내 정의된 이름 사용
   }
 };
 
@@ -55,7 +55,7 @@ const App: React.FC = () => {
   return (
     <>
       
-      {!isLogin ? (
+      {isLogin ? (
         <NavigationContainer>
           <Tab.Navigator
             screenOptions={({ route }) => ({

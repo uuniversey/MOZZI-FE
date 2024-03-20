@@ -18,6 +18,7 @@ const ContentContainer = styled.View`
 `
 
 const Greeting = styled.Text`
+  font-family: 'MaruBuri-Regular';
   font-size: 20px;
   font-weight: bold;
   color: #333;
