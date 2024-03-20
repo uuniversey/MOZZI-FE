@@ -79,7 +79,7 @@ function LandingScreen() {
       // accessToken을 전달하기 전에 res가 정상인지 확인
       if (res) {
         // 성공적으로 토큰을 받아오고 로그인 처리
-        await storeLogin(res.accessToken);
+        await storeLogin(res.idToken);
         // 로그인 후 LandingInputScreen으로 이동
         navigation.navigate('LandingInput');
       } else {
