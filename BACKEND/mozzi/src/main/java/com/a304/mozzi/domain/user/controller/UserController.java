@@ -38,8 +38,7 @@ import java.util.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("auth")
-@CrossOrigin(origins = "http://localhost:3000")
-
+@CrossOrigin(origins = "*")
 public class UserController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
@@ -69,9 +68,12 @@ public class UserController {
     public ResponseEntity<?> login(@RequestParam("code") String code) {
         try {
             // log.info(code);
-            KakaoApi.OAuthToken token = kakaoApi.getOAuthToken(code);
-            String str = token.getId_token();
-            String[] whatIneed = str.split("\\.");
+//            KakaoApi.OAuthToken token = kakaoApi.getOAuthToken(code);
+//            String str = token.getId_token();
+//            log.info(str);
+            log.info(code);
+            String[] whatIneed = code.split("\\.");
+
             KakaoApi.KakaoOpenIdToken kakaoOpenIdToken = kakaoApi
                     .getOpenIdToken(new String(Base64.getDecoder().decode(whatIneed[1]), StandardCharsets.UTF_8));
             if (!userService.existsByUserCode(kakaoOpenIdToken.getSub())) {
@@ -124,6 +126,8 @@ public class UserController {
         }
     }
 
+
+    // 여기서부터 뭘 할 거냐면 id 토큰을 받아서 그대로 분해만 하는작업
     @PatchMapping("/setvegan")
     ResponseEntity<?> setVegan(@RequestParam boolean isVegan) {
         UserModel user = userService.findCurrentUser();
