@@ -18,7 +18,7 @@ function RecommendScreen () {
   }
 
   const moveRecommendLanding = () => {
-    // setIndex(prevIndex => prevIndex + 1); // 인덱스 업데이트
+    setIndex(prevIndex => prevIndex + 1); // 인덱스 업데이트
     navigation.navigate("RecommendLanding", { nextIndex: index + 1 });
   };
 
@@ -90,7 +90,7 @@ function RecommendScreen () {
     todayRecommend(index)
 
     return () => {
-    // setIndex(0)  
+    setIndex(1)  
     }
 
   }, [index])
