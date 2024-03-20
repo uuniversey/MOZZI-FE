@@ -14,4 +14,5 @@ urlpatterns = [
     path('save_ingredient/',views.save_ingredient),
     path('save_category/',views.save_category),
     path('save_ingredients_category/',views.save_ingredients_category),
+    path('migrate_sql_to_neo4j/',views.migrate_sql_to_neo4j),
 ]

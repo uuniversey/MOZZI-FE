@@ -14,6 +14,9 @@ from django.http import JsonResponse
 from django.core import serializers
 
 from .models import MongoFood
+
+import mysql.connector
+from neo4j import GraphDatabase
 # 식재료 뽑기
 def get_ingredients(start, last):
     URL = f"http://openapi.foodsafetykorea.go.kr/api/2055492edca74694aa38/COOKRCP01/json/{start}/{last}"
@@ -364,12 +367,65 @@ def save_ingredients_category(request):
             ingredient.save()
     return JsonResponse({'message':'ok'})
 
-mongo_foods = MongoFood.objects.all()
-with open('mongo1.txt', 'w', encoding='utf-8') as file:
-    for mongo in mongo_foods:
-        file.write(mongo.food_recipe['RCP_PARTS_DTLS'].replace('\n',',') + '\n\n')
+# mongo_foods = MongoFood.objects.all()
+# with open('mongo1.txt', 'w', encoding='utf-8') as file:
+#     for mongo in mongo_foods:
+#         file.write(mongo.food_recipe['RCP_PARTS_DTLS'].replace('\n',',') + '\n\n')
 
 # mongo_foods = MongoFood.objects.all()
 # with open('mongo.txt', 'w', encoding='utf-8') as file:
 #     for mongo in mongo_foods:
 #         file.write(mongo.food_recipe['RCP_PARTS_DTLS'] + '\n\n')
+
+
+def migrate_sql_to_neo4j(request):
+    # MySQL 연결 설정
+    mysql_connection = mysql.connector.connect(
+        host="localhost",
+        user="ssafy",
+        password="ssafy",
+        database="mozzi"
+    )
+    mysql_cursor = mysql_connection.cursor(dictionary=True)
+
+    # Neo4j 연결 설정
+    neo4j_uri = "bolt://localhost:7687"
+    neo4j_user = "neo4j"
+    neo4j_password = "mozzimozzi"
+    neo4j_driver = GraphDatabase.driver(neo4j_uri, auth=(neo4j_user, neo4j_password))
+
+    # MySQL 데이터 읽어오기
+    mysql_cursor.execute("SELECT * FROM datas_ingredient")
+    foods = mysql_cursor.fetchall()
+
+    # Neo4j에 데이터 저장
+    def create_food_node(tx, ingredient_name, category_id):
+        tx.run("CREATE (f:Food {name: $ingredient_name, category_id: $category_id})", 
+            ingredient_name=ingredient_name, category_id=category_id)
+
+    def create_category_node(tx, category_name, category_id):
+        tx.run("MERGE (c:Category {id: $category_id}) ON CREATE SET c.name = $category_name", 
+            category_name=category_name, category_id=category_id)
+
+    def create_relation(tx, ingredient_name, category_id):
+        tx.run("MATCH (f:Food {name: $ingredient_name}), (c:Category {id: $category_id}) "
+               "MERGE (f)-[:BELONGS_TO]->(c)", ingredient_name=ingredient_name, category_id=category_id)
+
+    with neo4j_driver.session() as session:
+        for food in foods:
+            category_id = food['category_id']
+            mysql_cursor.execute("SELECT category_name FROM datas_category WHERE id = %s", (category_id,))
+            category_name = mysql_cursor.fetchone()['category_name']
+
+            session.write_transaction(create_category_node, category_name, category_id)
+            session.write_transaction(create_food_node, food['ingredient_name'], category_id)
+            session.write_transaction(create_relation, food['ingredient_name'], category_id)
+
+    print("Data migrated successfully.")
+
+    # 연결 종료
+    mysql_cursor.close()
+    mysql_connection.close()
+    neo4j_driver.close()
+
+    return JsonResponse({'message': 'ok'})  # 이관 완료 후 사용자에게 알림을 제공하는 페이지
