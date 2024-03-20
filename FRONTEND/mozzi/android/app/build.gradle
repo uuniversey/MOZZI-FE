@@ -98,6 +98,7 @@ android {
         buildConfigField 'String', 'KAKAO_NATIVE_APP_KEY', "\"${project.env.get("KAKAO_NATIVE_APP_KEY") ?: "default_value"}\""
         // `react-native-config` 라이브러리에서 환경 변수 가져오기
         resValue "string", "kakao_app_key", project.env.get("KAKAO_NATIVE_APP_KEY")
+        // resValue "string", "kakao_app_key", "kakao" + project.env.get("KAKAO_NATIVE_APP_KEY")
     }
     signingConfigs {
         debug {

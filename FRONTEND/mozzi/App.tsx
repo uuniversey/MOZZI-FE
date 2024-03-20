@@ -18,7 +18,7 @@ import { setCustomText } from 'react-native-global-props';
 
 const customTextProps = {
   style: {
-    fontFamily: 'MaruBuri-Regular', // 실제 폰트 파일 내 정의된 이름 사용
+    fontFamily: 'NanumMyeongjo', // 실제 폰트 파일 내 정의된 이름 사용
   }
 };
 
@@ -29,8 +29,8 @@ const Tab = createBottomTabNavigator();
 const windowWidth = Dimensions.get('window').width;
 
 const App: React.FC = () => {
-  const isLogin: boolean = true;
-  // const isLogin: boolean = false;
+  // const isLogin: boolean = true;
+  const isLogin: boolean = false;
   const rotateAnim = useRef(new Animated.Value(0)).current;
 
   // 주사위 아이콘의 각도를 회전시키는 함수
