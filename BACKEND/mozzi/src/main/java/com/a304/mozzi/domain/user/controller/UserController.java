@@ -123,7 +123,7 @@ public class UserController {
                 token.put("refreshToken", MyAccesstoken);
 
                 LoginResponseDto.LoginInfo loginInfo = new LoginResponseDto.LoginInfo();
-                loginInfo.setIsRegistered(false);
+                loginInfo.setIsRegistered(true);
                 loginInfo.setNickname("");
 
                 ResponseMessageDto responseMessageDto = ResponseMessageDto.builder().message("로그인 완료").data(
