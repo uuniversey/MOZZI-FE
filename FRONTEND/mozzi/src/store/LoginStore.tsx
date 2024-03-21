@@ -15,7 +15,7 @@ const useLoginStore = create((set) => ({
       console.log('Backend response:', response.data) // 백엔드 응답 로깅
       set({ user: response.data.user })
     } catch (error) {
-      console.error('Login failed:', error)
+      console.error('로그인 실패:', error)
       set({ isLogin: false, user: null })
     }
   },
