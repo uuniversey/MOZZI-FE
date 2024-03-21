@@ -90,8 +90,16 @@ public class UserController {
                         List.of("ROLE_GUEST")
 
                 );
-                LoginResponseDto loginReqponse = LoginResponseDto.builder().accessToken(MyAccesstoken).refreshToken(MyAccesstoken).isRegistered(false).build();
-                ResponseMessageDto responseMessageDto = ResponseMessageDto.builder().message("회원가입 완료").data(loginReqponse).build();
+                Map<String, String> token = new HashMap<>();
+                token.put("accessToken", MyAccesstoken);
+                token.put("refreshToken", MyAccesstoken);
+
+                LoginResponseDto.LoginInfo loginInfo = new LoginResponseDto.LoginInfo();
+                loginInfo.setIsRegistered(false);
+                loginInfo.setNickname("");
+
+                LoginResponseDto loginResponse = LoginResponseDto.builder().token(token).info(loginInfo).build();
+                ResponseMessageDto responseMessageDto = ResponseMessageDto.builder().message("회원가입 완료").data(loginResponse).build();
                 return ResponseEntity.ok().body(responseMessageDto);
             } else {
                 Optional<UserModel> userOptional = userService.findByUserCode(kakaoOpenIdToken.getSub());
@@ -110,12 +118,19 @@ public class UserController {
                         .toList();
                 var MyAccesstoken = jwtIssuer.issue(user.getUserId(), user.getUserCode(), List.of("ROLE_GUEST"));
 
-                ResponseMessageDto responseMessageDto = ResponseMessageDto.builder().message("로그인 완료").data(LoginResponseDto.builder()
-                        .accessToken(MyAccesstoken)
-                        .refreshToken(MyAccesstoken)
-                        .nickname(user.getUserNickname())
-                        .isRegistered(true)
-                        .build()).build();
+                Map<String, String> token = new HashMap<>();
+                token.put("accessToken", MyAccesstoken);
+                token.put("refreshToken", MyAccesstoken);
+
+                LoginResponseDto.LoginInfo loginInfo = new LoginResponseDto.LoginInfo();
+                loginInfo.setIsRegistered(false);
+                loginInfo.setNickname("");
+
+                ResponseMessageDto responseMessageDto = ResponseMessageDto.builder().message("로그인 완료").data(
+                        LoginResponseDto.builder()
+                                .token(token)
+                                .info(loginInfo)
+                                .build()).build();
                 return ResponseEntity.ok().body(responseMessageDto);
             }
         } catch (Exception e) {
