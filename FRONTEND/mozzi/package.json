@@ -26,6 +26,7 @@
     "react-native-autocomplete-input": "^5.4.0",
     "react-native-calendars": "^1.1304.1",
     "react-native-config": "^1.5.1",
+    "react-native-element-dropdown": "^2.10.2",
     "react-native-gesture-handler": "^2.15.0",
     "react-native-global-props": "^1.1.5",
     "react-native-image-editor": "^0.0.1",

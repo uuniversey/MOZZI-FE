@@ -1,7 +1,13 @@
 import React, { useState } from 'react'
 import { View, Text, TextInput, Button } from 'react-native'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 import styled from 'styled-components/native'
+import Allergy from '../../components/Dropdown/Allergy'
+
+import { useNavigation } from '@react-navigation/native'
+import useProfileStore from '../../store/ProfileStore'
+import useLoginStore from '../../store/LoginStore'
 
 interface UserProfileState {
   email: string
@@ -24,6 +30,11 @@ const Title = styled.Text`
   width: 100%;
 `
 
+const BgText = styled.Text`
+  background-color: #F9F7BB;
+  font-size: 18px;
+`
+
 const Body = styled.View`
   margin: 0px 40px 0px 40px;
 `
@@ -39,8 +50,9 @@ const StyledInput = styled.TextInput`
   border-bottom-color: silver;
 `
 
-const P = styled.Text`
-  margin: 30px 0px 30px 0px;
+const StyledView = styled.View`
+  height: auto;
+  margin: 10px 0px 10px 0px;
 `
 
 const Btn = styled.TouchableOpacity`
@@ -57,7 +69,10 @@ const BtnText = styled.Text`
   text-align: center;
 `
 
-function LandingInputScreen() {
+function ProfileScreen () {
+  const { settingProfile } = useProfileStore()
+  const { setIsLogin } = useLoginStore()
+
   const [form, setForm] = useState<UserProfileState>({
     email: '',
     allergyInfo: '',
@@ -66,59 +81,70 @@ function LandingInputScreen() {
     isVegan: ''
   })
 
-  const handleNicknameChange = (email: string) => setForm({ ...form, email })
+  const handleEmailChange = (email: string) => setForm({ ...form, email })
   const handleAllergyInfoChange = (allergyInfo: string) => setForm({ ...form, allergyInfo })
   const handleFavoriteFoodChange = (favoriteFood: string) => setForm({ ...form, favoriteFood })
   const handleDislikedFoodChange = (dislikedFood: string) => setForm({ ...form, dislikedFood })
   const handleIsVeganChange = (isVegan: string) => setForm({ ...form, isVegan })
 
-  const editProfile = () => {
+  const completeEnter = () => {
     console.log('Form Data:', form)
+    setIsLogin(true)
+    // axios
+    // settingProfile()
   }
 
   return (
     <>
       <Container>
         <Title>회원 정보 입력</Title>
-        <View>
+        <Body>
           <Label>닉네임</Label>
           <StyledInput
             placeholder="닉네임을 입력하세요"
             value={form.email}
-            onChangeText={handleNicknameChange}
+            onChangeText={handleEmailChange}
+            placeholderTextColor="#ccc"
           />
-          <P>모찌가 레시피를 잘 추천할 수 있도록 아래의 추가 정보를 입력해 주세요!</P>
+
+          <BgText>모찌가 레시피를 잘 추천할 수 있도록 아래의 추가 정보를 입력해 주세요!</BgText>
+          
           <Label>알레르기 정보</Label>
-          <StyledInput
-            placeholder="알레르기 정보를 입력하세요"
-            value={form.allergyInfo}
-            onChangeText={handleAllergyInfoChange}
-          />
+          <StyledView>
+            <Allergy />
+          </StyledView>
+
           <Label>좋아하는 음식</Label>
           <StyledInput
             placeholder="좋아하는 음식을 입력하세요"
             value={form.favoriteFood}
             onChangeText={handleFavoriteFoodChange}
+            placeholderTextColor="#ccc"
           />
+
           <Label>싫어하는 음식</Label>
           <StyledInput
             placeholder="싫어하는 음식을 입력하세요"
             value={form.dislikedFood}
             onChangeText={handleDislikedFoodChange}
+            placeholderTextColor="#ccc"
           />
+
           <Label>비건 여부</Label>
           <StyledInput
             placeholder="예/아니오로 입력하세요"
             value={form.isVegan}
             onChangeText={handleIsVeganChange}
+            placeholderTextColor="#ccc"
           />
-          <Btn onPress={editProfile}>
-            <BtnText>수정</BtnText>
+
+          <Btn onPress={completeEnter}>
+            <BtnText>완료</BtnText>
           </Btn>
-        </View>
+        </Body>
       </Container>
     </>
   )
 }
 
-export default LandingInputScreen
+export default ProfileScreen
