@@ -7,7 +7,7 @@ class MongoFood(Document):
 # Create your models here.
 
 class Foods(models.Model):
-    # food_id = models.AutoField(primary_key=True)
+    food_id = models.AutoField(primary_key=True)
     food_name = models.CharField(max_length=30)
     food_recipe = models.CharField(max_length=255)
     food_views = models.IntegerField()
@@ -18,9 +18,10 @@ class Foods(models.Model):
     food_sour_rate = models.FloatField()
     food_umami_rate = models.FloatField()
     food_spicy_rate = models.FloatField()
-    food_category = models.CharField(max_length = 5)
+    food_category = models.CharField(max_length=5)
     food_today_views = models.IntegerField()
     food_category_count = models.IntegerField()
+
 
 
 
