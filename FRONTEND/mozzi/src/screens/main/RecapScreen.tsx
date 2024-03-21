@@ -122,7 +122,7 @@ function RecapScreen() {
       // setRecapFoods(response.data)
     } catch (error) {
       //응답 실패
-      console.error(error);
+      console.error(error)
     }
   }
 
@@ -136,10 +136,31 @@ function RecapScreen() {
   }
 
   const myRecipes = [
-    { title: '양념장 전', day: '일주일 전 먹은 음식', imageSource: require('../../assets/recommend/pizza.jpg') },
-    { title: '한 접시 풀잎', day: '한 달 전 먹은 음식', imageSource: require('../../assets/recommend/chicken.jpg') },
+    { title: '양념장 전', day: '2024-03-16', imageSource: require('../../assets/recommend/pizza.jpg') },
+    { title: '한 접시 풀잎', day: '2024-02-21', imageSource: require('../../assets/recommend/chicken.jpg') },
   ]
 
+  const convertDay = (day: string): string => {
+    const today = new Date();
+    const inputDate = new Date(day);
+    const difference = today.getTime() - inputDate.getTime();
+    const days = difference / (1000 * 3600 * 24);
+  
+    if (days < 7) {
+      return `${Math.floor(days)}일 전 먹은 음식`;
+    } else if (days < 30) {
+      return "지난 주 먹은 음식"
+    } else if (days < 90) {
+      return "한 달 전 먹은 음식"
+    } else if (days < 180) {
+      return "3달 전 먹은 음식"
+    } else if (days < 365) {
+      return "6개월 전 먹은 음식"
+    } else {
+      return "작년에 먹은 음식"
+    }
+  };
+  
   return (
     <>
       <Header>
@@ -150,7 +171,7 @@ function RecapScreen() {
         {myRecipes.map((recipe, index) => (
           <RecipeCard
             key={index}
-            day={recipe.day}
+            day={convertDay(recipe.day)}
             // day={`${recipe.day} 전 먹은 음식`}
             title={recipe.title}
             imageSource={recipe.imageSource}
