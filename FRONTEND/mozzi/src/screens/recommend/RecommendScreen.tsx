@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import RecommendItemScreen from './RecommendItemScreen'
 import axios from 'axios'
+import RecommendLandingScreen from './RecommendLandingScreen';
+import { nextDay } from 'date-fns';
 
 type Recipe = {
   recipeId: number
@@ -17,9 +19,21 @@ function RecommendScreen () {
     navigation.navigate("Recipe")
   }
 
-  const moveRecommendLanding = () => {
-    setIndex(prevIndex => prevIndex + 1); // 인덱스 업데이트
-    navigation.navigate("RecommendLanding", { nextIndex: index + 1 });
+  const moveRecommendLanding = async () => {
+    setLoading(true) // 로딩 시작
+    // navigation.navigate("RecommendLanding"); // RecommendLanding 페이지로 네비게이션
+    let newIndex;
+    do {
+      newIndex = Math.floor(Math.random() * dummyRecipe.length);
+    } while (newIndex === index);
+
+    setIndex(newIndex)
+  
+    // 여기에 레시피 로딩을 위한 비동기 로직 추가 (예: setTimeout 사용)
+    setTimeout(() => {
+      // navigation.navigate("Recipe", { nextIndex: index + 1 }); // Recipe 페이지로 이동
+      setLoading(false) // 로딩 완료
+    }, 3000) // 2초 후 로딩 완료 및 페이지 이동 (실제 API 요청 시에는 요청 완료 시점에 설정)
   };
 
   const handleSharePress = () => {
@@ -30,8 +44,31 @@ function RecommendScreen () {
     console.log('Retry button pressed')
   }
 
+  const dummyRecipe = [{
+    recipeId: 1,
+    dishName: "고등어구이",
+    imageUri: "https://i.namu.wiki/i/QncptNs6gl_Zyh-LEPsb_pEOkFhYKjvlOHUm0yNGp9iwCRUmUVjdJT9uxEEHIH6I0YW8BMq2YnvDlSV10wI3apuzbl_hDUpgH8KYCNFUqRc-E2s4JqnsVwWMqdHt26Kqsw3O4qSK9NLlvdjzOnk1Xw.webp"
+  },
+  {
+    recipeId: 2,
+    dishName: "니노막시무스카이저소제쏘냐도르앤돈가스파르타",
+    imageUri: "https://i.namu.wiki/i/870lvjrMKGTyx00arSIaji0nFXyrxh7C-8uMe4WA0k9mhlJUOnkRFz4r4w5411--p2I4Vl1TmDHjEWOJ5xpUladA9gGNBWJmJDR2kHavjNUGh6K3HVSbygWa3GsUMbjr0M755QOGtqS5Pc7M3LpXSg.webp"
+  },
+  {
+    recipeId: 3,
+    dishName: "뼈해장국",
+    imageUri: "https://i.namu.wiki/i/ywRdkOZAdp4dU3ItrNm36NjVx3sbEE6PYVvNVYpRa9MUDtKIxxejpM-jAXGl9fHGavoYESWtzbf7C0LA9RBGsS63D8KY1eINfE4ZQf-36gNq-fDtiJu9fXkS5hE01eY2ArhJcagnO7pMdtRz2e0dsA.webp"
+  },
+  {
+    recipeId: 4,
+    dishName: "떡볶이",
+    imageUri: "https://i.namu.wiki/i/0e2H0MymA2D0hthFVdH0MpUTxcVHLuAMaVv7mpWlyMHzxsFIaDkN1VRfX_nLLTlUde0t3sq97DIfteY0XrucKC7BnO4X4xtAVbC5O1TKYG0XTUXlOVMnbM7LdoBCiGkXqPT6qE1RuaaKqsrj5ojweQ.webp"
+  },
+  ]
+
   const [todayRecipe, setTodayRecipe] = useState<Recipe | null>(null)
-  const [index, setIndex] = useState<number>(0)
+  const [index, setIndex] = useState<number>(1)
+  const [loading, setLoading] = useState(false)
   
   const date: string = new Date().toLocaleDateString('ko-KR', {
     year: 'numeric', // "2024년"
@@ -52,37 +89,16 @@ function RecommendScreen () {
   //   }
   // }
 
-  const dummyRecipe = [{
-    recipeId: 1,
-    dishName: "라자냐",
-    imageUri: "https://i.namu.wiki/i/QncptNs6gl_Zyh-LEPsb_pEOkFhYKjvlOHUm0yNGp9iwCRUmUVjdJT9uxEEHIH6I0YW8BMq2YnvDlSV10wI3apuzbl_hDUpgH8KYCNFUqRc-E2s4JqnsVwWMqdHt26Kqsw3O4qSK9NLlvdjzOnk1Xw.webp"
-  },
-  {
-    recipeId: 2,
-    dishName: "라자댜",
-    imageUri: "https://i.namu.wiki/i/QncptNs6gl_Zyh-LEPsb_pEOkFhYKjvlOHUm0yNGp9iwCRUmUVjdJT9uxEEHIH6I0YW8BMq2YnvDlSV10wI3apuzbl_hDUpgH8KYCNFUqRc-E2s4JqnsVwWMqdHt26Kqsw3O4qSK9NLlvdjzOnk1Xw.webp"
-  },
-  {
-    recipeId: 3,
-    dishName: "라자랴",
-    imageUri: "https://i.namu.wiki/i/QncptNs6gl_Zyh-LEPsb_pEOkFhYKjvlOHUm0yNGp9iwCRUmUVjdJT9uxEEHIH6I0YW8BMq2YnvDlSV10wI3apuzbl_hDUpgH8KYCNFUqRc-E2s4JqnsVwWMqdHt26Kqsw3O4qSK9NLlvdjzOnk1Xw.webp"
-  },
-  {
-    recipeId: 4,
-    dishName: "라자먀",
-    imageUri: "https://i.namu.wiki/i/QncptNs6gl_Zyh-LEPsb_pEOkFhYKjvlOHUm0yNGp9iwCRUmUVjdJT9uxEEHIH6I0YW8BMq2YnvDlSV10wI3apuzbl_hDUpgH8KYCNFUqRc-E2s4JqnsVwWMqdHt26Kqsw3O4qSK9NLlvdjzOnk1Xw.webp"
-  },
-  ]
-
+ 
 
   const todayRecommend = (recipeIndex: number) => {
     // dummyRecipe 배열에서 recipeIndex에 해당하는 레시피를 찾아 설정합니다.
     // 배열 인덱스가 0부터 시작하므로 recipeIndex 값을 조정합니다.
-    const recipe = dummyRecipe.find(recipe => recipe.recipeId === recipeIndex + 1);
+    const recipe = dummyRecipe[recipeIndex]
     if (recipe) {
       setTodayRecipe(recipe);
     }
-  };
+  }
 
   useEffect(() => {
     // todayRecommend('baloo', 1)
@@ -90,13 +106,18 @@ function RecommendScreen () {
     todayRecommend(index)
 
     return () => {
-    setIndex(1)  
+    // setLoading(false)  
+    // setIndex(1)
     }
 
   }, [index])
 
   if (!todayRecipe) {
     return null
+  }
+
+  if (loading) {
+    return <RecommendLandingScreen />
   }
 
   return (
