@@ -18,7 +18,7 @@ import { setCustomText } from 'react-native-global-props';
 
 const customTextProps = {
   style: {
-    fontFamily: 'NanumMyeongjo', // 실제 폰트 파일 내 정의된 이름 사용
+    fontFamily: 'MaruBuri-Bold', // 실제 폰트 파일 내 정의된 이름 사용
   }
 };
 

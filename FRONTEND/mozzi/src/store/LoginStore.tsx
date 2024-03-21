@@ -10,10 +10,10 @@ const useLoginStore = create((set) => ({
       const response = await axios.get('http://10.0.2.2:8080/auth/Oauth2/KakaoToken', { 
         params : { code : token },
       });
-      console.log('Backend response:', response.data) // 백엔드 응답 로깅
-      set({ isLogin: true, user: response.data.user })
+      console.log('백엔드 응답:', response.data) // 백엔드 응답 로깅
+      // set({ isLogin: true, user: response.data.user })
     } catch (error) {
-      console.error('Login failed:', error)
+      console.error('로그인 실패:', error)
       set({ isLogin: false, user: null })
     }
   },
