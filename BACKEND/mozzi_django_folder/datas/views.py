@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Foods,Category,Ingredient
+from .models import Foods,Category,Ingredient,User
 from .serializers import FoodSerializer 
 import requests
 import json
@@ -10,13 +10,18 @@ from django.http import JsonResponse
 import re
 from .models import MongoFood  # MongoDB 모델 임포트
 import requests
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponse
 from django.core import serializers
-
+import base64
 from .models import MongoFood
-
+from django.db import connection
+from datetime import datetime
 import mysql.connector
 from neo4j import GraphDatabase
+import neo4jupyter
+from py2neo import Graph
+from pyvis.network import Network
+
 # 식재료 뽑기
 def get_ingredients(start, last):
     URL = f"http://openapi.foodsafetykorea.go.kr/api/2055492edca74694aa38/COOKRCP01/json/{start}/{last}"
@@ -168,12 +173,13 @@ def get_random_food(request):
 
 
 def recipe_detail(request):
-
+    start_time = datetime.now()
     body_unicode = request.body.decode('utf-8')
    
     lines = body_unicode.split("\n")
 
     food_name = None
+    print(lines)
     for i in range(len(lines)):
         if lines[i] == '\r':
             food_name = lines[i+1]
@@ -198,6 +204,8 @@ def recipe_detail(request):
         mongo_food = MongoFood.objects.get(id=food_recipe_id)
         # MongoDB의 레시피 ID 반환
    
+        end_time = datetime.now()
+        print(end_time - start_time)
         return JsonResponse({'data': {
             # 'id': str(mongo_food.id),
             'RCP_PARTS_DTLS': mongo_food.food_recipe["RCP_PARTS_DTLS"],
@@ -255,6 +263,9 @@ def recipe_detail(request):
         return JsonResponse({'레시피': '음식을 찾을 수 없습니다'})
 
 def get_recipe_list(request):
+    print(11111)
+    authorization_header = request.headers.get('Authorization')
+    print('Authorization header:', authorization_header)
     foods = Foods.objects.all()
     data = []
     for food in foods:
@@ -429,3 +440,119 @@ def migrate_sql_to_neo4j(request):
     neo4j_driver.close()
 
     return JsonResponse({'message': 'ok'})  # 이관 완료 후 사용자에게 알림을 제공하는 페이지
+
+
+@api_view(['POST', 'GET','DELETE'])
+def add_ingredients_to_refrigerator(request):
+    user = User.objects.all()
+    
+    # print(request.headers['Authorization'],'adddddddddddddddd')
+    token = request.headers['Authorization'].split(' ')[1]
+    data = base64.b64decode(token)
+   
+    data = data.decode('latin-1')
+    
+    index_e = data.index('"e":') + len('"e":')  # "e": 다음 인덱스부터 시작
+    index_comma = data.index(',', index_e)  # 쉼표(,)가 나오는 인덱스 찾기
+    e_value = data[index_e:index_comma]
+    user_number = e_value[1:-1]
+    # 결과 출력
+    for i in user:
+            if i.user_code == user_number :
+                user_id = i.user_id  
+    
+    category_id = request.data.get('category')
+    foods = request.data.get('foods')
+    if request.method == 'POST':
+        
+        # for i in user:
+        #     if i.user_code == user_number :
+        #         user_id = i.user_id       
+        if user_id is None:
+            return JsonResponse({"error": "User is not authenticated."}, status=401)
+        
+        
+        ingredient_ids = []
+        for food_name in foods:
+            ingredient_id = Ingredient.objects.filter(ingredient_name=food_name).values_list('id', flat=True).first()
+            ingredient_ids.append(ingredient_id)
+
+        with connection.cursor() as cursor:
+            for ingredient_id in ingredient_ids:
+                # 이미 존재하는지 확인
+                cursor.execute("SELECT COUNT(*) FROM refri_ingredients WHERE user_id = %s AND ingredient_id = %s", [user_id, ingredient_id])
+                row_count = cursor.fetchone()[0]
+                
+                # 중복 삽입 방지
+                if row_count == 0:
+                    cursor.execute("INSERT INTO refri_ingredients (user_id, ingredient_id, expiration_date) VALUES (%s, %s, %s)",
+                                [user_id, ingredient_id, datetime.now()])
+
+        return JsonResponse({"message": "Ingredients added to refrigerator successfully."}, status=201)
+    elif request.method == 'GET':
+        return JsonResponse({"error": "GET method is not allowed for this endpoint."}, status=405)
+
+    # DELETE 요청인 경우
+    elif request.method == 'DELETE':
+        ingredient_ids = []
+        for food_name in foods:
+            try:
+                ingredient = Ingredient.objects.get(ingredient_name=food_name)
+                ingredient_ids.append(ingredient.id)
+            except Ingredient.DoesNotExist:
+                # 만약 해당 음식이 존재하지 않는다면 에러 응답
+                return JsonResponse({"error": f"Ingredient '{food_name}' not found."}, status=404)
+
+        # refri_ingredients 테이블에서 삭제할 행 삭제
+        with connection.cursor() as cursor:
+            for ingredient_id in ingredient_ids:
+                cursor.execute("""
+                    DELETE FROM refri_ingredients 
+                    WHERE user_id = %s AND ingredient_id = %s
+                """, [user_id, ingredient_id])
+        return JsonResponse({"message": "Ingredients removed from refrigerator successfully."}, status=200)
+
+    # 지원하지 않는 메서드인 경우
+    else:
+        return JsonResponse({"error": "Method not allowed."}, status=405)
+
+def neo4j_visualization(request):
+    neo4j_uri = "bolt://localhost:7687"
+    neo4j_user = "neo4j"
+    neo4j_password = "mozzimozzi"  # 실제 비밀번호로 바꿔야 합니다
+    driver = GraphDatabase.driver(neo4j_uri, auth=(neo4j_user, neo4j_password))
+
+    # 데이터 추출
+    category_node = {
+        "identity": 2148,
+        "labels": ["Category"],
+        "properties": {"name": "건해산", "id": 16},
+        "elementId": "4:5f802a2d-d50a-461d-9935-0af3730eef74:2148"
+    }
+
+    food_node = {
+        "identity": 2463,
+        "labels": ["Food"],
+        "properties": {"name": "멸치", "category_id": 16},
+        "elementId": "4:5f802a2d-d50a-461d-9935-0af3730eef74:2463"
+    }
+
+    # 시각화를 위한 네트워크 객체 생성
+    net = Network(height="750px", width="100%")
+
+    # 노드 추가
+    net.add_node(category_node["identity"], label=category_node["properties"]["name"], title=category_node["elementId"])
+    net.add_node(food_node["identity"], label=food_node["properties"]["name"], title=food_node["elementId"])
+
+    # 관계 추가
+    net.add_edge(category_node["identity"], food_node["identity"], label="CONTAINS")
+
+    # 시각화 버튼 추가
+    net.show_buttons(filter_=['nodes', 'edges', 'physics'])
+
+    # HTML 파일로 그래프 저장
+    html_file_path = "neo4j_visualization.html"
+    net.show(html_file_path)
+
+    # HTML 파일 경로 반환
+    return HttpResponse(html_file_path)
