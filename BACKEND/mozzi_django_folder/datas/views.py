@@ -51,14 +51,14 @@ def migrate_food_recipe_from_mongo_to_mysql(request):
     for mongo_food in mongo_foods:
         # 이미 해당 ID의 레코드가 MySQL에 있는지 확인
         try:
-            food = Foods.objects.get(id=mysql_id)
+            food = Foods.objects.get(food_id=mysql_id)
             # 이미 레코드가 존재한다면 해당 필드만 업데이트
             food.food_recipe = str(mongo_food.id)
             food.save()
         except Foods.DoesNotExist:
             # 레코드가 존재하지 않는다면 새로운 레코드 생성
             Foods.objects.create(
-                id=mysql_id,
+                food_id=mysql_id,
                 food_name=mongo_food.food_name,
                 food_recipe=str(mongo_food.id),  # MongoDB의 ObjectId를 문자열로 변환하여 저장
                 food_views=mongo_food.food_views,  # MongoDB의 해당 필드 값을 그대로 사용
