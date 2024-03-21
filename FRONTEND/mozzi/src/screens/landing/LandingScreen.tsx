@@ -67,7 +67,7 @@ const AnimatedLoginButton = Animated.createAnimatedComponent(TouchableOpacity);
 
 function LandingScreen() {
   const navigation = useNavigation();
-  const { login: storeLogin } = useLoginStore()
+  const { login: storeLogin, userData } = useLoginStore()
 
   const kakaoLogin = async () => {
     console.log("테스팅 중")
@@ -80,8 +80,10 @@ function LandingScreen() {
       if (res) {
         // 성공적으로 토큰을 받아오고 로그인 처리
         await storeLogin(res.idToken);
+
         // 로그인 후 LandingInputScreen으로 이동
         navigation.navigate('LandingInput');
+        
       } else {
         console.log('Login response is undefined');
       }

@@ -8,6 +8,7 @@ import Allergy from '../../components/Dropdown/Allergy'
 import { useNavigation } from '@react-navigation/native'
 import useProfileStore from '../../store/ProfileStore'
 import useLoginStore from '../../store/LoginStore'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 interface UserProfileState {
   email: string
@@ -104,6 +105,10 @@ function ProfileScreen () {
 
   useEffect(() => {
     console.log('내가담은데이터', userData)
+    
+    AsyncStorage.getItem('accessToken').then((accessToken) => {
+      console.log('accessToken:', accessToken)
+    })
   }, [])
 
   return (

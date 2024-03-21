@@ -15,9 +15,15 @@ const useLoginStore = create((set) => ({
         params : { code : token },
       });
       console.log('Backend response:', response.data) // 백엔드 응답 로깅
+
       // 유저 데이터 저장
-      set({ userData: response.data.data.info })
-      
+      if (response.data.data.info.isRegistered) {
+        set({ isLogin: true })
+      } else {
+        // else문 없애도 될수도
+        set({ userData: response.data.data.info })
+      }
+
       // 토큰 스토리지에 저장
       await Promise.all([
         AsyncStorage.setItem('accessToken', JSON.stringify(response.data.data.token.accessToken)),
