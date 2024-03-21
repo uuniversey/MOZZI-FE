@@ -7,6 +7,7 @@ class MongoFood(Document):
 # Create your models here.
 
 class Foods(models.Model):
+    food_id = models.AutoField(primary_key=True)
     food_name = models.CharField(max_length=30)
     food_recipe = models.CharField(max_length=255)
     food_views = models.IntegerField()
