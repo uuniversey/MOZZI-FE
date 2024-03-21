@@ -75,7 +75,7 @@ WSGI_APPLICATION = 'mozzi_django.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-ALLOWED_HOSTS = ['a304.site']
+ALLOWED_HOSTS = ['a304.site','127.0.0.1']
 
 DATABASES = {
     'default': {
