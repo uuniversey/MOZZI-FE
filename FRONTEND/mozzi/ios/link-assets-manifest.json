@@ -20,6 +20,30 @@
     {
       "path": "src/assets/fonts/MaruBuri-SemiBold.ttf",
       "sha1": "8a8b27eefd3db0bc764b6f0201fca26d061680d4"
+    },
+    {
+      "path": "src/assets/fonts/NanumMyeongjo.otf",
+      "sha1": "1b75cb9703613cb75bb8fc8a2fdb538853473017"
+    },
+    {
+      "path": "src/assets/fonts/NanumMyeongjo.ttf",
+      "sha1": "fff5fd3f51dfff394c88948a703ea746b3ef52fb"
+    },
+    {
+      "path": "src/assets/fonts/NanumMyeongjoBold.otf",
+      "sha1": "42590d385125e8eedf8d448ba02f4aa0a87458b5"
+    },
+    {
+      "path": "src/assets/fonts/NanumMyeongjoBold.ttf",
+      "sha1": "4b5299e387fea8bab768cb78c228b304dfe35391"
+    },
+    {
+      "path": "src/assets/fonts/NanumMyeongjoExtraBold.otf",
+      "sha1": "1c3a975ea921c56d429bbf30a689dbb6510f839a"
+    },
+    {
+      "path": "src/assets/fonts/NanumMyeongjoExtraBold.ttf",
+      "sha1": "a891c3233a43468b46159004e253c095064b5de3"
     }
   ]
 }

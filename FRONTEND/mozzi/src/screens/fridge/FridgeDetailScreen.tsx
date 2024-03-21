@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native'
 import { Header } from '../../components/Header/Header'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
+import useFridgeStore from '../../store/FridgeStore'
 import note from '../../assets/fridge/note.png'
 import clip from '../../assets/fridge/clip.png'
 
@@ -108,23 +109,29 @@ const MiniTitle = styled.Text`
   align-self: flex-start;
 `
 
-function FridgeDetailScreen ({route}) {
-  const [text, setText] = useState('');
-  const [keyboardOpen, setKeyboardOpen] = useState(false); // 키보드 상태를 저장하는 상태 추가
-  const [savedText, setSavedText] = useState('');
-  const scrollViewRef = useRef(null); // ScrollView에 대한 참조 생성
+function FridgeDetailScreen({ route }) {
+  const [text, setText] = useState('')
+  const scrollViewRef = useRef(null)
+  const savedTexts = useFridgeStore((state) => state.savedTexts)
+  const addFridge = useFridgeStore((state) => state.addFridge)
   
   const { item } = route.params; // item을 받음
   const { name, img } = item;
 
   const navigation = useNavigation()
 
+  // const handleSend = () => {
+  //   // 전송 버튼을 눌렀을 때 텍스트 상태 초기화 및 위치 조정
+  //   setSavedText(savedText + text + '\n');
+  //   setText('');
+  //   scrollViewRef.current.scrollToEnd({ animated: true });
+  // }
+
   const handleSend = () => {
-    // 전송 버튼을 눌렀을 때 텍스트 상태 초기화 및 위치 조정
-    setSavedText(savedText + text + '\n');
-    setText('');
-    scrollViewRef.current.scrollToEnd({ animated: true });
-  }
+    addFridge(text); // Zustand 스토어 업데이트 및 DB 업데이트
+    setText(''); // 텍스트 입력 필드 초기화
+    scrollViewRef.current.scrollToEnd({ animated: true }); // 스크롤을 맨 아래로 이동
+  };
   
   return (
     <Container behavior={Platform.OS === "ios" ? "padding" : "height"}>
@@ -140,9 +147,7 @@ function FridgeDetailScreen ({route}) {
           <MenuItem>{name}</MenuItem>
         </TitleContainer>
         <MyFood ref={scrollViewRef}>
-          {/* 여기서 savedText를 바로 표시하는 대신,
-               개별 텍스트 항목을 각각의 MyFoodText로 렌더링합니다. */}
-          {savedText.split('\n').map((item, index) => (
+          {savedTexts.map((item, index) => ( // 배열을 순회하며 MyFoodText 컴포넌트로 렌더링
             <MyFoodText key={index}>{item}</MyFoodText>
           ))}
         </MyFood>

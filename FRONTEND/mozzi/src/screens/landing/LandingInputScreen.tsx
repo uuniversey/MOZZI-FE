@@ -1,7 +1,14 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, TextInput, Button } from 'react-native'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 import styled from 'styled-components/native'
+import Allergy from '../../components/Dropdown/Allergy'
+
+import { useNavigation } from '@react-navigation/native'
+import useProfileStore from '../../store/ProfileStore'
+import useLoginStore from '../../store/LoginStore'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 interface UserProfileState {
   email: string
@@ -24,6 +31,11 @@ const Title = styled.Text`
   width: 100%;
 `
 
+const BgText = styled.Text`
+  background-color: #F9F7BB;
+  font-size: 18px;
+`
+
 const Body = styled.View`
   margin: 0px 40px 0px 40px;
 `
@@ -39,8 +51,16 @@ const StyledInput = styled.TextInput`
   border-bottom-color: silver;
 `
 
-const P = styled.Text`
-  margin: 30px 0px 30px 0px;
+const StyledView = styled.View`
+  height: auto;
+  margin: 10px 0px 10px 0px;
+`
+
+const JustifyView = styled.View`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 20px;
 `
 
 const Btn = styled.TouchableOpacity`
@@ -57,7 +77,10 @@ const BtnText = styled.Text`
   text-align: center;
 `
 
-function LandingInputScreen() {
+function ProfileScreen () {
+  const { settingProfile } = useProfileStore()
+  const { setIsLogin, userData } = useLoginStore()
+
   const [form, setForm] = useState<UserProfileState>({
     email: '',
     allergyInfo: '',
@@ -66,59 +89,83 @@ function LandingInputScreen() {
     isVegan: ''
   })
 
-  const handleNicknameChange = (email: string) => setForm({ ...form, email })
+  const handleEmailChange = (email: string) => setForm({ ...form, email })
   const handleAllergyInfoChange = (allergyInfo: string) => setForm({ ...form, allergyInfo })
   const handleFavoriteFoodChange = (favoriteFood: string) => setForm({ ...form, favoriteFood })
   const handleDislikedFoodChange = (dislikedFood: string) => setForm({ ...form, dislikedFood })
   const handleIsVeganChange = (isVegan: string) => setForm({ ...form, isVegan })
 
-  const editProfile = () => {
-    console.log('Form Data:', form)
+  const goMain = () => {
+    setIsLogin(true)
   }
 
+  const completeEnter = () => {
+    settingProfile()
+  }
+
+  useEffect(() => {
+    console.log('내가담은데이터', userData)
+    
+    AsyncStorage.getItem('accessToken').then((accessToken) => {
+      console.log('accessToken:', accessToken)
+    })
+  }, [])
+
   return (
-    <>
-      <Container>
-        <Title>회원 정보 입력</Title>
-        <View>
-          <Label>닉네임</Label>
-          <StyledInput
-            placeholder="닉네임을 입력하세요"
-            value={form.email}
-            onChangeText={handleNicknameChange}
-          />
-          <P>모찌가 레시피를 잘 추천할 수 있도록 아래의 추가 정보를 입력해 주세요!</P>
-          <Label>알레르기 정보</Label>
-          <StyledInput
-            placeholder="알레르기 정보를 입력하세요"
-            value={form.allergyInfo}
-            onChangeText={handleAllergyInfoChange}
-          />
-          <Label>좋아하는 음식</Label>
-          <StyledInput
-            placeholder="좋아하는 음식을 입력하세요"
-            value={form.favoriteFood}
-            onChangeText={handleFavoriteFoodChange}
-          />
-          <Label>싫어하는 음식</Label>
-          <StyledInput
-            placeholder="싫어하는 음식을 입력하세요"
-            value={form.dislikedFood}
-            onChangeText={handleDislikedFoodChange}
-          />
-          <Label>비건 여부</Label>
-          <StyledInput
-            placeholder="예/아니오로 입력하세요"
-            value={form.isVegan}
-            onChangeText={handleIsVeganChange}
-          />
-          <Btn onPress={editProfile}>
-            <BtnText>수정</BtnText>
+    <Container>
+      <Title>회원 정보 입력</Title>
+      <Body>
+        <Label>닉네임</Label>
+        <StyledInput
+          placeholder="닉네임을 입력하세요"
+          value={form.email}
+          onChangeText={handleEmailChange}
+          placeholderTextColor="#ccc"
+        />
+
+        <BgText>모찌가 레시피를 잘 추천할 수 있도록 아래의 추가 정보를 입력해 주세요!</BgText>
+        
+        <Label>알레르기 정보</Label>
+        <StyledView>
+          <Allergy />
+        </StyledView>
+
+        <Label>좋아하는 음식</Label>
+        <StyledInput
+          placeholder="좋아하는 음식을 입력하세요"
+          value={form.favoriteFood}
+          onChangeText={handleFavoriteFoodChange}
+          placeholderTextColor="#ccc"
+        />
+
+        <Label>싫어하는 음식</Label>
+        <StyledInput
+          placeholder="싫어하는 음식을 입력하세요"
+          value={form.dislikedFood}
+          onChangeText={handleDislikedFoodChange}
+          placeholderTextColor="#ccc"
+        />
+
+        <Label>비건 여부</Label>
+        <StyledInput
+          placeholder="예/아니오로 입력하세요"
+          value={form.isVegan}
+          onChangeText={handleIsVeganChange}
+          placeholderTextColor="#ccc"
+        />
+
+        <JustifyView>
+          <Btn onPress={goMain}>
+            <BtnText>스킵</BtnText>
           </Btn>
-        </View>
-      </Container>
-    </>
+
+          <Btn onPress={completeEnter}>
+            <BtnText>완료</BtnText>
+          </Btn>
+        </JustifyView>
+      </Body>
+    </Container>
   )
 }
 
-export default LandingInputScreen
+export default ProfileScreen

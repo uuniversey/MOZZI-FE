@@ -1,24 +1,26 @@
-import React, { useRef } from 'react';
-import { View, StyleSheet, TouchableOpacity, Dimensions, Animated } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import React, { useRef } from 'react'
+import { View, StyleSheet, TouchableOpacity, Dimensions, Animated } from 'react-native'
+import { NavigationContainer } from '@react-navigation/native'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
-import MainStack from './src/navigation/MainStack';
-import FridgeStack from './src/navigation/FridgeStack';
-import RecommendStack from './src/navigation/RecommendStack';
-import DiaryStack from './src/navigation/DiaryStack';
-import ProfileScreen from './src/screens/profile/ProfileScreen';
+import MainStack from './src/navigation/MainStack'
+import FridgeStack from './src/navigation/FridgeStack'
+import RecommendStack from './src/navigation/RecommendStack'
+import DiaryStack from './src/navigation/DiaryStack'
+import ProfileScreen from './src/screens/profile/ProfileScreen'
 // import LandingScreen from './src/screens/landing/LandingScreen';
-import LoginStack from './src/navigation/LoginStack';
+import LoginStack from './src/navigation/LoginStack'
+
+import useLoginStore from './src/store/LoginStore'
 
 // App.tsx 파일 상단에 다음을 추가
-import { setCustomText } from 'react-native-global-props';
+import { setCustomText } from 'react-native-global-props'
 
 const customTextProps = {
   style: {
-    fontFamily: 'MaruBuri-Regular', // 실제 폰트 파일 내 정의된 이름 사용
+    fontFamily: 'MaruBuri-Bold', // 실제 폰트 파일 내 정의된 이름 사용
   }
 };
 
@@ -26,23 +28,23 @@ const customTextProps = {
 setCustomText(customTextProps)
 
 const Tab = createBottomTabNavigator();
-const windowWidth = Dimensions.get('window').width;
+const windowWidth = Dimensions.get('window').width
 
 const App: React.FC = () => {
-  const isLogin: boolean = true;
-  // const isLogin: boolean = false;
+
+  const { isLogin } = useLoginStore()
   const rotateAnim = useRef(new Animated.Value(0)).current;
 
   // 주사위 아이콘의 각도를 회전시키는 함수
   const rotate = () => {
     // 회전 애니메이션을 초기화
-    rotateAnim.setValue(0);
+    rotateAnim.setValue(0)
     // 애니메이션 실행
     Animated.timing(rotateAnim, {
       toValue: 1,
       duration: 800,
       useNativeDriver: true,
-    }).start();
+    }).start()
   };
 
   // rotateAnim 값에 따라 outputRange에서 정의된 각도로 회전
@@ -53,8 +55,7 @@ const App: React.FC = () => {
 
 
   return (
-    <>
-      
+    <> 
       {isLogin ? (
         <NavigationContainer>
           <Tab.Navigator
@@ -64,17 +65,17 @@ const App: React.FC = () => {
               headerShown: false,
               tabBarStyle: styles.tabBarStyle,
               tabBarIcon: ({ focused, size }) => {
-                const color = focused ? 'gray' : 'lightgray'; // Update color based on focused state
-                let iconName;
+                const color = focused ? 'gray' : 'lightgray' // Update color based on focused state
+                let iconName
 
                 if (route.name === 'MainTab') {
-                  iconName = 'home';
+                  iconName = 'home'
                 } else if (route.name === 'FridgeTab') {
-                  iconName = 'kitchen';
+                  iconName = 'kitchen'
                 } else if (route.name === 'DiaryTab') {
-                  iconName = 'calendar-month';
+                  iconName = 'calendar-month'
                 } else if (route.name === 'ProfileTab') {
-                  iconName = 'account-circle';
+                  iconName = 'account-circle'
                 }
 
                 if (route.name === 'RecommendTab') {
@@ -82,13 +83,13 @@ const App: React.FC = () => {
                     <Animated.View style={{ transform: [{ rotate: spin }] }}> {/* Animated View */}
                       <MaterialCommunityIcons name="casino" size={size} color={color} />
                     </Animated.View>
-                  );
+                  )
                 }
 
                 // Choose the correct icon set for each tab
                 const IconComponent = route.name === 'FridgeTab' || route.name === 'DiaryTab' ? MaterialIcons : MaterialCommunityIcons;
                 
-                return <IconComponent name={iconName} size={size} color={color} />;
+                return <IconComponent name={iconName} size={size} color={color} />
               },
               tabBarButton: (props) => {
                 if (route.name === 'RecommendTab') {
@@ -97,8 +98,8 @@ const App: React.FC = () => {
                       <TouchableOpacity
                         style={styles.fabButton}
                         onPress={() => {
-                          props.onPress();
-                          rotate(); // 주사위 아이콘 회전
+                          props.onPress()
+                          rotate() // 주사위 아이콘 회전
                         }}
                         activeOpacity={0.9} // 클릭시 투명해지는 효과 없앰
                       >
@@ -109,7 +110,7 @@ const App: React.FC = () => {
                         />
                       </TouchableOpacity>
                     </View>
-                  );
+                  )
                 } else {
                   return (
                     <TouchableOpacity style={styles.regularTab} {...props} />
@@ -131,9 +132,8 @@ const App: React.FC = () => {
         </NavigationContainer>
       )}
     </>
-  );
-};
-
+  )
+}
 
 const styles = StyleSheet.create({
   tabBarStyle: {
@@ -170,6 +170,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 60 + 20,
   },
-});
+})
 
-export default App;
+export default App

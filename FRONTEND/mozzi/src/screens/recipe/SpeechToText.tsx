@@ -2,6 +2,17 @@ import React, { useState, useEffect } from 'react'
 import { View, Text, Button } from 'react-native'
 import Voice from '@react-native-voice/voice'
 
+import Icon from 'react-native-vector-icons/MaterialIcons'
+import styled from 'styled-components/native'
+
+const Btn = styled.TouchableOpacity`
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 28px;
+`
+
 function SpeechToText() {
   const [text, setText] = useState('')
   const [isListening, setIsListening] = useState(true)
@@ -53,6 +64,9 @@ function SpeechToText() {
   return (
     <>
     <Text>인식된 텍스트: {text}</Text>
+    <Btn>
+      <Icon name="mic" size={40} onPress={startListening}/>
+    </Btn>
       <Button title="듣기 시작" onPress={startListening} disabled={isListening} />
       <Button title="듣기 중지" onPress={stopListening} disabled={!isListening} />
     </>

@@ -1,8 +1,9 @@
 import { useNavigation } from '@react-navigation/native'
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import { Text, StyleSheet, TouchableOpacity, Animated } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import styled from 'styled-components/native'
+import useVideoStore from '../../store/RecapStore'
 
 const Container = styled.View`
   flex: 1;
@@ -61,12 +62,18 @@ const RecapLandingScreen: React.FC = () => {
   // const rootNavigation = useRootNavigation<'Main'>();
   const animatedValue = useRef(new Animated.Value(0)).current
   const navigation = useNavigation()
+  const isVideoComplete = useVideoStore(state => state.isVideoComplete);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      navigation.navigate("MakeShorts")
-    }, 5000) // 5초 = 5000밀리초
+    // const timer = setTimeout(() => {
+    //   navigation.navigate("MakeShorts")
+    // }, 5000) // 5초 = 5000밀리초
 
+
+  if (isVideoComplete) {
+    navigation.navigate("MakeShorts");
+    useVideoStore.getState().setVideoComplete(false) // 상태 초기화
+  }
     // 컴포넌트가 언마운트될 때 타이머를 정리함
     Animated.loop(
       Animated.sequence([
@@ -78,9 +85,11 @@ const RecapLandingScreen: React.FC = () => {
       ]),
     ).start()
 
-    return () => clearTimeout(timer)
+    return () => {
+
+    }
     
-  }, [animatedValue, navigation])
+  }, [isVideoComplete, animatedValue, navigation])
 
   const translateX = animatedValue.interpolate({
     inputRange: [0, 1],

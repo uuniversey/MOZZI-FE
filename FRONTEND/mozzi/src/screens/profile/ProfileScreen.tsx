@@ -86,30 +86,35 @@ function ProfileScreen () {
             onChangeText={handleEmailChange}
             autoCapitalize="none"
             keyboardType="email-address"
+            placeholderTextColor="#ccc"
           />
           <Label>알레르기 정보</Label>
           <StyledInput
             placeholder="알레르기 정보를 입력하세요"
             value={form.allergyInfo}
             onChangeText={handleAllergyInfoChange}
+            placeholderTextColor="#ccc"
           />
           <Label>좋아하는 음식</Label>
           <StyledInput
             placeholder="좋아하는 음식을 입력하세요"
             value={form.favoriteFood}
             onChangeText={handleFavoriteFoodChange}
+            placeholderTextColor="#ccc"
           />
           <Label>싫어하는 음식</Label>
           <StyledInput
             placeholder="싫어하는 음식을 입력하세요"
             value={form.dislikedFood}
             onChangeText={handleDislikedFoodChange}
+            placeholderTextColor="#ccc"
           />
           <Label>비건 여부</Label>
           <StyledInput
             placeholder="예/아니오로 입력하세요"
             value={form.isVegan}
             onChangeText={handleIsVeganChange}
+            placeholderTextColor="#ccc"
           />
           <Btn onPress={editProfile}>
             <BtnText>수정</BtnText>

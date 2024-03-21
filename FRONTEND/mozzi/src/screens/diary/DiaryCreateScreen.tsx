@@ -36,7 +36,7 @@ const Line = styled.View`
   border-bottom-width: 1px;
   width: 85%;
   align-self: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 `
 
 const ImageContainer = styled.View`
@@ -47,6 +47,11 @@ const ImageContainer = styled.View`
   justify-content: center;
   align-items: center;
   margin-bottom: 20px;
+`
+
+const FoodNameText = styled.Text`
+  font-weight: 600;
+  font-size: 16px;
 `
 
 const ImageInnerContainer = styled.TouchableOpacity`
@@ -116,6 +121,16 @@ const CalendarButton = styled.TouchableOpacity`
   border-radius: 20px;
 `
 
+const FoodNameContainer = styled.View`
+  width: 86%;
+  height: 40px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background-color: #F9F7BB;
+  margin-bottom: 10px;
+`
+
 function DiaryCreateScreen () {
   
   const navigation = useNavigation()
@@ -138,7 +153,8 @@ function DiaryCreateScreen () {
     setDatePickerVisibility(false)
   }
 
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>();
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>()
+  const [selectedrecipe, setSelectedrecipe] = useState<number | null>(null)
   const handleConfirm = (date: Date) => {
     console.warn("A date has been picked: ", date)
     setSelectedDate(date)
@@ -220,11 +236,15 @@ function DiaryCreateScreen () {
             )}
         </DateContainer>
         <Line />
+        <FoodNameContainer>
+              <FoodNameText>{selectedrecipe}</FoodNameText>
+        </FoodNameContainer>
         <DateTimePickerModal
           isVisible={isDatePickerVisible}
           mode="date"
           onConfirm={handleConfirm}
           onCancel={hideDatePicker}
+          accentColor="#F9F7BB"
         />
         <ImageContainer>
           <ImageInnerContainer onPress={handleChoosePhoto}>

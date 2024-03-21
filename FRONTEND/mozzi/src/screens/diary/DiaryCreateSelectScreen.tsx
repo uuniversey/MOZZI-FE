@@ -1,13 +1,13 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
 import { useNavigation } from '@react-navigation/native'
 
-import Autocomplete from 'react-native-autocomplete-input'
 import { Header } from '../../components/Header/Header'
+import { SearchBar } from '../../components/Search/search'
 
-interface Recipe {
+interface FoodItem {
   id: number;
   image: string;
   title: string;
@@ -18,26 +18,32 @@ function DiaryCreateSelectScreen () {
   const navigation = useNavigation() 
 
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [filteredData, setFilteredData] = useState<Recipe[]>([]);
-
-  const data: Recipe[] = [
-    {id: 1, image: '', title: "cheese"}, 
-    {id: 2, image: '', title: "cheesetoast"}, 
-    {id: 3, image: '', title: "cheesetaco"}, 
-    {id: 4, image: '', title: "cheeseball"},
-  ]; // 예시 데이터, 실제 사용시에는 서버에서 가져오거나 로컬 데이터베이스에서 조회할 수 있습니다.
-
+  
   const handleSearch = () => {
     console.log('Performing search for:', searchQuery);
-    // Implement your search logic here
-  };
+  }
 
-  // 자동 완성 데이터 필터링
-  const handleAutoComplete = (text: string) => {
-    setSearchQuery(text);
-    const filtered = data.filter(item => item.title.toLowerCase().startsWith(text.toLowerCase()));
-    setFilteredData(filtered);
-  };
+  const [recipeData, setRecipeData] = useState<FoodItem[] | null>(null)
+
+  useEffect(() => {
+    setRecipeData([
+      {id: 1, image: '', title: "cheese"},
+      {id: 2, image: '', title: "cheesetoast"},
+      {id: 3, image: '', title: "cheesetaco"},
+      {id: 4, image: '', title: "cheeseball"},
+      {id: 5, image: '', title: "issactoast"},
+      {id: 1, image: '', title: "cheesea"},
+      {id: 2, image: '', title: "cheesetoasta"},
+      {id: 3, image: '', title: "cheesetacoa"},
+      {id: 4, image: '', title: "cheeseballa"},
+      {id: 5, image: '', title: "issactoasta"},
+      {id: 1, image: '', title: "cheesea"},
+      {id: 2, image: '', title: "cheesetoasta"},
+      {id: 3, image: '', title: "cheesetacoa"},
+      {id: 4, image: '', title: "cheeseballa"},
+      {id: 5, image: '', title: "issactoasta"},
+    ]);
+  }, []);
 
   return (
     <>
@@ -45,38 +51,8 @@ function DiaryCreateSelectScreen () {
         <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
       </Header>
       <View style={styles.container}>
-      <View style={styles.searchSection}>
-        <Icon name="search" size={20} color="#000" style={styles.searchIcon} />
-        {/* <AutocompleteDropdown
-          clearOnFocus={false}
-          closeOnBlur={true}
-          closeOnSubmit={false}
-          onSelectItem={item => {item && setSelectedItem(item.id)}}
-          dataSet={data}  
-        /> */}
-       <Autocomplete
-        data={filteredData}
-        defaultValue={searchQuery}
-        onChangeText={handleAutoComplete}
-        // placeholder="어떤 레시피를 기록할까요?"
-        inputContainerStyle={styles.input}
-        flatListProps={{
-          renderItem: ({ item }: { item: Recipe }) => (
-            <TouchableOpacity style={styles.listButton} onPress={() => setSearchQuery(item.title)}>
-              <Text>{item.title}</Text>
-            </TouchableOpacity>
-          ),
-          // Make sure scrolling is enabled
-          scrollEnabled: true,
-          // Set a maximum height
-          style: { ...styles.list, ...styles.shadow }
-        }}
-      />
-      </View>
-      {/* <TextInput
-        style={[styles.input, styles.longInput]}
-        placeholder="치즈에 숨바꼭질"
-      /> */}
+        {/* 검색 컴포넌트 추가 */}
+        {recipeData && <SearchBar data={recipeData} />}
       <View style={styles.enterContainer}>
         <TouchableOpacity style={styles.button} onPress={handleSearch}>
           <Text style={styles.buttonText}>확인</Text>
@@ -125,7 +101,7 @@ const styles = StyleSheet.create({
     height: 20
   },
   list: {
-    position: 'absolute',
+    // position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
@@ -160,7 +136,8 @@ const styles = StyleSheet.create({
     padding: 10,
     width: '20%',
     alignItems: 'center',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    zIndex: -10
   },
   buttonText: {
     color: '#000',
