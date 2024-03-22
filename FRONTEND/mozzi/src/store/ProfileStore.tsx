@@ -51,7 +51,7 @@ const useProfileStore = create((set) => ({
     const token = await AsyncStorage.getItem('accessToken')
     console.log(token)
     try {
-      const response = await axios.patch('mozzi/auth/setvagan', {
+      const response = await axios.patch('mozzi/auth/setvegan', {
         isVegan
       }, {
         headers: {
