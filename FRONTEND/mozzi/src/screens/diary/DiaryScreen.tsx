@@ -1,11 +1,13 @@
 import { View, Text, Button, TouchableOpacity, Image } from 'react-native'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
 import styled from 'styled-components/native'
 
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { useNavigation } from '@react-navigation/native'
-import { Calendar, DateData } from 'react-native-calendars'
+import { Calendar } from 'react-native-calendars'
+
+import useDiaryStore from '../../store/DiaryStore'
 
 interface DayStyleProps {
   isSelected: boolean;
@@ -76,60 +78,85 @@ const CalendarImage = styled.Image`
 `
 
 function DiaryScreen () {
-
   const navigation = useNavigation()
+  const { calendarData, getCalendar } = useDiaryStore()
 
-  const moveDiaryDetail = (date: Date) => {
-    navigation.navigate("DiaryDetail", {date: date})
+  useEffect (() => {
+    // 컴포넌트 마운트 시 현재 달의 데이터를 불러옵니다.
+    const today = new Date()
+    console.log(today)
+    const year = today.getFullYear().toString()
+    const month = (today.getMonth() + 1).toString().padStart(2, '0')
+    getCalendar(year, month)
+  }, [])
+
+  // 달 이동할 때 달 정보 받음
+  const getDate = (year, month) => {
+    console.log(year, month)
+    getCalendar(`${year}`, `${month.toString().padStart(2, '0')}`)
   }
+
+  const moveDiaryDetail = (date, dayData) => {
+    if (dayData.length > 0) {
+      navigation.navigate("DiaryDetail", {
+        date: date,
+        dayData: dayData[0],
+      })
+    }
+  }
+
   const moveDiaryCreate = () => {
     navigation.navigate("DiaryCreate")
   }
 
   return (
-    <>
-      <Container>
-        <JustifyView>
-          <Title>나의 요리 달력</Title>
-          <BtnContainer>
-            <Btn onPress={moveDiaryCreate}>
-              <Icon name="add" size={24} color="white" />
-            </Btn>
-          </BtnContainer>
-        </JustifyView>
+    <Container>
+      <JustifyView>
+        <Title>나의 요리 달력</Title>
+        <BtnContainer>
+          <Btn onPress={moveDiaryCreate}>
+            <Icon name="add" size={24} color="white" />
+          </Btn>
+        </BtnContainer>
+      </JustifyView>
 
-        <MyCalendar
-          dayComponent={({date, state}) => {
-            let textColor = '#000' // 기본 텍스트 색상
+      <MyCalendar
+        onMonthChange={(month) => {
+          getDate(month.year, month.month)
+        }}
 
-            if (state === 'disabled') {
-              textColor = '#d9e1e8' // 비활성화된 날짜(저번달/다음달 날짜)의 색상
-            } else if (state === 'today') {
-              textColor = 'red'
-            }
+        dayComponent={({date, state}) => {
+          const dayData = dummyfood.filter(food => food.photoDate === date.dateString)
 
-            return (
-              <TouchableOpacity onPress={() => moveDiaryDetail(date)}>
-                <DayStyle isSelected={state === 'selected'}>
-                  <DayNum textColor={textColor} isToday={state === 'today'}>
-                    {date.day}
-                  </DayNum>
-                  {state !== 'disabled' && 
-                    dummyfood.map((food) => {
-                      return food.photoDate === date.dateString ? 
-                      <CalendarImage
+          let textColor = '#000' // 기본 텍스트 색상
+
+          if (state === 'disabled') {
+            textColor = '#d9e1e8' // 비활성화된 날짜(저번달/다음달 날짜)의 색상
+          } else if (state === 'today') {
+            textColor = 'red'
+          }
+
+          return (
+            <TouchableOpacity onPress={() => moveDiaryDetail(date, dayData)}>
+              <DayStyle isSelected={state === 'selected'}>
+                <DayNum textColor={textColor} isToday={state === 'today'}>
+                  {date.day}
+                </DayNum>
+                {state !== 'disabled' && 
+                  dummyfood.map((food) => {
+                    return food.photoDate === date.dateString ? 
+                    <CalendarImage
                       key={food.id}
                       source={{ uri: `${food.photoUrl}` }}
                     /> : null
-                    })
-                  }
-                </DayStyle>
-              </TouchableOpacity>
-            )
-          }}
-        />
-      </Container>
-    </>
+                  })
+                }
+              </DayStyle>
+            </TouchableOpacity>
+          )
+        }}
+      />
+    </Container>
   )
 }
 
