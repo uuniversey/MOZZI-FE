@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import { useNavigation } from '@react-navigation/native'
 
 import { Header } from '../../components/Header/Header'
-import { SearchBar } from '../../components/Search/search'
+import { SearchBar } from '../../components/Autoword/Search'
 
 interface FoodItem {
   id: number;

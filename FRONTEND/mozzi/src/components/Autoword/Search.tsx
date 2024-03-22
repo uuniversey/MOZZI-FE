@@ -19,10 +19,21 @@ export const SearchBar = ({ data }: SearchBarProps) => {
   const [filteredData, setFilteredData] = useState<FoodItem[]>([])
 
   // 자동 완성 데이터 필터링
+  // const handleAutoComplete = (text: string) => {
+  //   setSearchQuery(text);
+  //   const filtered = data.filter(item => item.title.toLowerCase().includes(text.toLowerCase()));
+  //   setFilteredData(filtered);
+  // }
   const handleAutoComplete = (text: string) => {
     setSearchQuery(text);
-    const filtered = data.filter(item => item.title.toLowerCase().includes(text.toLowerCase()));
-    setFilteredData(filtered);
+    // data가 정의되었는지 확인 후 필터링
+    if (data) {
+      const filtered = data.filter(item => item.title.toLowerCase().includes(text.toLowerCase()));
+      setFilteredData(filtered);
+    } else {
+      // data가 undefined인 경우 처리
+      setFilteredData([]);
+    }
   }
 
   return (
