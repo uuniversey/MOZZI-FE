@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Foods,Category,Ingredient,User
+from .models import Foods,Category,Ingredient,User,FoodIngredient
 from .serializers import FoodSerializer 
 import requests
 import json
@@ -267,8 +267,11 @@ def get_recipe_list(request):
     authorization_header = request.headers.get('Authorization')
     print('Authorization header:', authorization_header)
     foods = Foods.objects.all()
+   
     data = []
+    
     for food in foods:
+        print(food)
         food_data = {
             "foodName": food.food_name,
             "photoUrl": food.food_pic
@@ -304,9 +307,12 @@ def get_ingredient_list_per_category(request):
     
 
 def get_highest_viewed_food(request):
+    cnt = 0
     # food_today_views 열에서 가장 높은 값을 가진 행을 가져옵니다.
     highest_viewed_food = Foods.objects.order_by('-food_today_views').first()
-
+    for i in FoodIngredient.objects.all():
+        print(i.ingredient_ratio,cnt)
+        cnt+=1
     # 결과를 JsonResponse로 반환합니다.
     if highest_viewed_food:
         return JsonResponse({"data": {"foodName": highest_viewed_food.food_name, "photo" : highest_viewed_food.food_pic }} )
@@ -465,9 +471,9 @@ def add_ingredients_to_refrigerator(request):
     foods = request.data.get('foods')
     if request.method == 'POST':
         
-        # for i in user:
-        #     if i.user_code == user_number :
-        #         user_id = i.user_id       
+        for i in user:
+            if i.user_code == user_number :
+                user_id = i.user_id       
         if user_id is None:
             return JsonResponse({"error": "User is not authenticated."}, status=401)
         
@@ -516,43 +522,140 @@ def add_ingredients_to_refrigerator(request):
     else:
         return JsonResponse({"error": "Method not allowed."}, status=405)
 
-def neo4j_visualization(request):
-    neo4j_uri = "bolt://localhost:7687"
-    neo4j_user = "neo4j"
-    neo4j_password = "mozzimozzi"  # 실제 비밀번호로 바꿔야 합니다
-    driver = GraphDatabase.driver(neo4j_uri, auth=(neo4j_user, neo4j_password))
+# def save_ingredient_ratio(request):
+    
+#     weights = {}
+#     food_ingredients = FoodIngredient.objects.all()
+#     foods = Foods.objects.all()
+#     ingredients = Ingredient.objects.all()
+#     with open('food_weight.json', 'r', encoding='utf-8') as json_file:
+#         food_weight = json.load(json_file)
+#     with open('weight.txt', 'r', encoding='utf-8') as weight_file:
+#         for line in weight_file:
+#             parts = line.strip().split('(')
+#             # print(parts)
+#             food_name = parts[0]
+#             temp = parts[1]
+#             parts = temp.strip().split(':')
+#             # print(parts,'1111111')
+#             if food_name not in weights:
+#                 weights[food_name] = (parts[0].replace(')','').strip(),parts[1])
+#             else:
+#                 weights[food_name] += (parts[0].replace(')','').strip(),parts[1])
+#     # print(weights)
+#     with open('resultOnPreDict4.txt','r',encoding='utf-8') as file:
+        
+#         for s in file:
+#             cnt  = 0
+#             start_index = s.find('로그') + 2
+#             end_index = s.find('음식에')
 
-    # 데이터 추출
-    category_node = {
-        "identity": 2148,
-        "labels": ["Category"],
-        "properties": {"name": "건해산", "id": 16},
-        "elementId": "4:5f802a2d-d50a-461d-9935-0af3730eef74:2148"
-    }
+#             food_name = s[start_index:end_index].strip()
+#             food_id = 0
+            
+#             for i in foods:
+                
+#                 if i.food_name.strip() == food_name:
+#                     food_id = i.food_id
+            
+#             index = 0
+#             while index < len(s):
+#                 ratio = 0
+#                 ingredient_id = 0
+#                 amount = 0
+#                 ingredient_name = 0
+#                 if s[index:index+4] == '[[[[':
+#                     end_bracket = s.find(']]]]', index) + 4
+#                     ingredient_name = s[index+4:s.find('$', index)]
+#                     ingredients = Ingredient.objects.all()
+#                     for ingredient in ingredients:
+#                         if ingredient.ingredient_name.strip() == ingredient_name.strip():
+#                             ingredient_id = ingredient.id
+#                     amount = s[s.find('$', index) + 1:end_bracket-4]
+#                     unit = re.search(r'\((.*?)\)', amount).group(1)
+#                     amount = float(amount.replace(unit, '').replace('(','').replace(')', ''))
+#                     # print(ingredient_name,amount,unit,type(amount),1111111111111111111)
+#                     ratio = round((float(amount) / food_weight[food_name]) * 100 ,1)
+#                     # print(food_id,ingredient_name,ingredient_id,amount,ratio,'[[]]')
+#                     if ingredient_name in weights:
+#                         if unit in weights[ingredient_name]:
+#                             cnt += amount*float(weights[ingredient_name][weights[ingredient_name].index(unit)+1].replace('g',''))
+#                             # print(ingredient_name,amount,weights[ingredient_name][weights[ingredient_name].index(unit)+1])
+#                         else:
+#                             if unit.strip() == '적당량' or unit == '약간':
+#                                 pass
+#                             elif unit == 'ml':
+#                                 cnt += amount
+#                             elif unit == 'ts' or unit == 'Ts' or unit=='T' or unit=='t':
+#                                 cnt += amount
+#                             else:
+#                                 pass
+#                                 # print(unit)
+#                                 # print(ingredient_name,amount,unit,type(amount))
+#                             # print(food_name,weights[ingredient_name],ingredient_name)
+#                     index = end_bracket
+#                 elif s[index:index+2] == '[[':
+#                     end_bracket = s.find(']]', index) + 2
+#                     ingredient_name = s[index+2:s.find('$', index)]
+#                     # print(ingredient_name)
+#                     ingredients = Ingredient.objects.all()
+#                     for ingredient in ingredients:
+#                         if ingredient.ingredient_name.strip() == ingredient_name.strip():
+#                             ingredient_id = ingredient.id
+#                     amount = s[s.find('$', index) + 1:end_bracket-5]
+#                     ratio = round((float(amount) / food_weight[food_name]) * 100 ,1)
+#                     # print(food_name,ingredient_name,amount,ratio,'[[[[]]]]')
+#                     # print(f"{ingredient_name}: {amount}")
+#                     index = end_bracket
+#                     cnt += float(amount.strip())
+#                 index += 1
+#             # print(food_name , round(cnt,1))
+#                 print(food_name,food_id,ingredient_name,ingredient_id,ratio)
+#                 if ingredient_id != 0 :
+#                     # print(1)
+#                     try:
+#                         FoodIngredient.objects.create(food_id_id=food_id, ingredient_id_id=ingredient_id, ingredient_ratio=ratio, ingredient_count=1)
+#                     except:
+#                         pass
 
-    food_node = {
-        "identity": 2463,
-        "labels": ["Food"],
-        "properties": {"name": "멸치", "category_id": 16},
-        "elementId": "4:5f802a2d-d50a-461d-9935-0af3730eef74:2463"
-    }
 
-    # 시각화를 위한 네트워크 객체 생성
-    net = Network(height="750px", width="100%")
+# def neo4j_visualization(request):
+#     neo4j_uri = "bolt://localhost:7687"
+#     neo4j_user = "neo4j"
+#     neo4j_password = "mozzimozzi"  # 실제 비밀번호로 바꿔야 합니다
+#     driver = GraphDatabase.driver(neo4j_uri, auth=(neo4j_user, neo4j_password))
 
-    # 노드 추가
-    net.add_node(category_node["identity"], label=category_node["properties"]["name"], title=category_node["elementId"])
-    net.add_node(food_node["identity"], label=food_node["properties"]["name"], title=food_node["elementId"])
+#     # 데이터 추출
+#     category_node = {
+#         "identity": 2148,
+#         "labels": ["Category"],
+#         "properties": {"name": "건해산", "id": 16},
+#         "elementId": "4:5f802a2d-d50a-461d-9935-0af3730eef74:2148"
+#     }
 
-    # 관계 추가
-    net.add_edge(category_node["identity"], food_node["identity"], label="CONTAINS")
+#     food_node = {
+#         "identity": 2463,
+#         "labels": ["Food"],
+#         "properties": {"name": "멸치", "category_id": 16},
+#         "elementId": "4:5f802a2d-d50a-461d-9935-0af3730eef74:2463"
+#     }
 
-    # 시각화 버튼 추가
-    net.show_buttons(filter_=['nodes', 'edges', 'physics'])
+#     # 시각화를 위한 네트워크 객체 생성
+#     net = Network(height="750px", width="100%")
 
-    # HTML 파일로 그래프 저장
-    html_file_path = "neo4j_visualization.html"
-    net.show(html_file_path)
+#     # 노드 추가
+#     net.add_node(category_node["identity"], label=category_node["properties"]["name"], title=category_node["elementId"])
+#     net.add_node(food_node["identity"], label=food_node["properties"]["name"], title=food_node["elementId"])
 
-    # HTML 파일 경로 반환
-    return HttpResponse(html_file_path)
+#     # 관계 추가
+#     net.add_edge(category_node["identity"], food_node["identity"], label="CONTAINS")
+
+#     # 시각화 버튼 추가
+#     net.show_buttons(filter_=['nodes', 'edges', 'physics'])
+
+#     # HTML 파일로 그래프 저장
+#     html_file_path = "neo4j_visualization.html"
+#     net.show(html_file_path)
+
+#     # HTML 파일 경로 반환
+#     return HttpResponse(html_file_path)

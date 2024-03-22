@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.Random;
 
 import com.a304.mozzi.domain.diary.dto.DiaryFoodListDto;
+import com.a304.mozzi.domain.diary.dto.DiaryInputDto;
 import com.a304.mozzi.domain.foods.model.Food;
 import com.a304.mozzi.domain.foods.service.FoodService;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -60,13 +61,17 @@ public class DiaryController {
         DiaryFoodListDto diaryFoodLists = DiaryFoodListDto.builder().foods(DiariesDto).build();
         return ResponseEntity.status(HttpStatus.OK).body(diaryFoodLists);
     }
-
+//    @RequestParam("photo") MultipartFile photo,
+//    @RequestParam("photoDate") String photoDate,
+//    @RequestParam("foodName") String foodName)
     @PostMapping("/setmydiary")
     public ResponseEntity<?> postMyDiary(
-            @RequestParam("photo") MultipartFile photo,
-            @RequestParam("photoDate") String photoDate,
-            @RequestParam("foodName") String foodName) {
+            @ModelAttribute DiaryInputDto diaryInputDto
+            ) {
         try {
+            MultipartFile photo = diaryInputDto.getPhoto();
+            String photoDate = diaryInputDto.getPhotoDate();
+            String foodName = diaryInputDto.getFoodName();
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String username = userDetails.getUsername();

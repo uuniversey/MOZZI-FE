@@ -14,6 +14,8 @@ import com.a304.mozzi.domain.user.customingredient.dto.UserIngredientDto;
 import com.a304.mozzi.domain.user.customingredient.model.UserIngredientModel;
 import com.a304.mozzi.domain.user.customingredient.repository.UserIngredientRepository;
 import com.a304.mozzi.domain.user.dto.LoginResponseDto;
+import com.a304.mozzi.domain.user.dto.UserIsVeganDto;
+import com.a304.mozzi.domain.user.dto.UserNicknameDto;
 import com.a304.mozzi.domain.user.dto.UserProfileDto;
 import com.a304.mozzi.domain.user.model.UserModel;
 import com.a304.mozzi.domain.user.service.UserService;
@@ -126,7 +128,7 @@ public class UserController {
 
                 LoginResponseDto.LoginInfo loginInfo = new LoginResponseDto.LoginInfo();
                 loginInfo.setIsRegistered(true);
-                loginInfo.setNickname("");
+                loginInfo.setNickname(user.getUserNickname());
 
                 ResponseMessageDto responseMessageDto = ResponseMessageDto.builder().message("로그인 완료").data(
                         LoginResponseDto.builder()
@@ -243,18 +245,19 @@ public class UserController {
 
     // 여기서부터 뭘 할 거냐면 id 토큰을 받아서 그대로 분해만 하는작업
     @PatchMapping("/setvegan")
-    ResponseEntity<?> setVegan(@RequestParam boolean isVegan) {
+    ResponseEntity<?> setVegan(@RequestBody UserIsVeganDto isVegan) {
         UserModel user = userService.findCurrentUser();
-        userService.setUserIsVegan(user, isVegan);
+        userService.setUserIsVegan(user, isVegan.isVegan());
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PatchMapping("/setnickname")
-    ResponseEntity<?> setNickname(@RequestParam String nickname) {
+    ResponseEntity<?> setNickname(@RequestBody UserNicknameDto nickname) {
+        log.info(nickname.getNickname());
         UserModel user = userService.findCurrentUser();
-        userService.setUserNickname(user, nickname);
+        userService.setUserNickname(user, nickname.getNickname());
         Map<String, String> result = new HashMap<>();
-        result.put("nickname", nickname);
+        result.put("nickname", nickname.getNickname());
         return ResponseEntity.ok().body(result);
     }
 //
@@ -294,7 +297,7 @@ public class UserController {
 //    }
 
     @PostMapping("/setfood")
-    ResponseEntity<?> addIsLike(@RequestParam List<UserFoodInpDto> listInp) {
+    ResponseEntity<?> addIsLike(@RequestBody List<UserFoodInpDto> listInp) {
         try {
             UserModel user = userService.findCurrentUser();
             for (UserFoodInpDto userFoodInpDto : listInp) {
