@@ -49,7 +49,7 @@ const BtnText = styled.Text`
 `
 
 function ProfileScreen () {
-  const { getProfile, profileData } = useProfileStore()
+  const { getProfile, profileData, editNickname } = useProfileStore()
   const [ isEdit, setIsEdit ] = useState<boolean>(false)
 
   useEffect (() => {
@@ -57,7 +57,9 @@ function ProfileScreen () {
   }, [])
 
   const handleIsEdit = () => {
-    // console.log('Form Data:', form)
+    if (isEdit) {
+      editNickname('신그자체김상범')
+    }
     setIsEdit(!isEdit)
   }
 

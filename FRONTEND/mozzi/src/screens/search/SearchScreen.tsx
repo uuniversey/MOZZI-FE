@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import styled from 'styled-components/native'
 
-import { SearchBar } from '../../components/Autoword/SearchRecipe'
+import { SearchBar } from '../../components/AutoWord/SearchRecipe'
 import { Header } from '../../components/Header/Header'
 import { useNavigation } from '@react-navigation/native'
 
