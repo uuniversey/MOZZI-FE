@@ -1,0 +1,4 @@
+import base64
+code = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiYSI6WyJST0xFX0dVRVNUIl0sImUiOiIzMzY0NDEzNzIxIiwiZXhwIjoxNzEwODEwMTE2fQ.OkNRf0WKlI0NGrl8Lcu2Zfh6bO9FRcP-hEyoAKUUe40'
+coded = base64.b64decode(code)
+print(coded)

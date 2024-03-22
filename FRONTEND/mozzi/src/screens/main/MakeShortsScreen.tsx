@@ -152,15 +152,14 @@ function MakeShortsScreen () {
         <Header.Icon iconName="chevron-back" onPress={goRecap} />
       </Header>
       <Container>
-        <HeaderText>쇼츠 만들기</HeaderText>
+        <HeaderText>쇼츠 만들기 (2/2)</HeaderText>
         <PlayButton>
           <Video
             source={{ uri: videoPath }} // 상태를 사용하여 URI 설정
             style={{ width: '100%', height: '100%' }}
             controls={true}
-            resizeMode="cover"
+            resizeMode="contain"
             paused={false} // 재생/중지 여부
-            onLoad={e => console.log(e)} // 미디어가 로드되고 재생할 준비가 되면 호출되는 콜백 함수입니다.
             repeat={true}
           />
           {/* <Icon name="play-circle" size={60} color="#000" /> */}
