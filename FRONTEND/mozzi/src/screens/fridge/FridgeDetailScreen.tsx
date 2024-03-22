@@ -6,7 +6,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 
 import { Header } from '../../components/Header/Header';
-import { SearchFood } from '../../components/Autoword/SearchFood';
+import { SearchFood } from '../../components/AutoWord/SearchFood';
 import useFridgeStore from '../../store/FridgeStore';
 import note from '../../assets/fridge/note.png';
 import clip from '../../assets/fridge/clip.png';
@@ -18,11 +18,6 @@ interface FoodItem {
 const Container = styled.KeyboardAvoidingView`
   flex: 1;
   background-color: #FFFEF2;
-`;
-
-const Title = styled.Text`
-  margin-top: 50px;
-  margin-bottom: 20px;
 `;
 
 const ClipImg = styled.Image`
@@ -100,10 +95,18 @@ const FridgeDetailScreen = ({ route }) => {
   const navigation = useNavigation();
 
   // 항목을 냉장고에 추가하는 함수
+  // const handleSend = () => {
+  //   addFridge(text?.food); // Zustand 스토어 업데이트 및 DB 업데이트
+  //   setText(null); // 텍스트 입력 필드 초기화
+  //   scrollViewRef.current.scrollToEnd({ animated: true }); // 스크롤을 맨 아래로 이동
+  // };
+
   const handleSend = () => {
-    addFridge(text?.food); // Zustand 스토어 업데이트 및 DB 업데이트
-    setText(null); // 텍스트 입력 필드 초기화
-    scrollViewRef.current.scrollToEnd({ animated: true }); // 스크롤을 맨 아래로 이동
+    if (text) {
+      addFridge(text); // Zustand 스토어 업데이트 및 DB 업데이트
+      setText(''); // 텍스트 입력 필드 초기화
+      scrollViewRef.current.scrollToEnd({ animated: true }); // 스크롤을 맨 아래로 이동
+    }
   };
 
   return (
@@ -129,7 +132,7 @@ const FridgeDetailScreen = ({ route }) => {
       <InputContainer>
         <SearchFood
           data={allFoods}
-          setQuery={(query) => setText({ food: query })}
+          setQuery={setText} // 여기서 setQuery를 setText로 설정
           placeholder="재료를 입력하세요..."
         />
         {text && ( // 텍스트가 있을 때만 전송 버튼 표시
