@@ -310,12 +310,10 @@ def get_highest_viewed_food(request):
     cnt = 0
     # food_today_views 열에서 가장 높은 값을 가진 행을 가져옵니다.
     highest_viewed_food = Foods.objects.order_by('-food_today_views').first()
-    for i in FoodIngredient.objects.all():
-        print(i.ingredient_ratio,cnt)
-        cnt+=1
-    # 결과를 JsonResponse로 반환합니다.
-    if highest_viewed_food:
-        return JsonResponse({"data": {"foodName": highest_viewed_food.food_name, "photo" : highest_viewed_food.food_pic }} )
+    # print(len(foods))
+    
+    
+    return JsonResponse({"data": {"foodName": highest_viewed_food.food_name, "photo" : highest_viewed_food.food_pic }} )
 
 import os
 
