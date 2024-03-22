@@ -49,7 +49,7 @@ export const SearchFood = ({ data, setQuery }) => {
       data={filteredData}
       defaultValue={query}
       onChangeText={handleAutoComplete}
-      placeholder="재료를 입력해 주세요..."
+      placeholder="재료를 입력해 주세요... text word 추가"
       flatListProps={{
         keyExtractor: (item, index) => index.toString(),
         renderItem: ({ item }) => (
