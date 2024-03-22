@@ -175,20 +175,21 @@ def get_random_food(request):
 def recipe_detail(request):
     start_time = datetime.now()
     body_unicode = request.body.decode('utf-8')
-   
-    lines = body_unicode.split("\n")
-
-    food_name = None
-    print(lines)
-    for i in range(len(lines)):
-        if lines[i] == '\r':
-            food_name = lines[i+1]
-            break
+    # print(body_unicode)
+    #
+    # lines = body_unicode.split("\n")
+    food = json.loads(body_unicode)
+    food_name = food['foodName']
+    
+    # print(food)
+    # print(lines)
+    # for i in range(len(lines)):
+    #     if lines[i] == '\r':
+    #         food_name = lines[i+1]
+    #         break
     
     # 가져온 값 출력
-    print()
-    print("Received food name:", food_name.strip(),food_name)
-    print()
+   
     try:
       
         foodsss = Foods.objects.all()
@@ -205,7 +206,7 @@ def recipe_detail(request):
         # MongoDB의 레시피 ID 반환
    
         end_time = datetime.now()
-        print(end_time - start_time)
+        # print(end_time - start_time)
         return JsonResponse({'data': {
             # 'id': str(mongo_food.id),
             'RCP_PARTS_DTLS': mongo_food.food_recipe["RCP_PARTS_DTLS"],
