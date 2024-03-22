@@ -287,18 +287,15 @@ def get_ingredient_list(request):
 
 def get_ingredient_list_per_category(request):
     body_unicode = request.body.decode('utf-8')
+    data_dict = json.loads(body_unicode)
     lines = body_unicode.split("\n")
-
-    categories = None
-    for i in range(len(lines)):
-        if lines[i] == '\r':
-            categories = lines[i+1]
-            break
+    categories = data_dict['category']
     
     ingredients = Ingredient.objects.all()
     foods = []
     for ingredient in ingredients:
-        if str(ingredient.category_id) in categories:
+        # print(ingredient.category_id)
+        if ingredient.category_id in categories:
             foods.append(ingredient.ingredient_name)
     
     
@@ -460,7 +457,9 @@ def add_ingredients_to_refrigerator(request):
     index_comma = data.index(',', index_e)  # 쉼표(,)가 나오는 인덱스 찾기
     e_value = data[index_e:index_comma]
     user_number = e_value[1:-1]
+    
     # 결과 출력
+    user_id =0
     for i in user:
             if i.user_code == user_number :
                 user_id = i.user_id  
