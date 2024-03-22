@@ -5,7 +5,9 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import { useNavigation } from '@react-navigation/native'
 
 import { Header } from '../../components/Header/Header'
-import { SearchBar } from '../../components/Search/search'
+import { SearchBar } from '../../components/Autoword/SearchRecipe'
+
+import useRecipeStore from '../../store/RecipeStore'
 
 interface FoodItem {
   id: number;
@@ -14,8 +16,8 @@ interface FoodItem {
 }
 
 function DiaryCreateSelectScreen () {
-
-  const navigation = useNavigation() 
+  const navigation = useNavigation()
+  const { getRecipe, recipeData2 } = useRecipeStore()
 
   const [searchQuery, setSearchQuery] = useState<string>('');
   
@@ -25,6 +27,7 @@ function DiaryCreateSelectScreen () {
 
   const [recipeData, setRecipeData] = useState<FoodItem[] | null>(null)
 
+  
   useEffect(() => {
     setRecipeData([
       {id: 1, image: '', title: "cheese"},
@@ -43,6 +46,7 @@ function DiaryCreateSelectScreen () {
       {id: 4, image: '', title: "cheeseballa"},
       {id: 5, image: '', title: "issactoasta"},
     ]);
+    getRecipe()
   }, []);
 
   return (

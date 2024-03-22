@@ -1,14 +1,13 @@
 import { create } from 'zustand'
-import axios from 'axios'
+import axios from '../../axios'
 
 const useRecipeStore = create((set) => ({
   
-  recipeData: [],
+  recipeData2: [],
 
-  getRecipe: async (url) => {
-    console.log(url) // url이 잘 받아와지는지 확인
+  getRecipe: async () => {
     try {
-      const response = await axios.get(url)
+      const response = await axios.get('recommend/datas/get_recipe_list/')
       console.log('Backend response:', response.data) // 백엔드 응답 로깅
       set({ recipeData: response.data })
     } catch (error) {

@@ -70,6 +70,7 @@ const Btn = styled.TouchableOpacity`
   height: 35px;
   justify-content: center;
   align-self: flex-end;
+  margin-top: 30px;
 `
 
 const BtnText = styled.Text`

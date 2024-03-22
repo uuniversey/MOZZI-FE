@@ -1,16 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, TextInput, Button } from 'react-native'
-import Icon from 'react-native-vector-icons/MaterialIcons'
-
 import styled from 'styled-components/native'
 
-interface UserProfileState {
-  email: string
-  allergyInfo: string
-  favoriteFood: string
-  dislikedFood: string
-  isVegan: string
-}
+import EditScreen from './EditScreen'
+import useProfileStore from '../../store/ProfileStore'
 
 const Container = styled.View`
   flex: 1;
@@ -47,6 +40,7 @@ const Btn = styled.TouchableOpacity`
   height: 35px;
   justify-content: center;
   align-self: flex-end;
+  margin-top: 30px;
 `
 
 const BtnText = styled.Text`
@@ -55,73 +49,55 @@ const BtnText = styled.Text`
 `
 
 function ProfileScreen () {
+  const { getProfile, profileData } = useProfileStore()
+  const [ isEdit, setIsEdit ] = useState<boolean>(false)
 
-  const [form, setForm] = useState<UserProfileState>({
-    email: '',
-    allergyInfo: '',
-    favoriteFood: '',
-    dislikedFood: '',
-    isVegan: ''
-  })
+  useEffect (() => {
+    getProfile()
+  }, [])
 
-  const handleEmailChange = (email: string) => setForm({ ...form, email })
-  const handleAllergyInfoChange = (allergyInfo: string) => setForm({ ...form, allergyInfo })
-  const handleFavoriteFoodChange = (favoriteFood: string) => setForm({ ...form, favoriteFood })
-  const handleDislikedFoodChange = (dislikedFood: string) => setForm({ ...form, dislikedFood })
-  const handleIsVeganChange = (isVegan: string) => setForm({ ...form, isVegan })
-
-  const editProfile = () => {
-    console.log('Form Data:', form)
+  const handleIsEdit = () => {
+    // console.log('Form Data:', form)
+    setIsEdit(!isEdit)
   }
 
   return (
-    <>
-      <Container>
-        <Title>내 정보</Title>
-        <Body>
-          <Label>이메일</Label>
-          <StyledInput
-            placeholder="이메일을 입력하세요"
-            value={form.email}
-            onChangeText={handleEmailChange}
-            autoCapitalize="none"
-            keyboardType="email-address"
-            placeholderTextColor="#ccc"
-          />
-          <Label>알레르기 정보</Label>
-          <StyledInput
-            placeholder="알레르기 정보를 입력하세요"
-            value={form.allergyInfo}
-            onChangeText={handleAllergyInfoChange}
-            placeholderTextColor="#ccc"
-          />
-          <Label>좋아하는 음식</Label>
-          <StyledInput
-            placeholder="좋아하는 음식을 입력하세요"
-            value={form.favoriteFood}
-            onChangeText={handleFavoriteFoodChange}
-            placeholderTextColor="#ccc"
-          />
-          <Label>싫어하는 음식</Label>
-          <StyledInput
-            placeholder="싫어하는 음식을 입력하세요"
-            value={form.dislikedFood}
-            onChangeText={handleDislikedFoodChange}
-            placeholderTextColor="#ccc"
-          />
-          <Label>비건 여부</Label>
-          <StyledInput
-            placeholder="예/아니오로 입력하세요"
-            value={form.isVegan}
-            onChangeText={handleIsVeganChange}
-            placeholderTextColor="#ccc"
-          />
-          <Btn onPress={editProfile}>
-            <BtnText>수정</BtnText>
-          </Btn>
-        </Body>
-      </Container>
-    </>
+    <Container>
+      <Title>내 정보</Title>
+      <Body>
+        {isEdit ? (
+          <EditScreen />
+          ) : (
+          <View>
+            <Label>닉네임</Label>
+            <StyledInput
+              placeholder={`${profileData.nickname}`}
+              editable={false}
+            />
+            <Label>알레르기 정보</Label>
+            <StyledInput
+              placeholder={`${profileData.foods}`}
+            />
+            <Label>좋아하는 음식</Label>
+            <StyledInput
+              placeholder={`${profileData.foods}`}
+            />
+            <Label>싫어하는 음식</Label>
+            <StyledInput
+              placeholder={`${profileData.foods}`}
+            />
+            <Label>비건 여부</Label>
+            <StyledInput
+              placeholder={`${profileData.isVegan}`}
+            />
+          </View>
+          )
+        }
+        <Btn onPress={handleIsEdit}>
+          <BtnText>{isEdit ? '완료' : '수정'}</BtnText>
+        </Btn>
+      </Body>
+    </Container>
   )
 }
 
