@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import Autocomplete from 'react-native-autocomplete-input';
+import React, { useEffect, useState } from 'react'
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native'
+import Icon from 'react-native-vector-icons/MaterialIcons'
+import Autocomplete from 'react-native-autocomplete-input'
 
 interface FoodItem {
   id: number
@@ -11,12 +11,15 @@ interface FoodItem {
 
 interface SearchBarProps {
   data: FoodItem[]
+  onSelect: (recipeKey: number, recipeName: string) => void
 }
 
-export const SearchBar = ({ data }: SearchBarProps) => {
+export const SearchBar = ({ data, onSelect }: SearchBarProps) => {
 
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [filteredData, setFilteredData] = useState<FoodItem[]>([])
+  const [recipeKey, setRecipeKey] = useState<Number | null>(null)
+  const [recipeName, setRecipeName] = useState<string>('')
 
   // 자동 완성 데이터 필터링
   const handleAutoComplete = (text: string) => {
@@ -25,9 +28,18 @@ export const SearchBar = ({ data }: SearchBarProps) => {
     setFilteredData(filtered);
   }
 
+  useEffect(() => {
+    if (searchQuery) {
+      const selectedItem = filteredData.find(item => item.title.toLowerCase() === searchQuery.toLowerCase());
+      if (selectedItem) {
+        onSelect(selectedItem.id, selectedItem.title)
+      }
+    }
+  }, [searchQuery, filteredData, onSelect])
+
   return (
     <>
-      <View style={styles.searchSection}>
+     <View style={styles.searchSection}>
         <Icon name="search" size={20} color="#000" style={styles.searchIcon} />
           <View style={styles.InputSection}>
             <Autocomplete
@@ -37,7 +49,14 @@ export const SearchBar = ({ data }: SearchBarProps) => {
               inputContainerStyle={styles.input}
               flatListProps={{
                 renderItem: ({ item }: { item: FoodItem }) => (
-                  <TouchableOpacity style={styles.listButton} onPress={() => setSearchQuery(item.title)}>
+                  <TouchableOpacity
+                    style={styles.listButton}
+                    onPress={() => {
+                      setSearchQuery(item.title)
+                      setRecipeKey(item.id)
+                      setRecipeName(item.title)
+                      onSelect(item.id, item.title)
+                    }}>
                     <Text>{item.title}</Text>
                   </TouchableOpacity>
                 ),
@@ -45,6 +64,11 @@ export const SearchBar = ({ data }: SearchBarProps) => {
                 style: { ...styles.list, ...styles.shadow },
               }}
             />
+            {filteredData.length === 0 && searchQuery.length > 0 && (
+              <View style={styles.emptySearchResults}>
+                <Text>검색 결과가 없습니다.</Text>
+              </View>
+            )}
         </View>
       </View>
     </>
@@ -112,4 +136,9 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 5,
   },
-});
+  emptySearchResults: {
+    alignItems: 'center', // 메시지를 중앙 정렬
+    justifyContent: 'center',
+    padding: 10, // 적당한 패딩
+  },
+})

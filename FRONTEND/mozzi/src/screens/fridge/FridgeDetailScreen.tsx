@@ -6,7 +6,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 
 import { Header } from '../../components/Header/Header';
-import { SearchFood } from '../../components/Autoword/SearchFood';
+import { SearchFood } from '../../components/AutoWord/SearchFood';
 import useFridgeStore from '../../store/FridgeStore';
 import note from '../../assets/fridge/note.png';
 import clip from '../../assets/fridge/clip.png';

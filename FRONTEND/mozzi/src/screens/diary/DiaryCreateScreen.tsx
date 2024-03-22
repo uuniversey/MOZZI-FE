@@ -187,12 +187,12 @@ function DiaryCreateScreen () {
       maxHeight: 768,
       includeBase64: Platform.OS === 'android',
     }, (response) => {
-      if (response.assets && response.assets[0].uri) {
-        console.log(response.assets[0].uri)
-        setImageUri(response.assets[0].uri)
-        setImageType(response.assets[0].type)
+      if (response.assets && response.assets[0].uri && response.assets[0].uri) {
+        console.log(response?.assets[0]?.uri)
+        setImageUri(response?.assets[0]?.uri)
+        setImageType(response?.assets[0]?.type)
         // 파일명 한글이라 오류 날 경우, 임의로 파일명 부여할 것
-        setImageName(response.assets[0].fileName)
+        setImageName(response?.assets[0]?.fileName)
       } else if (response.didCancel) {
         console.log('User cancelled image picker')
       } else if (response.errorCode) {
@@ -215,36 +215,38 @@ function DiaryCreateScreen () {
     // formData.append('nickName', nickName)
     if (imageUri && imageType && imageName) {
       // 안드로이드에서는 파일 경로의 수정이 필요함
-      const imagePath = Platform.OS === 'android' ? imageUri.replace('file://', '') : imageUri
+      // const imagePath = Platform.OS === 'android' ? imageUri.replace('file://', '') : imageUri
       
       formData.append('photo', {
         name: imageName,
         type: imageType,
-        uri: imagePath,
+        uri: 'https://i.namu.wiki/i/ywRdkOZAdp4dU3ItrNm36NjVx3sbEE6PYVvNVYpRa9MUDtKIxxejpM-jAXGl9fHGavoYESWtzbf7C0LA9RBGsS63D8KY1eINfE4ZQf-36gNq-fDtiJu9fXkS5hE01eY2ArhJcagnO7pMdtRz2e0dsA.webp',
       })
     }
 
-  const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwiYSI6WyJST0xFX0dVRVNUIl0sImUiOiIzMzk3ODg1MjUyIiwiZXhwIjoxNzExMTYwODA5fQ.TEGaAc8QeGqW_nh_2UZDIZJvoKVs42_Sf4XgiVF3cmA'
   const createDiary = async () => {
+    const token = await AsyncStorage.getItem('accessToken')
     try {
-      console.log(formData)
+      // console.log(formData)
+      console.log(formData.getAll('photo'))
+
       //http://a304.site/api/mozzi/diary/setmydiary
       // axios.get('/recommend/get_ingredients_from_refrigerator/
-      const response = await axios.post('http://a304.site/api/mozzi/diary/setmydiary', formData, {
+      const response = await axios.post(`https://a304.site/api/mozzi/diary/setmydiary`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
-          // Accept: '*/*',
           'Content-type': 'multipart/form-data',
         },
-        transformRequest: data => data,
+        transformRequest: (data, headers) => {
+          return data
+        },
       })
       console.log(response.data)
     } catch (error) {
       //응답 실패
-      console.error(error);
+      console.error(error)
     }
   }
-
 
   return (
     <>
