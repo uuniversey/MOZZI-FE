@@ -11,3 +11,9 @@ spring:
 security:
   jwt:
     secret-key: mozziisthemostperfectprojectintheworld
+
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled:true
