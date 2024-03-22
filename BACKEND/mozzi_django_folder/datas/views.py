@@ -267,13 +267,18 @@ def get_recipe_list(request):
     authorization_header = request.headers.get('Authorization')
     print('Authorization header:', authorization_header)
     foods = Foods.objects.all()
+    print(len(foods))
     data = []
-    for food in foods:
-        food_data = {
-            "foodName": food.food_name,
-            "photoUrl": food.food_pic
-        }
-        data.append(food_data)
+    for i in foods:
+        print(i)
+    print(321)
+    # for food in foods:
+    #     print(food)
+    #     food_data = {
+    #         "foodName": food.food_name,
+    #         "photoUrl": food.food_pic
+    #     }
+    #     data.append(food_data)
     return JsonResponse({'foods': data})
 
 def get_ingredient_list(request):
@@ -465,9 +470,9 @@ def add_ingredients_to_refrigerator(request):
     foods = request.data.get('foods')
     if request.method == 'POST':
         
-        # for i in user:
-        #     if i.user_code == user_number :
-        #         user_id = i.user_id       
+        for i in user:
+            if i.user_code == user_number :
+                user_id = i.user_id       
         if user_id is None:
             return JsonResponse({"error": "User is not authenticated."}, status=401)
         

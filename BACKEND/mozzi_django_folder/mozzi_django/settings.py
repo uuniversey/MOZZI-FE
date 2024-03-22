@@ -76,23 +76,22 @@ WSGI_APPLICATION = 'mozzi_django.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 ALLOWED_HOSTS = ['a304.site','127.0.0.1']
-
+### 로컬용
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'mozzi',
         'USER': 'ssafy',
         'PASSWORD': 'ssafy',
-        'HOST': 'a304.site',
+        'HOST': 'localhost',
         'PORT': '3306',
     },
     'mongodb': {
         'ENGINE': 'djongo',
         'ENFORCE_SCHEMA': False,
         'NAME': 'mozzi',
-        'USER': 'root',
-        'PASSWORD': 'ssafy',
-        'HOST': 'a304.site',  # 여기서는 호스트 이름만 지정합니다.
+        
+        'HOST': 'localhost',  # 여기서는 호스트 이름만 지정합니다.
         'PORT': '27017',  # 포트는 정수로 지정합니다.
     }
 }
@@ -102,6 +101,32 @@ connect(
     alias='default',  # 이 부분은 Django에서 사용할 alias를 설정하는 부분입니다.
 
 )
+### 서버용
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'mozzi',
+#         'USER': 'ssafy',
+#         'PASSWORD': 'ssafy',
+#         'HOST': 'a304.site',
+#         'PORT': '3306',
+#     },
+#     'mongodb': {
+#         'ENGINE': 'djongo',
+#         'ENFORCE_SCHEMA': False,
+#         'NAME': 'mozzi',
+#         'USER': 'root',
+#         'PASSWORD': 'ssafy',
+#         'HOST': 'a304.site',  # 여기서는 호스트 이름만 지정합니다.
+#         'PORT': '27017',  # 포트는 정수로 지정합니다.
+#     }
+# }
+# connect(
+#     db='mozzi',  # 여기에는 사용할 MongoDB 데이터베이스 이름을 넣으세요.
+#     host='mongodb://a304.site:27017/',  # MongoDB 호스트 주소입니다. 포트 번호 27017을 사용합니다.
+#     alias='default',  # 이 부분은 Django에서 사용할 alias를 설정하는 부분입니다.
+
+# )
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
