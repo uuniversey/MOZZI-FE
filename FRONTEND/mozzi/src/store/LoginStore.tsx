@@ -26,8 +26,8 @@ const useLoginStore = create((set) => ({
 
       // 토큰 스토리지에 저장
       await Promise.all([
-        AsyncStorage.setItem('accessToken', JSON.stringify(response.data.data.token.accessToken)),
-        AsyncStorage.setItem('refreshToken', JSON.stringify(response.data.data.token.refreshToken))
+        AsyncStorage.setItem('accessToken', JSON.stringify(response.data.data.token.accessToken).slice(1, -1)),
+        AsyncStorage.setItem('refreshToken', JSON.stringify(response.data.data.token.refreshToken).slice(1, -1))
       ])
 
     } catch (error) {

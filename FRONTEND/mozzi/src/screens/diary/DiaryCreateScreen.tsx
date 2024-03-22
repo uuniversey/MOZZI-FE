@@ -1,14 +1,16 @@
 import { View, Text, Button, TouchableOpacity, Platform } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StyleSheet, Image  } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { launchImageLibrary } from 'react-native-image-picker'
 import { format } from 'date-fns'
 import DateTimePickerModal from 'react-native-modal-datetime-picker'
 import { Header } from '../../components/Header/Header'
+// import axios from '../../../axios'
 import axios from 'axios'
-import styled from 'styled-components/native';
+import styled from 'styled-components/native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 // Styled components definitions
 const Container = styled.View`
@@ -165,6 +167,18 @@ function DiaryCreateScreen () {
   const [imageUri, setImageUri] = useState<string | undefined>()
   const [imageType, setImageType] = useState<string | undefined>()
   const [imageName, setImageName] = useState<string | undefined>()
+  const route = useRoute()
+  const [selectedRecipeKey, setSelectedRecipeKey] = useState<number | null>(null)
+  const [selectedRecipeName, setSelectedRecipeName] = useState<string>('')
+
+  useEffect(() => {
+    // route.params에서 데이터 가져오기
+    if (route.params) {
+      const { recipeKey, recipeName } = route.params as { recipeKey: number; recipeName: string }
+      setSelectedRecipeKey(recipeKey)
+      setSelectedRecipeName(recipeName)
+    }
+  }, [route.params])
 
   const handleChoosePhoto = () => {
     launchImageLibrary({
@@ -187,28 +201,39 @@ function DiaryCreateScreen () {
     })
   }
 
-  
+  // const storageData = AsyncStorage.getItem("accessToken")
+  // console.log("--------------", JSON.parse({storageData}))
+
+
   const formData = new FormData()
     if (selectedDate) {
-      formData.append('date', format(selectedDate, 'yyyy-MM-dd'))
+      formData.append('photoDate', format(selectedDate, 'yyyy-MM-dd'))
+    }
+    if (selectedRecipeName) {
+      formData.append('foodName', selectedRecipeName)
     }
     // formData.append('nickName', nickName)
     if (imageUri && imageType && imageName) {
       // 안드로이드에서는 파일 경로의 수정이 필요함
       const imagePath = Platform.OS === 'android' ? imageUri.replace('file://', '') : imageUri
       
-      formData.append('image', {
+      formData.append('photo', {
         name: imageName,
         type: imageType,
         uri: imagePath,
       })
     }
 
+  const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzIiwiYSI6WyJST0xFX0dVRVNUIl0sImUiOiIzMzk3ODg1MjUyIiwiZXhwIjoxNzExMTYwODA5fQ.TEGaAc8QeGqW_nh_2UZDIZJvoKVs42_Sf4XgiVF3cmA'
   const createDiary = async () => {
     try {
-      const response = await axios.post('http://10.0.2.2:8000/maker/video_yk/', formData, {
+      console.log(formData)
+      //http://a304.site/api/mozzi/diary/setmydiary
+      // axios.get('/recommend/get_ingredients_from_refrigerator/
+      const response = await axios.post('http://a304.site/api/mozzi/diary/setmydiary', formData, {
         headers: {
-          Accept: '*/*',
+          Authorization: `Bearer ${token}`,
+          // Accept: '*/*',
           'Content-type': 'multipart/form-data',
         },
         transformRequest: data => data,
@@ -237,7 +262,7 @@ function DiaryCreateScreen () {
         </DateContainer>
         <Line />
         <FoodNameContainer>
-              <FoodNameText>{selectedrecipe}</FoodNameText>
+              <FoodNameText>{selectedRecipeName}</FoodNameText>
         </FoodNameContainer>
         <DateTimePickerModal
           isVisible={isDatePickerVisible}
@@ -268,7 +293,7 @@ function DiaryCreateScreen () {
           <ButtonText>레시피 불러오기</ButtonText>
         </RecipeButton>
         <EnterContainer>
-          <EnterButton>
+          <EnterButton onPress={createDiary}>
             <EnterButtonText>등록</EnterButtonText>
           </EnterButton>
         </EnterContainer>
