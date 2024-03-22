@@ -10,10 +10,14 @@ import java.util.Optional;
 import java.util.Random;
 
 import com.a304.mozzi.domain.diary.dto.DiaryFoodListDto;
+import com.a304.mozzi.domain.diary.dto.DiaryInputDto;
 import com.a304.mozzi.domain.foods.model.Food;
 import com.a304.mozzi.domain.foods.service.FoodService;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -42,6 +46,9 @@ public class DiaryController {
     private final DiaryService diaryService;
     private final UserService userService;
     private final FoodService foodService;
+    @Value("${spring.cloud.aws.s3.bucket}")
+    private String bucket;
+    private  final AmazonS3Client amazonS3Client;
 
     @GetMapping("/getmydiary")
     public ResponseEntity<DiaryFoodListDto> GetMyDiary(
@@ -54,13 +61,17 @@ public class DiaryController {
         DiaryFoodListDto diaryFoodLists = DiaryFoodListDto.builder().foods(DiariesDto).build();
         return ResponseEntity.status(HttpStatus.OK).body(diaryFoodLists);
     }
-
+//    @RequestParam("photo") MultipartFile photo,
+//    @RequestParam("photoDate") String photoDate,
+//    @RequestParam("foodName") String foodName)
     @PostMapping("/setmydiary")
     public ResponseEntity<?> postMyDiary(
-            @RequestParam("photo") MultipartFile photo,
-            @RequestParam("photoDate") String photoDate,
-            @RequestParam("foodName") String foodName) {
+            @ModelAttribute DiaryInputDto diaryInputDto
+            ) {
         try {
+            MultipartFile photo = diaryInputDto.getPhoto();
+            String photoDate = diaryInputDto.getPhotoDate();
+            String foodName = diaryInputDto.getFoodName();
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             String username = userDetails.getUsername();
@@ -71,21 +82,27 @@ public class DiaryController {
             }
             String sourceFileName = photo.getOriginalFilename();
             String sourceFileNameExtension = FilenameUtils.getExtension(sourceFileName).toLowerCase();
-            String fileUrl = "C:\\Users\\SSAFY\\Downloads\\GOODCODE\\S2A304\\BACKEND\\public\\";
+            // String fileUrl = "C:\\Users\\SSAFY\\Downloads\\GOODCODE\\S2A304\\BACKEND\\public\\";
+            String fileUrl = "https://" + bucket + "/";
             String destinationFileName = RandomStringUtils.randomAlphabetic(5) + "_" + username + "_" + photoDate + "."
                     + sourceFileNameExtension;
-            File destinationFile = new File(fileUrl + destinationFileName);
 
-            if (!destinationFile.getParentFile().exists()) {
-                if (!destinationFile.getParentFile().mkdirs()) {
-                    log.error("Failed to create directories for file: {}", destinationFile.getPath());
-                    // 에러 처리 로직 추가
-                }
-            }
-
-            // destinationFile.getParentFile().mkdirs();
-
-            photo.transferTo(destinationFile);
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType(photo.getContentType());
+            metadata.setContentLength(photo.getSize());
+            amazonS3Client.putObject(bucket, destinationFileName, photo.getInputStream() ,metadata);
+//            File destinationFile = new File(fileUrl + destinationFileName);
+//
+//            if (!destinationFile.getParentFile().exists()) {
+//                if (!destinationFile.getParentFile().mkdirs()) {
+//                    log.error("Failed to create directories for file: {}", destinationFile.getPath());
+//                    // 에러 처리 로직 추가
+//                }
+//            }
+//
+//            // destinationFile.getParentFile().mkdirs();
+//
+//            photo.transferTo(destinationFile);
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             // log.info(photoDate);
 

@@ -10,9 +10,13 @@ import com.a304.mozzi.domain.ingredients.service.IngrdientsService;
 import com.a304.mozzi.domain.user.customfood.dto.UserFoodInpDto;
 import com.a304.mozzi.domain.user.customfood.model.UserFood;
 import com.a304.mozzi.domain.user.customfood.repository.UserFoodRepository;
+import com.a304.mozzi.domain.user.customingredient.dto.UserIngredientDto;
 import com.a304.mozzi.domain.user.customingredient.model.UserIngredientModel;
 import com.a304.mozzi.domain.user.customingredient.repository.UserIngredientRepository;
 import com.a304.mozzi.domain.user.dto.LoginResponseDto;
+import com.a304.mozzi.domain.user.dto.UserIsVeganDto;
+import com.a304.mozzi.domain.user.dto.UserNicknameDto;
+import com.a304.mozzi.domain.user.dto.UserProfileDto;
 import com.a304.mozzi.domain.user.model.UserModel;
 import com.a304.mozzi.domain.user.service.UserService;
 import com.a304.mozzi.global.dto.ResponseDto;
@@ -58,7 +62,7 @@ public class UserController {
         // return response;
         java.util.Map<String, String> links = new HashMap<>();
         links.put("link", "https://kauth.kakao.com/oauth/authorize");
-        links.put("redirect", "http://localhost:8080/auth/Oauth2/KakaoToken");
+        links.put("redirect", "http://localhost:8080/auth/Oauth2/KakaoWeb");
         // links.put("redirect", "http://localhost:3000/auth");
 
         return ResponseEntity.status(HttpStatus.OK).body(links);
@@ -124,7 +128,7 @@ public class UserController {
 
                 LoginResponseDto.LoginInfo loginInfo = new LoginResponseDto.LoginInfo();
                 loginInfo.setIsRegistered(true);
-                loginInfo.setNickname("");
+                loginInfo.setNickname(user.getUserNickname());
 
                 ResponseMessageDto responseMessageDto = ResponseMessageDto.builder().message("로그인 완료").data(
                         LoginResponseDto.builder()
@@ -141,21 +145,119 @@ public class UserController {
         }
     }
 
+    @GetMapping("/Oauth2/KakaoWeb")
+    public ResponseEntity<?> loginForWeb(@RequestParam("code") String code) {
+        try {
+         log.info(code);
+            KakaoApi.OAuthToken token = kakaoApi.getOAuthToken(code);
+            String str = token.getId_token();
+            log.info(str);
+//            log.info(code);
+            String[] whatIneed = str.split("\\.");
+
+            KakaoApi.KakaoOpenIdToken kakaoOpenIdToken = kakaoApi
+                    .getOpenIdToken(new String(Base64.getDecoder().decode(whatIneed[1]), StandardCharsets.UTF_8));
+            if (!userService.existsByUserCode(kakaoOpenIdToken.getSub())) {
+
+                UserModel user = UserModel.builder()
+                        .userCode(kakaoOpenIdToken.getSub())
+                        .build();
+
+                UserModel registerUserModel = userService.create(user);
+                var MyAccesstoken = jwtIssuer.issue(registerUserModel.getUserId(),
+                        registerUserModel.getUserCode(),
+                        // Arrays.stream(registerUserModel.getRole().split(", "))
+                        // .collect((Collectors.toList()))
+                        List.of("ROLE_GUEST")
+
+                );
+                Map<String, String> tokenContainer = new HashMap<>();
+                tokenContainer.put("accessToken", MyAccesstoken);
+                tokenContainer.put("refreshToken", MyAccesstoken);
+
+                LoginResponseDto.LoginInfo loginInfo = new LoginResponseDto.LoginInfo();
+                loginInfo.setIsRegistered(false);
+                loginInfo.setNickname("");
+
+                LoginResponseDto loginResponse = LoginResponseDto.builder().token(tokenContainer).info(loginInfo).build();
+                ResponseMessageDto responseMessageDto = ResponseMessageDto.builder().message("회원가입 완료").data(loginResponse).build();
+                return ResponseEntity.ok().body(responseMessageDto);
+            } else {
+                log.info(code);
+                Optional<UserModel> userOptional = userService.findByUserCode(kakaoOpenIdToken.getSub());
+                UserModel user = null;
+                if (userOptional.isPresent()) {
+                    user = userOptional.get();
+                }
+
+                var authentication = authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(kakaoOpenIdToken.getSub(), "mozzi"));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                var principal = (UserPrincipal) authentication.getPrincipal();
+
+                var roles = principal.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .toList();
+                var MyAccesstoken = jwtIssuer.issue(user.getUserId(), user.getUserCode(), List.of("ROLE_GUEST"));
+
+                Map<String, String> tokenContainer = new HashMap<>();
+                tokenContainer.put("accessToken", MyAccesstoken);
+                tokenContainer.put("refreshToken", MyAccesstoken);
+
+                LoginResponseDto.LoginInfo loginInfo = new LoginResponseDto.LoginInfo();
+                loginInfo.setIsRegistered(true);
+                loginInfo.setNickname("");
+
+                ResponseMessageDto responseMessageDto = ResponseMessageDto.builder().message("로그인 완료").data(
+                        LoginResponseDto.builder()
+                                .token(tokenContainer)
+                                .info(loginInfo)
+                                .build()).build();
+                return ResponseEntity.ok().body(responseMessageDto);
+            }
+        } catch (Exception e) {
+            ResponseDto responseDTO = ResponseDto.builder().error(e.getMessage()).build();
+            return ResponseEntity
+                    .badRequest()
+                    .body(responseDTO);
+        }
+    }
+
+    @GetMapping("/getUserProfile")
+    ResponseEntity<?> getUserProfile() {
+        try
+        {
+            UserModel user = userService.findCurrentUser();
+            List<UserIngredientModel> userIngredientModels = userIngredientRepository.findUserIngredientModelsByUser(user);
+            List<UserIngredientDto> userIngredientDtoList = Collections.emptyList();
+            for (UserIngredientModel userIngredientModel : userIngredientModels)
+            {
+                UserIngredientDto userIngredientDto = UserIngredientDto.builder().ingredientName(userIngredientModel.getIngredients().getIngredientName()).isLike(userIngredientModel.getIsLike()).build();
+                userIngredientDtoList.add(userIngredientDto);
+            }
+            UserProfileDto userProfileDto = UserProfileDto.builder().id(user.getUserId()).isVegan(user.getUserIsvegan()).nickname(user.getUserNickname()).foods(userIngredientDtoList).build();
+            return ResponseEntity.ok().body(userProfileDto);
+        } catch (Exception e)
+        {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 
     // 여기서부터 뭘 할 거냐면 id 토큰을 받아서 그대로 분해만 하는작업
     @PatchMapping("/setvegan")
-    ResponseEntity<?> setVegan(@RequestParam boolean isVegan) {
+    ResponseEntity<?> setVegan(@RequestBody UserIsVeganDto isVegan) {
         UserModel user = userService.findCurrentUser();
-        userService.setUserIsVegan(user, isVegan);
+        userService.setUserIsVegan(user, isVegan.isVegan());
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PatchMapping("/setnickname")
-    ResponseEntity<?> setNickname(@RequestParam String nickname) {
+    ResponseEntity<?> setNickname(@RequestBody UserNicknameDto nickname) {
+        log.info(nickname.getNickname());
         UserModel user = userService.findCurrentUser();
-        userService.setUserNickname(user, nickname);
+        userService.setUserNickname(user, nickname.getNickname());
         Map<String, String> result = new HashMap<>();
-        result.put("nickname", nickname);
+        result.put("nickname", nickname.getNickname());
         return ResponseEntity.ok().body(result);
     }
 //
@@ -195,7 +297,7 @@ public class UserController {
 //    }
 
     @PostMapping("/setfood")
-    ResponseEntity<?> addIsLike(@RequestParam List<UserFoodInpDto> listInp) {
+    ResponseEntity<?> addIsLike(@RequestBody List<UserFoodInpDto> listInp) {
         try {
             UserModel user = userService.findCurrentUser();
             for (UserFoodInpDto userFoodInpDto : listInp) {

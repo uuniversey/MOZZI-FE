@@ -6,9 +6,13 @@ import com.a304.mozzi.domain.user.model.UserModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 
 @Repository
 public interface UserIngredientRepository extends JpaRepository<UserIngredientModel, Integer> {
 
     public UserIngredientModel findUserIngredientModelByUserAndIngredients(UserModel user, IngredientsModel ingredientsModel);
+
+    public List<UserIngredientModel> findUserIngredientModelsByUser(UserModel user);
 }
