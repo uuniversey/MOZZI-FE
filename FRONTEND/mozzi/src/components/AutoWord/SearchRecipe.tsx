@@ -11,18 +11,20 @@ interface FoodItem {
 
 interface SearchBarProps {
   data: FoodItem[]
+  onSelect: (recipeKey: number, recipeName: string) => void
 }
 
-export const SearchBar = ({ data }: SearchBarProps) => {
+export const SearchBar = ({ data, onSelect }: SearchBarProps) => {
 
   const [searchQuery, setSearchQuery] = useState<string>('')
+  const [recipeKey, setRecipeKey] = useState<number | null>(null)
   const [filteredData, setFilteredData] = useState<FoodItem[]>([])
 
   // 자동 완성 데이터 필터링
   const handleAutoComplete = (text: string) => {
     setSearchQuery(text);
     const filtered = data.filter(item => item.title.toLowerCase().includes(text.toLowerCase()));
-    setFilteredData(filtered);
+    setFilteredData(filtered)
   }
 
   return (
@@ -37,7 +39,16 @@ export const SearchBar = ({ data }: SearchBarProps) => {
               inputContainerStyle={styles.input}
               flatListProps={{
                 renderItem: ({ item }: { item: FoodItem }) => (
-                  <TouchableOpacity style={styles.listButton} onPress={() => setSearchQuery(item.title)}>
+                  <TouchableOpacity
+                    style={styles.listButton}
+                    onPress={() => {
+                      setSearchQuery(item.title)
+                      setRecipeKey(item.id)
+                      onSelect(
+                        item.id,
+                        item.title,
+                      )
+                    }}>
                     <Text>{item.title}</Text>
                   </TouchableOpacity>
                 ),
@@ -45,6 +56,11 @@ export const SearchBar = ({ data }: SearchBarProps) => {
                 style: { ...styles.list, ...styles.shadow },
               }}
             />
+            {filteredData.length === 0 && searchQuery.length > 0 && (
+            <View style={styles.emptySearchResults}>
+              <Text>검색 결과가 없습니다.</Text>
+            </View>
+            )}
         </View>
       </View>
     </>
@@ -111,5 +127,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 3,
     elevation: 5,
+  },
+  emptySearchResults: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 50,
   },
 });
