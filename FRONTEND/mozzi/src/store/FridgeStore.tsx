@@ -23,16 +23,21 @@ const useFridgeStore = create((set) => ({
   },
 
   // 냉장고에 이미 저장된 음식 불러오기
-  getMyFoods: async () => {
-    const token = await AsyncStorage.getItem('accessToken')
-    console.log('토크은', token)
+  // 번호를 인자로 받아야 함
+  getMyFoods: async (categoryIds) => {
+    const token = await AsyncStorage.getItem('accessToken');
+    console.log('토큰:', token);
     try {
-      const response = await axios.get('recommend/get_ingredients_from_refrigerator/', {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const response = await axios.post(
+        'recommend/datas/get_ingredient_list_per_category/',
+        { category: categoryIds },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
-      set({ savedFoods: response.data.foods }) // 응답에서 받은 음식 리스트로 상태 업데이트
+      );
+      set({ savedFoods: response.data.data.foods }); // 응답에서 받은 음식 리스트로 상태 업데이트
     } catch (error) {
       console.error('냉장고 내용물 로딩 실패:', error);
     }
@@ -48,9 +53,10 @@ const useFridgeStore = create((set) => ({
     });
 
     try {
+      console.log(`내가 보낼 데이터: ${food}`)
       await axios.post(
-        'recommend/add_ingredients_to_refrigerator/',
-        { foods: food },
+        'recommend/datas/add_ingredients_to_refrigerator/',
+        { foods: [food] },
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -62,6 +68,31 @@ const useFridgeStore = create((set) => ({
       console.error('냉장고 업데이트 실패:', error)
     }
   },
+
+  // 저장된 음식 삭제하기
+  deleteFood: async (foodName) => {
+    const token = await AsyncStorage.getItem('accessToken');
+    console.log('토큰:', token);
+    try {
+      await axios.delete(
+        'recommend/datas/add_ingredients_to_refrigerator/',
+        { foods: [food] },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      set((state) => {
+        const updatedFoods = state.savedFoods.filter((food) => food !== foodName);
+        return { savedFoods: updatedFoods };
+      });
+      console.log('냉장고 음식 삭제 성공');
+    } catch (error) {
+      console.error('냉장고 음식 삭제 실패:', error);
+    }
+  },
 }));
 
 export default useFridgeStore
+
