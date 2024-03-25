@@ -15,7 +15,7 @@ import lombok.*;
 public class IngredientsModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer ingredientId;
+    private Integer Id;
 
     @OneToOne
     @JoinColumn(name = "category_id")
