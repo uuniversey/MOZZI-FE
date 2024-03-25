@@ -113,12 +113,19 @@ DATABASES = {
     'mongodb': {
         'ENGINE': 'djongo',
         'ENFORCE_SCHEMA': False,
-        'NAME': 'mozzi',
-        'USER': 'root',
-        'PASSWORD': 'ssafy',
-        'HOST': 'a304.site',  # 여기서는 호스트 이름만 지정합니다.
-        'PORT': '27017',  # 포트는 정수로 지정합니다.
+        'NAME': 'mozzi',       
+        
+        'CLIENT' : {
+            'host': 'a304.site',  # 여기서는 호스트 이름만 지정합니다.
+            'port': '27017',  # 포트는 정수로 지정합니다.
+            'username': 'root',
+            'password': 'ssafy',
+            'authSource' : 'admin',
+            'authMechanism' : 'SCRAM-SHA-1'
+        }
     }
+
+
 }
 connect(
     db='mozzi',  # 여기에는 사용할 MongoDB 데이터베이스 이름을 넣으세요.

@@ -177,12 +177,13 @@ def get_random_food(request):
 
 def recipe_detail(request):
     start_time = datetime.now()
-    body_unicode = request.body.decode('utf-8')
+    food_name = request.GET.getlist('foodName')[0]
+    # body_unicode = request.body.decode('utf-8')
     # print(body_unicode)
     #
     # lines = body_unicode.split("\n")
-    food = json.loads(body_unicode)
-    food_name = food['foodName']
+    # food = json.loads(body_unicode)
+    # food_name = food['foodName']
     
     # print(food)
     # print(lines)
