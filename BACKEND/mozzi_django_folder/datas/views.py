@@ -521,6 +521,7 @@ def add_ingredients_to_refrigerator(request):
         return JsonResponse({"message": "Ingredients added to refrigerator successfully."}, status=201)
     elif request.method == 'GET':
         foods = []
+        print(request)
         print(request.data,'data')
         category = request.data.get('category')
         ingredient = Ingredient.objects.all()
