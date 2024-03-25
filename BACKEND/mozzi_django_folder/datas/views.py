@@ -447,7 +447,7 @@ def migrate_sql_to_neo4j(request):
 @api_view(['POST', 'GET','DELETE'])
 def add_ingredients_to_refrigerator(request):
     user = User.objects.all()
-    
+    foodingredients = FoodIngredient.objects.all()
     # print(request.headers['Authorization'],'adddddddddddddddd')
     token = request.headers['Authorization'].split(' ')[1]
     data = base64.b64decode(token)
@@ -461,7 +461,10 @@ def add_ingredients_to_refrigerator(request):
     
     # 결과 출력
     user_id =0
+    
+
     for i in user:
+            
             if i.user_code == user_number :
                 user_id = i.user_id  
     
@@ -494,7 +497,31 @@ def add_ingredients_to_refrigerator(request):
 
         return JsonResponse({"message": "Ingredients added to refrigerator successfully."}, status=201)
     elif request.method == 'GET':
-        return JsonResponse({"error": "GET method is not allowed for this endpoint."}, status=405)
+        foods = []
+        category = request.data.get('category')
+        ingredient = Ingredient.objects.all()
+        query = """
+            SELECT * FROM refri_ingredients
+            WHERE user_id = %s
+        """ 
+       
+
+        # 쿼리 실행
+        with connection.cursor() as cursor:
+            cursor.execute(query, [user_id])
+            rows = cursor.fetchall()
+        
+        
+        # 결과 출력
+        for row in rows:
+            
+        
+            for i in ingredient:
+            
+                if i.id == row[1] and i.category_id in category :
+                    foods.append(i.ingredient_name)
+
+        return JsonResponse({'data': {"foods" : foods}})
 
     # DELETE 요청인 경우
     elif request.method == 'DELETE':
