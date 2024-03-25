@@ -512,13 +512,14 @@ def add_ingredients_to_refrigerator(request):
         with connection.cursor() as cursor:
             for ingredient_id in ingredient_ids:
                 # 이미 존재하는지 확인
-                cursor.execute("SELECT COUNT(*) FROM refri_ingredients WHERE user_id = %s AND ingredient_id = %s", [user_id, ingredient_id])
+                cursor.execute("SELECT COUNT(*) FROM refri_ingredients WHERE user_id = %s AND ingredient_id = %s", [user_id, ingredient_id]) 
                 row_count = cursor.fetchone()[0]
+                print(row_count)
                 
                 # 중복 삽입 방지
                 if row_count == 0:
                     cursor.execute("INSERT INTO refri_ingredients (user_id, ingredient_id, expiration_date) VALUES (%s, %s, %s, %s)",
-                                [user_id, ingredient_id, datetime.now(), ])
+                                [user_id, ingredient_id, datetime.now(), pos])
 
         return JsonResponse({"message": "Ingredients added to refrigerator successfully."}, status=201)
     elif request.method == 'GET':
