@@ -132,7 +132,7 @@ def save_food(request):
             # 'food_pic' 필드가 비어 있는 경우를 처리합니다.
             # 이 부분에 대해 원하는 동작을 수행하거나 오류를 처리할 수 있습니다.
             continue
-        print(mongo_food.id)
+        # print(mongo_food.id)
         save_data = {
             'food_name': item.get('RCP_NM'),
             'food_recipe': str(mongo_food.id),  # MongoDB의 ObjectId를 문자열로 변환하여 저장합니다.
@@ -196,7 +196,7 @@ def recipe_detail(request):
     try:
       
         foodsss = Foods.objects.all()
-      
+        
         food = Foods.objects.get(food_name=food_name.strip())
      
         food_recipe_id = food.food_recipe  # MongoDB의 레시피 ID
@@ -267,7 +267,6 @@ def recipe_detail(request):
         return JsonResponse({'레시피': '음식을 찾을 수 없습니다'})
 
 def get_recipe_list(request):
-    print(11111)
     authorization_header = request.headers.get('Authorization')
     print('Authorization header:', authorization_header)
     foods = Foods.objects.all()
@@ -275,7 +274,7 @@ def get_recipe_list(request):
     data = []
     
     for food in foods:
-        print(food)
+        # print(food)
         food_data = {
             "foodName": food.food_name,
             "photoUrl": food.food_pic
@@ -521,9 +520,11 @@ def add_ingredients_to_refrigerator(request):
         return JsonResponse({"message": "Ingredients added to refrigerator successfully."}, status=201)
     elif request.method == 'GET':
         foods = []
-        print(request)
-        print(request.data,'data')
-        category = request.data.get('category')
+        # print(request)
+        # print(request.data,'data')
+        category = request.GET.getlist('category')[0]
+        # category = request.data.get('category')
+        # print(category,'category')
         ingredient = Ingredient.objects.all()
         query = """
             SELECT * FROM refri_ingredients
@@ -535,16 +536,16 @@ def add_ingredients_to_refrigerator(request):
         with connection.cursor() as cursor:
             cursor.execute(query, [user_id])
             rows = cursor.fetchall()
-        print(len(ingredient),'len_ingredient')
-        print(rows,'rows')
-        print(category,'category')
+        # print(len(ingredient),'len_ingredient')
+        # print(rows,'rows')
+        # print(category,'category')
         # 결과 출력
         for row in rows:
             
         
             for i in ingredient:
             
-                if i.id == row[1] and i.category_id in category :
+                if i.id == row[1] and str(i.category_id) in category :
                     foods.append(i.ingredient_name)
 
         return JsonResponse({'data': {"foods" : foods}})
