@@ -521,6 +521,8 @@ def add_ingredients_to_refrigerator(request):
         return JsonResponse({"message": "Ingredients added to refrigerator successfully."}, status=201)
     elif request.method == 'GET':
         foods = []
+        print(request)
+        print(request.data,'data')
         category = request.data.get('category')
         ingredient = Ingredient.objects.all()
         query = """
@@ -533,8 +535,9 @@ def add_ingredients_to_refrigerator(request):
         with connection.cursor() as cursor:
             cursor.execute(query, [user_id])
             rows = cursor.fetchall()
-        
-        
+        print(len(ingredient),'len_ingredient')
+        print(rows,'rows')
+        print(category,'category')
         # 결과 출력
         for row in rows:
             
