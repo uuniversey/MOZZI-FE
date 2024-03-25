@@ -106,11 +106,11 @@ const ButtonText = styled.Text`
 `
 
 const EnterButton = styled.TouchableOpacity`
-  background-color: #F9F7BB;
   border-radius: 10px;
   width: 80px;
   height: 35px;
   justify-content: center;
+  background-color: ${props => props.disabled ? '#cccccc' : '#F9F7BB'};
 `
 
 const EnterButtonText = styled.Text`
@@ -168,17 +168,38 @@ function DiaryCreateScreen () {
   const [imageType, setImageType] = useState<string | undefined>()
   const [imageName, setImageName] = useState<string | undefined>()
   const route = useRoute()
-  const [selectedRecipeKey, setSelectedRecipeKey] = useState<number | null>(null)
   const [selectedRecipeName, setSelectedRecipeName] = useState<string>('')
+
+  const [isButtonEnabled, setIsButtonEnabled] = useState(false)
 
   useEffect(() => {
     // route.params에서 데이터 가져오기
     if (route.params) {
-      const { recipeKey, recipeName } = route.params as { recipeKey: number; recipeName: string }
-      setSelectedRecipeKey(recipeKey)
+      const { recipeName } = route.params as { recipeName: string }
       setSelectedRecipeName(recipeName)
     }
+
+    return () => {
+      selectedRecipeName
+    }
   }, [route.params])
+
+  useEffect(() => {
+    // 모든 조건(날짜 선택, 레시피 선택, 사진 첨부)이 충족되었는지 확인
+    if (selectedDate && selectedRecipeName && imageUri) {
+      setIsButtonEnabled(true) // 모든 조건이 충족되면 버튼을 활성화
+    } else {
+      setIsButtonEnabled(false) // 하나라도 충족되지 않으면 버튼을 비활성화
+    }
+  }, [selectedDate, selectedRecipeName, imageUri])
+
+  const handleCreateDiaryPress = () => {
+    if (isButtonEnabled) {
+      createDiary()
+    } else {
+      console.log('모든 정보를 입력해주세요.')
+    }
+  }
 
   const handleChoosePhoto = () => {
     launchImageLibrary({
@@ -220,7 +241,8 @@ function DiaryCreateScreen () {
       formData.append('photo', {
         name: imageName,
         type: imageType,
-        uri: 'https://i.namu.wiki/i/ywRdkOZAdp4dU3ItrNm36NjVx3sbEE6PYVvNVYpRa9MUDtKIxxejpM-jAXGl9fHGavoYESWtzbf7C0LA9RBGsS63D8KY1eINfE4ZQf-36gNq-fDtiJu9fXkS5hE01eY2ArhJcagnO7pMdtRz2e0dsA.webp',
+        uri: imageUri,
+        // uri: 'http://www.foodsafetykorea.go.kr/uploadimg/20141118/20141118102019_1416273619379.jpg',
       })
     }
 
@@ -237,11 +259,12 @@ function DiaryCreateScreen () {
           Authorization: `Bearer ${token}`,
           'Content-type': 'multipart/form-data',
         },
-        transformRequest: (data, headers) => {
+        transformRequest: (data) => {
           return data
         },
       })
       console.log(response.data)
+      navigation.navigate("DiaryDetail", {date: selectedDate})
     } catch (error) {
       //응답 실패
       console.error(error)
@@ -263,15 +286,12 @@ function DiaryCreateScreen () {
             )}
         </DateContainer>
         <Line />
-        <FoodNameContainer>
-              <FoodNameText>{selectedRecipeName}</FoodNameText>
-        </FoodNameContainer>
         <DateTimePickerModal
           isVisible={isDatePickerVisible}
           mode="date"
           onConfirm={handleConfirm}
           onCancel={hideDatePicker}
-          accentColor="#F9F7BB"
+          maximumDate={new Date()}
         />
         <ImageContainer>
           <ImageInnerContainer onPress={handleChoosePhoto}>
@@ -292,10 +312,13 @@ function DiaryCreateScreen () {
         <RecipeButton
           onPress={moveDiaryCreateSelect} >
           <Icon name="menu-book" size={20}/>
-          <ButtonText>레시피 불러오기</ButtonText>
+          <ButtonText>{selectedRecipeName ? selectedRecipeName : '레시피 불러오기'}</ButtonText>
         </RecipeButton>
         <EnterContainer>
-          <EnterButton onPress={createDiary}>
+          <EnterButton 
+            onPress={handleCreateDiaryPress} 
+            disabled={!isButtonEnabled}
+            >
             <EnterButtonText>등록</EnterButtonText>
           </EnterButton>
         </EnterContainer>

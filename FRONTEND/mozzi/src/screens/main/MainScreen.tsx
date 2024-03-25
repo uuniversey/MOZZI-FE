@@ -5,6 +5,12 @@ import axios from 'axios'
 import { useNavigation } from '@react-navigation/native'
 import { Header } from '../../components/Header/Header'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import useProfileStore from '../../store/ProfileStore'
+
+interface RecipeItem {
+  foodName: string
+  photo: string
+}
 
 const Container = styled.View`
   flex: 1;
@@ -92,22 +98,25 @@ function MainScreen() {
     navigation.navigate("Recap")
   }
 
-  const [recipe, setRecipe] = useState<string>('')
+  const [recipe, setRecipe] = useState<RecipeItem | null>(null)
+  const { profileData } = useProfileStore()
   // 로그인 유저 호출
   // 최다 뷰카운트 호출
   const popularRecipe = async () => {
     const token = await AsyncStorage.getItem('accessToken')
     try {
-      const response = await axios.get(`recommend/datas/get_highest_viewed_food/`, {
+      // const response = await axios.get(`recommend/datas/get_highest_viewed_food/`, {
+      const response = await axios.get(`https://a304.site/api/recommend/datas/get_highest_viewed_food/`, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-type': 'application/json',
         },
       })
-      console.log(response)
+      console.log(response.data.data)
       // data에 저장해둠(respose 어디에 값이 들어있는지 확인할 것)
-      const data = await response.data
+      const data = await response.data.data
       setRecipe(data)
+      console.log(recipe)
     } catch (error) {
       //응답 실패
       console.error(error)
@@ -119,14 +128,15 @@ function MainScreen() {
   //   navigation.navigate("DiaryDetail")
   // }
 
-  const moveDiaryDetail = (date) => {
-    navigation.navigate("DiaryDetail", {date: date})
+  const moveRecipeDetail = () => {
+    navigation.navigate("Recipe")
   }
 
   // 오늘의 최다 조회수 레시피인데
   // 여기 페이지 들어올 때마다 호출할지
   // 맨 처음에 한 번만 호출할지 생각해봐야할 듯
   useEffect(() => {
+    console.log(profileData)
     popularRecipe()
     return () => {
     }
@@ -140,18 +150,19 @@ function MainScreen() {
       </Header>
       <Container>
         <ContentContainer>
-          <Greeting>환영해요, 아우엉님 님!</Greeting>
-          {/* <Greeting>환영해요, {userName} 님!</Greeting> */}
+          {/* <Greeting>환영해요, 아우엉님 님!</Greeting> */}
+          <Greeting>환영해요, {profileData.nickname} 님!</Greeting>
           <Question>오늘은 어떤 레시피를 도전할까요?</Question>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={moveRecipeDetail}>
             <Card>
               <MealQuestion>오늘 모찌에서 {"\n"}가장 많이 사랑받은 레시피는?</MealQuestion>
               <StyledImage
-                source={require('../../assets/recommend/pizza.jpg')}
-                // source={{recipe.photo}}
+                // source={require('../../assets/recommend/pizza.jpg')}
+                source={{ uri: recipe?.photo }}
                 />
-              <MealName>피자 최고</MealName>
-              {/* <MealName>{recipe.foodName}</MealName> */}
+              {/* <MealName>피자 최고</MealName> */}
+              <MealName>{recipe?.foodName}</MealName>
             </Card>
           </TouchableOpacity>
           <Button onPress={moveRecap}>
