@@ -517,8 +517,9 @@ def add_ingredients_to_refrigerator(request):
                 print(row_count)
                 
                 # 중복 삽입 방지
+                print(pos)
                 if row_count == 0:
-                    cursor.execute("INSERT INTO refri_ingredients (user_id, ingredient_id, expiration_date) VALUES (%s, %s, %s, %s)",
+                    cursor.execute("INSERT INTO refri_ingredients (user_id, ingredient_id, expiration_date, stored_pos) VALUES (%s, %s, %s, %s)",
                                 [user_id, ingredient_id, datetime.now(), pos])
 
         return JsonResponse({"message": "Ingredients added to refrigerator successfully."}, status=201)
