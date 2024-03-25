@@ -21,7 +21,8 @@ from neo4j import GraphDatabase
 import neo4jupyter
 from py2neo import Graph
 from pyvis.network import Network
-
+import pandas as pd
+import pymysql
 # 식재료 뽑기
 def get_ingredients(start, last):
     URL = f"http://openapi.foodsafetykorea.go.kr/api/2055492edca74694aa38/COOKRCP01/json/{start}/{last}"
@@ -35,10 +36,7 @@ def get_ingredients(start, last):
             # 정규표현식을 사용하여 숫자와 숫자 뒤에 붙은 문자열을 제거
             ingredient_name = re.sub(r'\d+(\S+)', '', ingredient)
             ingredient_name = ingredient_name.strip()  # 좌우 공백 제거
-            # print(ingredient_name)
-           
-     
-        
+            # print(ingredient_name)   
 
 def migrate_food_recipe_from_mongo_to_mysql(request):
     # MongoDB에서 데이터 가져오기
@@ -556,3 +554,23 @@ def neo4j_visualization(request):
 
     # HTML 파일 경로 반환
     return HttpResponse(html_file_path)
+
+
+def recommendFoods():
+    db = pymysql.connect(
+                        host = "localhost",
+                        port = 3306,
+                        user = "ssafy",
+                        password = "ssafy",
+                         )
+    foodsTotal = db.cursor()
+    with db.cursor() as cursor:
+        query = "select count(*) as total_rows from mozzi.datas_foods"
+        cursor.execute(query)
+        maxFoodsIndex = cursor.fetchall()[0][0]
+        print(maxFoodsIndex) 
+    # print(pd.read_sql( "select * from mozzi.datas_foods" ,db))
+    
+
+
+recommendFoods()

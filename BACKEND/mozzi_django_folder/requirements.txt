@@ -134,7 +134,7 @@ pure-eval==0.2.2
 py2neo==2021.2.4
 pycparser==2.21
 Pygments==2.15.1
-PyJWT==2.8.0
+PyJWT
 pymongo==4.6.2
 pyparsing==3.0.9
 python-dateutil==2.8.2
