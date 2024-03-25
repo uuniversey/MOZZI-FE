@@ -245,9 +245,10 @@ public class UserController {
 
     // 여기서부터 뭘 할 거냐면 id 토큰을 받아서 그대로 분해만 하는작업
     @PatchMapping("/setvegan")
-    ResponseEntity<?> setVegan(@RequestBody UserIsVeganDto isVegan) {
+    ResponseEntity<?> setVegan(@RequestBody UserIsVeganDto isVeganBody) {
         UserModel user = userService.findCurrentUser();
-        userService.setUserIsVegan(user, isVegan.isVegan());
+        log.info(String.valueOf(isVeganBody.getIsVegan()));
+        userService.setUserIsVegan(user, isVeganBody.getIsVegan());
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
