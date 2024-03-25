@@ -699,7 +699,7 @@ def recommendFoods():
         print(maxFoodsIndex) 
 
         # query = "select count(*) as total_rows from mozzi.datas_ingredient"
-        query = "select id from mozzi.datas_ingredient order by id desc limit 1"
+        query = "select ingredient_id from mozzi.datas_ingredient order by ingredient_id desc limit 1"
         cursor.execute(query)
         maxIngredientsIndex = cursor.fetchall()[0][0]
         print(maxIngredientsIndex)
