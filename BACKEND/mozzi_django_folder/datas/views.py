@@ -3,6 +3,8 @@ from .models import Foods,Category,Ingredient,User,FoodIngredient
 from .serializers import FoodSerializer 
 import requests
 import json
+import base64
+import binascii
 import random
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
@@ -21,6 +23,7 @@ from neo4j import GraphDatabase
 import neo4jupyter
 from py2neo import Graph
 from pyvis.network import Network
+from django.utils.http import urlsafe_base64_decode
 
 # 식재료 뽑기
 def get_ingredients(start, last):
@@ -449,16 +452,36 @@ def add_ingredients_to_refrigerator(request):
     user = User.objects.all()
     foodingredients = FoodIngredient.objects.all()
     # print(request.headers['Authorization'],'adddddddddddddddd')
-    token = request.headers['Authorization'].split(' ')[1]
-    data = base64.b64decode(token)
-   
-    data = data.decode('latin-1')
-    
-    index_e = data.index('"e":') + len('"e":')  # "e": 다음 인덱스부터 시작
-    index_comma = data.index(',', index_e)  # 쉼표(,)가 나오는 인덱스 찾기
-    e_value = data[index_e:index_comma]
-    user_number = e_value[1:-1]
-    
+    try:
+        token = request.headers['Authorization'].split(' ')[1]
+    except KeyError:
+        return JsonResponse({"error": "Authorization header is missing"}, status=401)
+    header, payload, signature = token.split('.')
+    decoded_payload = base64.b64decode(payload + "==").decode('utf-8')
+    padding_needed = 4 - (len(payload) % 4)
+    if padding_needed > 0 and padding_needed != 4:
+        payload += '=' * padding_needed
+    # print("Padded Token:", token)
+    # print("Padded Token Length:", len(token))
+    # print(22222222222222222222)
+    # print(token,len(token))
+    # print(3333333333333333333333333)
+    # data = base64.b64decode(token[:166])
+    data = base64.b64decode(payload).decode('utf-8')
+    # print(111111)
+    # print(data,'data')
+    # data = data.decode('latin-1')
+    # print(data,'latin')
+    try:
+        index_e = data.index('"e":') + len('"e":')
+        index_comma = data.index(',', index_e)
+        e_value = data[index_e:index_comma]
+        user_number = e_value[1:-1]
+        user_id = int(user_number)
+    except ValueError:
+            return JsonResponse({"error": "Invalid user id."}, status=401)
+
+    print(user_number,321)
     # 결과 출력
     user_id =0
     
