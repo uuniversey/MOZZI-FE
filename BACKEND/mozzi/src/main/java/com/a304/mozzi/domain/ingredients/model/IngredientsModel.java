@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Data
-@Table(name = "ingredients")
+@Table(name = "datas_ingredient")
 @Entity
 @Getter
 @Setter
@@ -15,7 +15,7 @@ import lombok.*;
 public class IngredientsModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer ingredientsId;
+    private Integer ingredientId;
 
     @OneToOne
     @JoinColumn(name = "category_id")

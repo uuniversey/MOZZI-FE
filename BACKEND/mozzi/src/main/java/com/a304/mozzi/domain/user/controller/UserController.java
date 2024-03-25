@@ -10,6 +10,7 @@ import com.a304.mozzi.domain.ingredients.service.IngrdientsService;
 import com.a304.mozzi.domain.user.customfood.dto.UserFoodInpDto;
 import com.a304.mozzi.domain.user.customfood.model.UserFood;
 import com.a304.mozzi.domain.user.customfood.repository.UserFoodRepository;
+import com.a304.mozzi.domain.user.customingredient.dto.IngredientsListDto;
 import com.a304.mozzi.domain.user.customingredient.dto.UserIngredientDto;
 import com.a304.mozzi.domain.user.customingredient.model.UserIngredientModel;
 import com.a304.mozzi.domain.user.customingredient.repository.UserIngredientRepository;
@@ -145,6 +146,20 @@ public class UserController {
         }
     }
 
+    @DeleteMapping("/deleteuser")
+    public  ResponseEntity<?> deleteAccount()
+    {
+        try {
+            UserModel user = userService.findCurrentUser();
+            userService.delete(user);
+
+            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+        } catch (Exception e)
+        {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
+    }
     @GetMapping("/Oauth2/KakaoWeb")
     public ResponseEntity<?> loginForWeb(@RequestParam("code") String code) {
         try {
@@ -298,22 +313,25 @@ public class UserController {
 //    }
 
     @PostMapping("/setfood")
-    ResponseEntity<?> addIsLike(@RequestBody List<UserFoodInpDto> listInp) {
+    ResponseEntity<?> addIsLike(@RequestBody IngredientsListDto listInp) {
         try {
             UserModel user = userService.findCurrentUser();
-            for (UserFoodInpDto userFoodInpDto : listInp) {
+            for (UserFoodInpDto userFoodInpDto : listInp.getFoods()) {
 
                 IngredientsModel ingredientsModel =ingredientsService.findIngredientsByIngredientsName(userFoodInpDto.getFoodName());
-//                Food food = foodService.findFoodByFoodName(userFoodInpDto.getFoodName());
+                log.info(userFoodInpDto.getFoodName());
+//              Food food = foodService.findFoodByFoodName(userFoodInpDto.getFoodName());
                 UserIngredientModel userIngredientModel = UserIngredientModel.builder()
                         .user(user)
                         .ingredients(ingredientsModel)
+                        .isLike(userFoodInpDto.getValue())
                         .build();
 //                UserFood userFood = UserFood.builder()
 //                        .food(food)
 //                        .user(user)
 //                        .userFoodPreference(userFoodInpDto.getValue())
 //                        .build();
+
                 userIngredientRepository.save(userIngredientModel);
             }
             ResponseMessageDto responseMessageDto = ResponseMessageDto.builder().message("Item Created").build();
