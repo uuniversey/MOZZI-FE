@@ -23,9 +23,11 @@ import com.a304.mozzi.domain.user.service.UserService;
 import com.a304.mozzi.global.dto.ResponseDto;
 
 import com.a304.mozzi.global.dto.ResponseMessageDto;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.commons.logging.Log;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -244,9 +246,10 @@ public class UserController {
         {
             UserModel user = userService.findCurrentUser();
             List<UserIngredientModel> userIngredientModels = userIngredientRepository.findUserIngredientModelsByUser(user);
-            List<UserIngredientDto> userIngredientDtoList = Collections.emptyList();
+            List<UserIngredientDto> userIngredientDtoList = new ArrayList<>();
             for (UserIngredientModel userIngredientModel : userIngredientModels)
             {
+                log.info(userIngredientModel.getIngredients().getIngredientName() + "입니다");
                 UserIngredientDto userIngredientDto = UserIngredientDto.builder().ingredientName(userIngredientModel.getIngredients().getIngredientName()).isLike(userIngredientModel.getIsLike()).build();
                 userIngredientDtoList.add(userIngredientDto);
             }
@@ -254,6 +257,7 @@ public class UserController {
             return ResponseEntity.ok().body(userProfileDto);
         } catch (Exception e)
         {
+            log.info(e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -313,9 +317,12 @@ public class UserController {
 //    }
 
     @PostMapping("/setfood")
+    @Transactional
     ResponseEntity<?> addIsLike(@RequestBody IngredientsListDto listInp) {
         try {
+
             UserModel user = userService.findCurrentUser();
+            userIngredientRepository.deleteAllByUser(user);
             for (UserFoodInpDto userFoodInpDto : listInp.getFoods()) {
 
                 IngredientsModel ingredientsModel =ingredientsService.findIngredientsByIngredientsName(userFoodInpDto.getFoodName());
