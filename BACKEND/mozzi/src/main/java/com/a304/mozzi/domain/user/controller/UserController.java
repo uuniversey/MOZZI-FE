@@ -23,6 +23,7 @@ import com.a304.mozzi.domain.user.service.UserService;
 import com.a304.mozzi.global.dto.ResponseDto;
 
 import com.a304.mozzi.global.dto.ResponseMessageDto;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -316,6 +317,7 @@ public class UserController {
 //    }
 
     @PostMapping("/setfood")
+    @Transactional
     ResponseEntity<?> addIsLike(@RequestBody IngredientsListDto listInp) {
         try {
 
