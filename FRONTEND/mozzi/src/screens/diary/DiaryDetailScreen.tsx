@@ -34,7 +34,7 @@ const DiaryInfo = styled.View`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-bottom: 10;
+  margin-bottom: 10px;
 `
 
 const BtnContainer = styled.View`
@@ -82,13 +82,12 @@ function DiaryDetailScreen ({ route }) {
     navigation.navigate('Stamp', {
       date,
       dayData,
-    });
-  };
-  
+    })
+  }
   
   // 스탬프 페이지로 이동
   const moveStamp = async () => {
-    navigateToStamp();
+    navigateToStamp()
   }
 
   return (

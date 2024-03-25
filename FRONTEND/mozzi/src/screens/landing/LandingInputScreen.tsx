@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
 import styled from 'styled-components/native'
-import Allergy from '../../components/Dropdown/Allergy'
+import Dropdown from '../../components/Dropdown/Dropdown'
 
 import { useNavigation } from '@react-navigation/native'
 import useProfileStore from '../../store/ProfileStore'
@@ -101,7 +101,7 @@ function ProfileScreen () {
   }
 
   const completeEnter = () => {
-    settingProfile()
+    console.log('여기에 엑시오스 넣어라')
   }
 
   useEffect(() => {
@@ -128,7 +128,7 @@ function ProfileScreen () {
         
         <Label>알레르기 정보</Label>
         <StyledView>
-          <Allergy />
+          <Dropdown />
         </StyledView>
 
         <Label>좋아하는 음식</Label>

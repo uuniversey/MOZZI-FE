@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import axios from '../../axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import WithdrawalScreen from '../screens/profile/WithdrawalScreen'
 
 const useLoginStore = create((set) => ({
   isLogin: false,
@@ -19,8 +20,6 @@ const useLoginStore = create((set) => ({
       // 유저 데이터 저장
       if (response.data.data.info.isRegistered) {
         set({ isLogin: true })
-      } else {
-        // else문 없애도 될수도
         set({ userData: response.data.data.info })
       }
 
@@ -35,8 +34,20 @@ const useLoginStore = create((set) => ({
       set({ isLogin: false, user: null })
     }
   },
-  logout: () => set({ isLogin: false, user: null }),
-
+  
+  userWithdrawal: async () => {
+    const token = await AsyncStorage.getItem('accessToken')
+    try {
+      const response = await axios.delete('mozzi/auth/deleteuser', {
+        headers: {
+          Authorization: `Bearer ${token}` // 헤더에 토큰 포함
+        }
+      })
+      console.log('회원 탈퇴 완료', response.data)
+    } catch (error) {
+      console.error('회원 탈퇴 요청 실패', error)
+    }
+  },
 }))
 
 export default useLoginStore
