@@ -9,7 +9,7 @@ const useFridgeStore = create((set) => ({
   // 전체 식재료 데이터 불러오기 
   getAllFoods: async () => {
     const token = await AsyncStorage.getItem('accessToken')
-    console.log('토크은', token)
+    // console.log('토큰:', token)
     try {
       const response = await axios.get('recommend/datas/get_ingredient_list/', {
         headers: {
@@ -24,20 +24,45 @@ const useFridgeStore = create((set) => ({
 
   // 냉장고에 이미 저장된 음식 불러오기
   // 번호를 인자로 받아야 함
-  getMyFoods: async (categoryIds) => {
+  // getMyFoods: async (categoryIds) => {
+  //   const token = await AsyncStorage.getItem('accessToken');
+  //   // console.log('토큰:', token);
+  //   try {
+  //     const response = await axios.post(
+  //       'recommend/datas/get_ingredient_list_per_category/',
+  //       { category: categoryIds },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       }
+  //     );
+  //     set({ savedFoods: response.data.data.foods }); // 응답에서 받은 음식 리스트로 상태 업데이트
+  //   } catch (error) {
+  //     console.error('냉장고 내용물 로딩 실패:', error);
+  //   }
+  // },
+
+
+  // 각 카테고리별 저장된 음식 호출
+  getMyFoods: async (categoryId) => {
     const token = await AsyncStorage.getItem('accessToken');
-    console.log('토큰:', token);
     try {
+      // 단일 카테고리 ID에 대한 요청 전송
       const response = await axios.post(
-        'recommend/datas/get_ingredient_list_per_category/',
-        { category: categoryIds },
+        'recommend/datas/add_ingredients_to_refrigerator/',
+        { category: [categoryId] },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      set({ savedFoods: response.data.data.foods }); // 응답에서 받은 음식 리스트로 상태 업데이트
+  
+      // 응답에서 받은 음식 리스트로 상태를 업데이트
+      set((state) => ({
+        savedFoods: [...state.savedFoods, ...response.data.data.foods] // 이전 상태에 새로운 음식들을 추가합니다.
+      }));
     } catch (error) {
       console.error('냉장고 내용물 로딩 실패:', error);
     }
@@ -46,7 +71,7 @@ const useFridgeStore = create((set) => ({
   // 냉장고에 새로운 음식 저장하기
   addFridge: async (food) => {
     const token = await AsyncStorage.getItem('accessToken')
-    console.log('토크은', token)
+    console.log('토큰:', token)
     set((state) => {
       const updatedFoods = [...state.savedFoods, food]
       return { savedFoods: updatedFoods }
@@ -70,8 +95,8 @@ const useFridgeStore = create((set) => ({
   },
 
   // 저장된 음식 삭제하기
-  deleteFood: async (foodName) => {
-    const token = await AsyncStorage.getItem('accessToken');
+  deleteFood: async (food) => {
+    // const token = await AsyncStorage.getItem('accessToken');
     console.log('토큰:', token);
     try {
       await axios.delete(

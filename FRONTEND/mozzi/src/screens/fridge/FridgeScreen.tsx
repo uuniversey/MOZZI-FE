@@ -69,47 +69,12 @@ const TouchableItem = styled.TouchableOpacity`
   right: ${props => props.right ? props.right + 'px' : undefined};
 `;
 
-
-
 const FridgeScreen = () => {
   const navigation = useNavigation();
 
-// numbers 객체에서 1부터 9까지의 값을 가진 키를 필터링
-const validKeys = Object.keys(numbers).filter(key => numbers[key] >= 1 && numbers[key] <= 9);
-
-const numbers = {
-  1: 1,
-  2: 1,
-  3: 3,
-  4: 3,
-  5: 4,
-  6: 5,
-  7: 5,
-  8: 6,
-  9: 6,
-  10: 3,
-  11: 8,
-  12: 9,
-  13: 7,
-  14: 6,
-  15: 2,
-  16: 2,
-  17: 10,
-  18: 10
-};
-
-// 아이템 데이터와 해당 순서
-const items = [
-  { name: '정육/계란류', img: meat, position: { top: 170, left: 80 } },
-  { name: '수산물/건해산', img: seafood, position: { top: 170, left: fridgeWidth / 2 + 15 } },
-  { name: '쌀/잡곡/견과', img: rice, position: { top: 300, left: fridgeWidth / 2 + 15 } },
-  { name: '우유/유제품', img: milk, position: { top: 300, right: 80 } },
-  { name: '베이커리/간식', img: bread, position: { top: 430, left: 80 } },
-  { name: '양념/오일', img: sauce, position: { top: 430, left: fridgeWidth / 2 + 15 } },
-  { name: '통조림/면류', img: noodle, position: { top: 430, right: 80 } },
-  { name: '야채', img: vege, position: { top: 585, left: 105 } },
-  { name: '과일', img: fruit, position: { top: 585, right: 105 } }
-];
+  const navigateToFridgeDetail = (item) => {
+    navigation.navigate('FridgeDetail', { item });
+  };
 
   return (
     <Container>
@@ -180,69 +145,50 @@ const items = [
       </StyledSvg>
 
       {/* 아이템들 */}
-      {/* 아이템들 - validItems를 사용해 필터링된 아이템만 렌더링 */}
-      {items.map((item, index) => {
-        if (!validKeys.includes(String(index + 1))) {
-          return null;
-        }
-        const { top, left, right } = item.position;
-        return (
-          <TouchableItem
-            key={index}
-            top={top}
-            left={left}
-            right={right}
-            onPress={() => navigateToFridgeDetail(item)}
-          >
-            <ImageIcon source={item.img} />
-            <ShelfItemText>{item.name}</ShelfItemText>
-          </TouchableItem>
-        );
-      })}
-      {/* <TouchableItem top={170} left={80} onPress={() => navigateToFridgeDetail({ name: '정육/계란류', img: meat })}>
+      <TouchableItem top={170} left={80} onPress={() => navigateToFridgeDetail({ name: '정육/계란류', img: meat, categoryId: [1, 2] })}>
         <ImageIcon source={meat} />
         <ShelfItemText>정육/계란류</ShelfItemText>
       </TouchableItem>
 
-      <TouchableItem top={170} left={fridgeWidth / 2 + 15} onPress={() => navigateToFridgeDetail({ name: '수산물/건해산', img: seafood })}>
+      <TouchableItem top={170} left={fridgeWidth / 2 + 15} onPress={() => navigateToFridgeDetail({ name: '수산물/건해산', img: seafood, categoryId: [15, 16] })}>
         <ImageIcon source={seafood} />
         <ShelfItemText>수산물/건해산</ShelfItemText>
       </TouchableItem>
 
-      <TouchableItem top={300} left={fridgeWidth / 2 + 15} onPress={() => navigateToFridgeDetail({ name: '쌀/잡곡/견과', img: rice })}>
+      <TouchableItem top={300} left={fridgeWidth / 2 + 15} onPress={() => navigateToFridgeDetail({ name: '쌀/잡곡/견과', img: rice, categoryId: [3, 4, 10] })}>
         <ImageIcon source={rice} />
         <ShelfItemText>쌀/잡곡/견과</ShelfItemText>
       </TouchableItem>
 
-      <TouchableItem top={300} right={80} onPress={() => navigateToFridgeDetail({ name: '우유/유제품', img: milk })}>
+      <TouchableItem top={300} right={80} onPress={() => navigateToFridgeDetail({ name: '우유/유제품', img: milk, categoryId: [5] })}>
         <ImageIcon source={milk} />
         <ShelfItemText>우유/유제품</ShelfItemText>
       </TouchableItem>
 
-      <TouchableItem top={430} left={80} onPress={() => navigateToFridgeDetail({ name: '베이커리/간식', img: bread })}>
+      <TouchableItem top={430} left={80} onPress={() => navigateToFridgeDetail({ name: '베이커리/간식', img: bread, categoryId: [6, 7] })}>
         <ImageIcon source={bread} />
         <ShelfItemText>베이커리/간식</ShelfItemText>
       </TouchableItem>
 
-      <TouchableItem top={430} left={fridgeWidth / 2 + 15} onPress={() => navigateToFridgeDetail({ name: '양념/오일', img: sauce })}>
+      <TouchableItem top={430} left={fridgeWidth / 2 + 15} onPress={() => navigateToFridgeDetail({ name: '양념/오일', img: sauce, categoryId: [8, 9, 14] })}>
         <ImageIcon source={sauce} />
         <ShelfItemText>양념/오일</ShelfItemText>
       </TouchableItem>
 
-      <TouchableItem top={430} right={80} onPress={() => navigateToFridgeDetail({ name: '통조림/면류', img: noodle })}>
+      <TouchableItem top={430} right={80} onPress={() => navigateToFridgeDetail({ name: '통조림/면류', img: noodle, categoryId: [13] })}>
         <ImageIcon source={noodle} />
         <ShelfItemText>통조림/면류</ShelfItemText>
       </TouchableItem>
 
-      <TouchableItem top={585} left={105} onPress={() => navigateToFridgeDetail({ name: '야채', img: vege })}>
+      <TouchableItem top={585} left={105} onPress={() => navigateToFridgeDetail({ name: '야채', img: vege, categoryId: [11]})}>
         <ImageIcon source={vege} />
         <ShelfItemText>야채</ShelfItemText>
       </TouchableItem>
 
-      <TouchableItem top={585} right={105} onPress={() => navigateToFridgeDetail({ name: '과일', img: fruit })}>
+      <TouchableItem top={585} right={105} onPress={() => navigateToFridgeDetail({ name: '과일', img: fruit, categoryId: [12] })}>
         <ImageIcon source={fruit} />
         <ShelfItemText>과일</ShelfItemText>
-      </TouchableItem> */}
+      </TouchableItem>
     </Container>
   );
 };

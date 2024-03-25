@@ -1,4 +1,4 @@
-import { View, TextInput, KeyboardAvoidingView, ScrollView, TouchableOpacity, Platform } from 'react-native';
+import { Keyboard, Dimensions, Platform } from 'react-native';
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -96,21 +96,24 @@ const FridgeDetailScreen = ({ route }) => {
   const deleteFood = useFridgeStore((state) => state.deleteFood);
 
   const { item } = route.params;
-  const { name, img } = item;
+  const { name, img , categoryId } = item;
 
   const navigation = useNavigation();
 
   useEffect(() => {
-    // 컴포넌트가 마운트될 때 저장된 음식들을 불러옴
-    // getMyFoods()
-    getMyFoods([1]);
-  }, [getMyFoods]);
-
+    console.log(`카테고리 번호: ${categoryId}`);
+    if (categoryId) {
+      // categoryId가 배열인지 확인하고, 배열의 각 요소에 대해 getMyFoods를 호출합니다.
+      categoryId.forEach(async (id) => {
+        await getMyFoods(id);
+      });
+    }
+  }, [getMyFoods, route.params]);
 
   const handleSend = () => {
     if (text) {
       addFridge(text); // Zustand 스토어 업데이트 및 DB 업데이트
-      setText(''); // 텍스트 입력 필드 초기화
+      // setText(''); // 텍스트 입력 필드 초기화
       scrollViewRef.current.scrollToEnd({ animated: true }); // 스크롤을 맨 아래로 이동
     }
   };
