@@ -505,6 +505,7 @@ def add_ingredients_to_refrigerator(request):
         
         ingredient_ids = []
         for food_name in foods:
+            print(food_name)
             ingredient_id = Ingredient.objects.filter(ingredient_name=food_name['foodName']).values_list('id', flat=True).first()
             pos = food_name['storedPos']
             ingredient_ids.append((ingredient_id, pos))
@@ -520,10 +521,11 @@ def add_ingredients_to_refrigerator(request):
 
                 if row_count == 0:
                     cursor.execute("INSERT INTO refri_ingredients (user_id, ingredient_id, expiration_date, stored_pos) VALUES (%s, %s, %s, %s)",
-                                [user_id, ingredient_id, datetime.now(), ingredient_id[1]])
+                                [user_id, ingredient_id[0], datetime.now(), ingredient_id[1]])
 
         return JsonResponse({"message": "Ingredients added to refrigerator successfully."}, status=201)
     elif request.method == 'GET':
+        print(1)
         foods = []
         # print(request)
         # print(request.data,'data')
