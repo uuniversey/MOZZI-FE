@@ -245,7 +245,7 @@ public class UserController {
         {
             UserModel user = userService.findCurrentUser();
             List<UserIngredientModel> userIngredientModels = userIngredientRepository.findUserIngredientModelsByUser(user);
-            List<UserIngredientDto> userIngredientDtoList = Collections.emptyList();
+            List<UserIngredientDto> userIngredientDtoList = new ArrayList<>();
             for (UserIngredientModel userIngredientModel : userIngredientModels)
             {
                 log.info(userIngredientModel.getIngredients().getIngredientName() + "입니다");
