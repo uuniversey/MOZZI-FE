@@ -563,12 +563,17 @@ def recommendFoods():
                         user = "ssafy",
                         password = "ssafy",
                          )
-    foodsTotal = db.cursor()
+
     with db.cursor() as cursor:
         query = "select count(*) as total_rows from mozzi.datas_foods"
         cursor.execute(query)
         maxFoodsIndex = cursor.fetchall()[0][0]
         print(maxFoodsIndex) 
+
+        query = "select count(*) as total_rows from mozzi.datas_ingredient"
+        cursor.execute(query)
+        maxIngredientsIndex = cursor.fetchall()[0][0]
+        print(maxIngredientsIndex)
     # print(pd.read_sql( "select * from mozzi.datas_foods" ,db))
     
 
