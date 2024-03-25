@@ -94,7 +94,7 @@ const ButtonText = styled.Text`
 
 function RecapScreen() {
   const navigation = useNavigation()
-  const [myRecipes, setMyRecipes] = useState<RecipeCardProps[]>([]);
+  const [myRecipes, setMyRecipes] = useState<RecipeCardProps[]>([])
 
   const callMakeVideoApi = async (userId: string, bgmCategory: number) => {
     try {

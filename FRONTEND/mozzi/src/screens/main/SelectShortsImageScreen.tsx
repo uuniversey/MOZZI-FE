@@ -174,10 +174,21 @@ function SelectShortsImageScreen () {
     navigation.goBack()
   }
 
+  // 회원의 이미지 불러오는 axios 필요함.
+  const getImages = async () => {
+    try {
+      const response = await axios.get('http://10.0.2.2:8000/maker/get_image/')
+      console.log(response)
+    } catch (error) {
+      //응답 실패
+      console.error(error)
+    }
+  }
+
   const renderImages = () => {
-    const images = [];
+    const images = []
     for (let i = 0; i < 15; i++) {
-      const isImageSelected = selectedImages.includes(i);
+      const isImageSelected = selectedImages.includes(i)
       images.push(
         <TouchableOpacity key={i} onPress={() => toggleImageSelection(i)}>
           <SelectableImage
@@ -187,7 +198,7 @@ function SelectShortsImageScreen () {
         </TouchableOpacity>
       );
     }
-    return images;
+    return images
   }
 
   const renderMusic = () => {

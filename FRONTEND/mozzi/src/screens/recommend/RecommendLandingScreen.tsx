@@ -46,7 +46,7 @@ const InnerBar = styled(Animated.View)`
 `
 
 const diceImages = [
-  require('../../assets/recommend/dice.png'),
+  require('../../assets/recommend/dice2.png'),
 ]
 
 function RecommendLandingScreen() {
