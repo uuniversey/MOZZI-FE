@@ -492,6 +492,7 @@ def add_ingredients_to_refrigerator(request):
     
     category_id = request.data.get('category')
     foods = request.data.get('foods')
+
     if request.method == 'POST':
         
         for i in user:
@@ -503,8 +504,9 @@ def add_ingredients_to_refrigerator(request):
         
         ingredient_ids = []
         for food_name in foods:
-            ingredient_id = Ingredient.objects.filter(ingredient_name=food_name).values_list('id', flat=True).first()
-            ingredient_ids.append(ingredient_id)
+            ingredient_id = Ingredient.objects.filter(ingredient_name=food_name[0]).values_list('id', flat=True).first()
+            pos = food_name[1]
+            ingredient_ids.append((ingredient_id, pos))
 
         with connection.cursor() as cursor:
             for ingredient_id in ingredient_ids:
@@ -514,8 +516,8 @@ def add_ingredients_to_refrigerator(request):
                 
                 # 중복 삽입 방지
                 if row_count == 0:
-                    cursor.execute("INSERT INTO refri_ingredients (user_id, ingredient_id, expiration_date) VALUES (%s, %s, %s)",
-                                [user_id, ingredient_id, datetime.now()])
+                    cursor.execute("INSERT INTO refri_ingredients (user_id, ingredient_id, expiration_date) VALUES (%s, %s, %s, %s)",
+                                [user_id, ingredient_id, datetime.now(), ])
 
         return JsonResponse({"message": "Ingredients added to refrigerator successfully."}, status=201)
     elif request.method == 'GET':
@@ -546,7 +548,7 @@ def add_ingredients_to_refrigerator(request):
             for i in ingredient:
             
                 if i.id == row[1] and str(i.category_id) in category :
-                    foods.append(i.ingredient_name)
+                    foods.append({'foodName': i.ingredient_name, 'storedPos' : row[3]})
 
         return JsonResponse({'data': {"foods" : foods}})
 
