@@ -8,5 +8,5 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserIsVeganDto {
-    private boolean isVegan;
+    private Boolean isVegan;
 }
