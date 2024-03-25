@@ -521,7 +521,7 @@ def add_ingredients_to_refrigerator(request):
 
                 if row_count == 0:
                     cursor.execute("INSERT INTO refri_ingredients (user_id, ingredient_id, expiration_date, stored_pos) VALUES (%s, %s, %s, %s)",
-                                [user_id, ingredient_id, datetime.now(), ingredient_id[1]])
+                                [user_id, ingredient_id[0], datetime.now(), ingredient_id[1]])
 
         return JsonResponse({"message": "Ingredients added to refrigerator successfully."}, status=201)
     elif request.method == 'GET':
