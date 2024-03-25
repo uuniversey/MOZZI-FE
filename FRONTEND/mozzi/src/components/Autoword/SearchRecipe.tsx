@@ -1,38 +1,54 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import Autocomplete from 'react-native-autocomplete-input'
+import styled from 'styled-components/native'
 
 interface FoodItem {
-  id: number
-  image: string
-  title: string
+  photoUrl: string
+  foodName: string
 }
 
 interface SearchBarProps {
   data: FoodItem[]
-  onSelect: (recipeKey: number, recipeName: string) => void
+  onSelect: (recipeName: string) => void
 }
+
+const StyledImage = styled.Image`
+  width: 35px;
+  height: 35px;
+  border-radius: 100px;
+  margin-right: 5px;
+`
+
+const StyledView = styled.View`
+  width: 100%;
+  height: 50px;
+  flex-direction: row;
+  padding-left: 5px;
+  align-items: center;
+  margin-top: 5px;
+`
 
 export const SearchBar = ({ data, onSelect }: SearchBarProps) => {
 
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [filteredData, setFilteredData] = useState<FoodItem[]>([])
-  const [recipeKey, setRecipeKey] = useState<Number | null>(null)
   const [recipeName, setRecipeName] = useState<string>('')
 
   // 자동 완성 데이터 필터링
   const handleAutoComplete = (text: string) => {
-    setSearchQuery(text);
-    const filtered = data.filter(item => item.title.toLowerCase().includes(text.toLowerCase()));
-    setFilteredData(filtered);
+    setSearchQuery(text)
+    const filtered = data.filter(item => item.foodName.includes(text))
+    setFilteredData(filtered)
+    console.log('----', filtered)
   }
 
   useEffect(() => {
     if (searchQuery) {
-      const selectedItem = filteredData.find(item => item.title.toLowerCase() === searchQuery.toLowerCase());
+      const selectedItem = filteredData.find(item => item.foodName === searchQuery);
       if (selectedItem) {
-        onSelect(selectedItem.id, selectedItem.title)
+        onSelect(selectedItem.foodName)
       }
     }
   }, [searchQuery, filteredData, onSelect])
@@ -52,12 +68,18 @@ export const SearchBar = ({ data, onSelect }: SearchBarProps) => {
                   <TouchableOpacity
                     style={styles.listButton}
                     onPress={() => {
-                      setSearchQuery(item.title)
-                      setRecipeKey(item.id)
-                      setRecipeName(item.title)
-                      onSelect(item.id, item.title)
+                      setSearchQuery(item.foodName)
+                      setRecipeName(item.foodName)
+                      onSelect(item.foodName)
+                      handleAutoComplete(item.foodName)
                     }}>
-                    <Text>{item.title}</Text>
+                    <StyledView>
+                      <StyledImage
+                      // source={require('../../assets/recommend/pizza.jpg')}
+                      source={{ uri: item.photoUrl }}
+                      />
+                      <Text>{item.foodName}</Text>
+                    </StyledView>
                   </TouchableOpacity>
                 ),
                 scrollEnabled: true,
@@ -74,6 +96,8 @@ export const SearchBar = ({ data, onSelect }: SearchBarProps) => {
     </>
   )
 }
+
+
 
 const styles = StyleSheet.create({
   searchSection: {
@@ -93,6 +117,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 4,
     left: 35,
+    width: 327,
     // marginTop: 30,
     // width: 350,
     // height: 55,
