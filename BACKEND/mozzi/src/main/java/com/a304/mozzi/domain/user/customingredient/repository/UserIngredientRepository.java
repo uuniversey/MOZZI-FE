@@ -15,4 +15,5 @@ public interface UserIngredientRepository extends JpaRepository<UserIngredientMo
     public UserIngredientModel findUserIngredientModelByUserAndIngredients(UserModel user, IngredientsModel ingredientsModel);
 
     public List<UserIngredientModel> findUserIngredientModelsByUser(UserModel user);
+    public void deleteAllByUser(UserModel user);
 }

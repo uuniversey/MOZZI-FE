@@ -318,7 +318,9 @@ public class UserController {
     @PostMapping("/setfood")
     ResponseEntity<?> addIsLike(@RequestBody IngredientsListDto listInp) {
         try {
+
             UserModel user = userService.findCurrentUser();
+            userIngredientRepository.deleteAllByUser(user);
             for (UserFoodInpDto userFoodInpDto : listInp.getFoods()) {
 
                 IngredientsModel ingredientsModel =ingredientsService.findIngredientsByIngredientsName(userFoodInpDto.getFoodName());
