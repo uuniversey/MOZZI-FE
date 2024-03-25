@@ -713,10 +713,24 @@ def recommendFoods():
             # df[parameter[0]][parameter[1]] = parameter[2] / 100
             df.iloc[parameter[0] - 1, parameter[1] - 1] = parameter[2] / 100
 
-        print(df)
-        print(df.T)
-        print(df.dot(df.T))
+        # print(df)
+        # print(df.T)
+        # print(df.dot(df.T))
 
+
+        df_foods = pd.DataFrame(np.zeros((maxFoodsIndex, maxFoodsIndex)))
+
+        for foodId1 in range(maxFoodsIndex):
+            for foodId2 in range(foodId1 + 1, maxFoodsIndex):
+                value = 0
+                for ingredientId in range(maxIngredientsIndex):
+                    value += (df.iloc[foodId1, ingredientId] - df.iloc[foodId2, ingredientId]) ** 2
+                value = value ** (1 / 2)
+                # print(value)s
+                df_foods.iloc[foodId1, foodId2] = 1 - value
+                df_foods.iloc[foodId2, foodId1] = 1 - value
+        print(df)
+        
 
     # print(pd.read_sql( "select * from mozzi.datas_foods" ,db))
     
