@@ -505,8 +505,8 @@ def add_ingredients_to_refrigerator(request):
         
         ingredient_ids = []
         for food_name in foods:
-            ingredient_id = Ingredient.objects.filter(ingredient_name=food_name[0]).values_list('id', flat=True).first()
-            pos = food_name[1]
+            ingredient_id = Ingredient.objects.filter(ingredient_name=food_name['foodName']).values_list('id', flat=True).first()
+            pos = food_name['storedPos']
             ingredient_ids.append((ingredient_id, pos))
 
         with connection.cursor() as cursor:
