@@ -37,26 +37,6 @@ function SearchScreen () {
     setKeyword(newText)
   }
 
-  useEffect(() => {
-    setRecipeData([
-      {id: 1, image: '', title: "cheese"},
-      {id: 2, image: '', title: "cheesetoast"},
-      {id: 3, image: '', title: "cheesetaco"},
-      {id: 4, image: '', title: "cheeseball"},
-      {id: 5, image: '', title: "issactoast"},
-      {id: 1, image: '', title: "cheesea"},
-      {id: 2, image: '', title: "cheesetoasta"},
-      {id: 3, image: '', title: "cheesetacoa"},
-      {id: 4, image: '', title: "cheeseballa"},
-      {id: 5, image: '', title: "issactoasta"},
-      {id: 1, image: '', title: "cheesea"},
-      {id: 2, image: '', title: "cheesetoasta"},
-      {id: 3, image: '', title: "cheesetacoa"},
-      {id: 4, image: '', title: "cheeseballa"},
-      {id: 5, image: '', title: "issactoasta"},
-    ])
-    getRecipe()
-  }, [])
   
   return (
     <Container>
