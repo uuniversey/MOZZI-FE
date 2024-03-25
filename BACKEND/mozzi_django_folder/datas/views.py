@@ -512,7 +512,7 @@ def add_ingredients_to_refrigerator(request):
         with connection.cursor() as cursor:
             for ingredient_id in ingredient_ids:
                 # 이미 존재하는지 확인
-                cursor.execute("SELECT COUNT(*) FROM refri_ingredients WHERE user_id = %s AND ingredient_id = %s", [user_id, ingredient_id]) 
+                cursor.execute("SELECT COUNT(*) as count FROM refri_ingredients WHERE user_id = %s AND ingredient_id = %s", [user_id, ingredient_id]) 
                 row_count = cursor.fetchone()[0]
                 print(row_count)
                 
