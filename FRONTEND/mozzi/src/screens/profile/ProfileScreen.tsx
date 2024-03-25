@@ -1,9 +1,22 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useLayoutEffect } from 'react'
 import { View, Text, TextInput, Button } from 'react-native'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 import styled from 'styled-components/native'
+import { useNavigation } from '@react-navigation/native'
+
+import { Header } from '../../components/Header/Header'
 
 import EditScreen from './EditScreen'
 import useProfileStore from '../../store/ProfileStore'
+
+
+interface UserProfileState {
+  nickname: string
+  allergyInfo: string
+  favoriteFood: string
+  dislikedFood: string
+  isVegan: string
+}
 
 const Container = styled.View`
   flex: 1;
@@ -13,7 +26,7 @@ const Container = styled.View`
 const Title = styled.Text`
   font-size: 36px;
   font-weight: bold;
-  margin: 50px 0px 0px 40px;
+  margin: 20px 0px 0px 40px;
   text-align: left;
   width: 100%;
 `
@@ -49,23 +62,41 @@ const BtnText = styled.Text`
 `
 
 function ProfileScreen () {
-  const { getProfile, profileData, editNickname, editIsVegan } = useProfileStore()
+  const navigation = useNavigation()
+  const { getProfile, profileData, editNickname, editIsVegan, editFoodInfo, form } = useProfileStore()
   const [ isEdit, setIsEdit ] = useState<boolean>(false)
+  const [ foodInfo, setFoodInfo ] = useState(
+  [
+    { foodName : "당근",
+      "value" : 1},
+    { foodName : "토마토",
+      "value" : 0},
+    { foodName : "우유",
+      "value" : 2},
+  ]
+)
 
-  useEffect (() => {
+  useLayoutEffect (() => {
     getProfile()
-  }, [])
-
+  }, [isEdit])
+ 
   const handleIsEdit = () => {
     if (isEdit) {
-      editNickname('신그자체김상범')
-      editIsVegan(true)
+      console.log('this is form', form)
+      // 입력 값으로 바꿔야 함
+      editNickname(form.nickname)
+      editIsVegan(Boolean(form.isVegan))
+      editFoodInfo(foodInfo)
     }
     setIsEdit(!isEdit)
   }
 
   return (
     <Container>
+      <Header>
+        <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
+      </Header>
+
       <Title>내 정보</Title>
       <Body>
         {isEdit ? (
@@ -74,24 +105,28 @@ function ProfileScreen () {
           <View>
             <Label>닉네임</Label>
             <StyledInput
-              placeholder={`${profileData.nickname}`}
+              placeholder={`${form.nickname}`}
               editable={false}
             />
             <Label>알레르기 정보</Label>
             <StyledInput
-              placeholder={`${profileData.foods}`}
+              placeholder={`${form.foods}`}
+              editable={false}
             />
             <Label>좋아하는 음식</Label>
             <StyledInput
-              placeholder={`${profileData.foods}`}
+              placeholder={`${form.foods}`}
+              editable={false}
             />
             <Label>싫어하는 음식</Label>
             <StyledInput
-              placeholder={`${profileData.foods}`}
+              placeholder={`${form.foods}`}
+              editable={false}
             />
             <Label>비건 여부</Label>
             <StyledInput
-              placeholder={`${profileData.isVegan}`}
+              placeholder={`${form.isVegan == 0 ? '네':'아니오'}`}
+              editable={false}
             />
           </View>
           )

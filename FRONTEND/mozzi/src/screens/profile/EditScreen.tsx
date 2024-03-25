@@ -2,14 +2,9 @@ import React, { useState } from 'react'
 import { View, Text, TextInput, Button } from 'react-native'
 import styled from 'styled-components/native'
 
-interface UserProfileState {
-  nickname: string
-  allergyInfo: string
-  favoriteFood: string
-  dislikedFood: string
-  isVegan: string
-}
+import Dropdown from '../../components/Dropdown/Dropdown'
 
+import useProfileStore from '../../store/ProfileStore'
 const Label = styled.Text`
   margin-top: 30px;
 `
@@ -22,14 +17,7 @@ const StyledInput = styled.TextInput`
 `
 
 function EditScreen() {
-  const [form, setForm] = useState<UserProfileState>({
-    nickname: '',
-    allergyInfo: '',
-    favoriteFood: '',
-    dislikedFood: '',
-    isVegan: ''
-  })
-
+  const { form, setForm } = useProfileStore()
   const handleNicknameChange = (nickname: string) => setForm({ ...form, nickname })
   const handleAllergyInfoChange = (allergyInfo: string) => setForm({ ...form, allergyInfo })
   const handleFavoriteFoodChange = (favoriteFood: string) => setForm({ ...form, favoriteFood })
@@ -46,22 +34,17 @@ function EditScreen() {
         placeholderTextColor="#ccc"
       />
       <Label>알레르기 정보</Label>
+      <Dropdown />
+      <Label>좋아하는 식재료</Label>
       <StyledInput
-        placeholder="알레르기 정보를 입력하세요"
-        value={form.allergyInfo}
-        onChangeText={handleAllergyInfoChange}
-        placeholderTextColor="#ccc"
-      />
-      <Label>좋아하는 음식</Label>
-      <StyledInput
-        placeholder="좋아하는 음식을 입력하세요"
+        placeholder="좋아하는 식재료를 입력하세요"
         value={form.favoriteFood}
         onChangeText={handleFavoriteFoodChange}
         placeholderTextColor="#ccc"
       />
-      <Label>싫어하는 음식</Label>
+      <Label>싫어하는 식재료</Label>
       <StyledInput
-        placeholder="싫어하는 음식을 입력하세요"
+        placeholder="싫어하는 식재료를 입력하세요"
         value={form.dislikedFood}
         onChangeText={handleDislikedFoodChange}
         placeholderTextColor="#ccc"
