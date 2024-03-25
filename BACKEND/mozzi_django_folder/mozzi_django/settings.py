@@ -117,23 +117,26 @@ DATABASES = {
         
         'CLIENT' : {
             'host': 'a304.site',  # 여기서는 호스트 이름만 지정합니다.
-            'port': '27017',  # 포트는 정수로 지정합니다.
+            'port': 27017,  # 포트는 정수로 지정합니다.
             'username': 'root',
             'password': 'ssafy',
-            'authSource' : 'admin',
-            'authMechanism' : 'SCRAM-SHA-1'
+            'authSource': 'admin',
+            'authMechanism': 'SCRAM-SHA-1'
         }
     }
 
 
 }
+
 connect(
-    db='mozzi',  # 여기에는 사용할 MongoDB 데이터베이스 이름을 넣으세요.
-    host='mongodb://a304.site:27017/',  # MongoDB 호스트 주소입니다. 포트 번호 27017을 사용합니다.
-    alias='default',  # 이 부분은 Django에서 사용할 alias를 설정하는 부분입니다.
-
+    db='mozzi',
+    host='a304.site',
+    port=27017,
+    username='root',
+    password='ssafy',
+    authentication_source='admin',
+    authentication_mechanism='SCRAM-SHA-1'
 )
-
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
