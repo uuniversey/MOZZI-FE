@@ -22,6 +22,7 @@ import neo4jupyter
 from py2neo import Graph
 from pyvis.network import Network
 import pandas as pd
+import numpy as np
 import pymysql
 # 식재료 뽑기
 def get_ingredients(start, last):
@@ -693,7 +694,7 @@ def recommendFoods():
                          )
 
     with db.cursor() as cursor:
-        query = "select count(*) as total_rows from mozzi.datas_foods"
+        query = "select food_id from mozzi.datas_foods order by food_id desc limit 1"
         cursor.execute(query)
         maxFoodsIndex = cursor.fetchall()[0][0]
         print(maxFoodsIndex) 
@@ -703,6 +704,20 @@ def recommendFoods():
         cursor.execute(query)
         maxIngredientsIndex = cursor.fetchall()[0][0]
         print(maxIngredientsIndex)
+        df = pd.DataFrame(np.zeros((maxFoodsIndex, maxIngredientsIndex)))
+        
+        query = "select food_id, ingredient_id, ingredient_ratio from mozzi.food_ingredient"
+        cursor.execute(query)
+        parameterList = cursor.fetchall()
+        for parameter in parameterList:
+            # df[parameter[0]][parameter[1]] = parameter[2] / 100
+            df.iloc[parameter[0] - 1, parameter[1] - 1] = parameter[2] / 100
+
+        print(df)
+        print(df.T)
+        print(df.dot(df.T))
+
+
     # print(pd.read_sql( "select * from mozzi.datas_foods" ,db))
     
 
