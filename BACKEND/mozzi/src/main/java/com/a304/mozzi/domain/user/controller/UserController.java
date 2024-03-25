@@ -26,6 +26,7 @@ import com.a304.mozzi.global.dto.ResponseMessageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.commons.logging.Log;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -247,6 +248,7 @@ public class UserController {
             List<UserIngredientDto> userIngredientDtoList = Collections.emptyList();
             for (UserIngredientModel userIngredientModel : userIngredientModels)
             {
+                log.info(userIngredientModel.getIngredients().getIngredientName());
                 UserIngredientDto userIngredientDto = UserIngredientDto.builder().ingredientName(userIngredientModel.getIngredients().getIngredientName()).isLike(userIngredientModel.getIsLike()).build();
                 userIngredientDtoList.add(userIngredientDto);
             }
