@@ -100,20 +100,35 @@ const FridgeDetailScreen = ({ route }) => {
 
   const navigation = useNavigation();
 
+  // useEffect(() => {
+  //   console.log(`카테고리 번호: ${categoryId}`);
+  //   // useFridgeStore.getState().clearSavedFoods()
+  //   // getMyFoods(categoryId)
+  //   if (categoryId) {
+  //     // categoryId가 배열인지 확인하고, 배열의 각 요소에 대해 getMyFoods를 호출합니다.
+  //     categoryId.forEach(async (id) => {
+  //       await getMyFoods(id);
+  //     });
+  //   }
+  // }, [getMyFoods, route.params]);
+
   useEffect(() => {
     console.log(`카테고리 번호: ${categoryId}`);
+    // 스토어의 상태를 직접 가져와서 clearSavedFoods 함수를 호출
+    useFridgeStore.getState().resetSavedFoods();
+    // categoryId가 배열이 아니라 단일 값일 경우에는 바로 getMyFoods를 호출
     if (categoryId) {
       // categoryId가 배열인지 확인하고, 배열의 각 요소에 대해 getMyFoods를 호출합니다.
       categoryId.forEach(async (id) => {
         await getMyFoods(id);
       });
     }
-  }, [getMyFoods, route.params]);
+  }, [getMyFoods, categoryId]); // useEffect의 의존성 배열에서 route.params를 제거
 
   const handleSend = () => {
     if (text) {
       addFridge(text); // Zustand 스토어 업데이트 및 DB 업데이트
-      // setText(''); // 텍스트 입력 필드 초기화
+      setText(''); // 텍스트 입력 필드 초기화
       scrollViewRef.current.scrollToEnd({ animated: true }); // 스크롤을 맨 아래로 이동
     }
   };
