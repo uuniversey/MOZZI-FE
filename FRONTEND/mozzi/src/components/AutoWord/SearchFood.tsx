@@ -69,13 +69,23 @@ export const SearchFood: React.FC<{ setQuery: (query: string) => void }> = ({ se
     if (text === '') {
       setFilteredData([]);
     } else {
-      // 문자열 배열에서 검색어가 포함된 항목만 필터링
+      // // 문자열 배열에서 검색어가 포함된 항목만 필터링
+      // const filtered = allFoods.filter((food) =>
+      //   food.toLowerCase().includes(text.toLowerCase())
+      // );
+      // setFilteredData(filtered);
       const filtered = allFoods.filter((food) =>
-        food.toLowerCase().includes(text.toLowerCase())
+      food && food.toLowerCase().includes(text.toLowerCase())
       );
       setFilteredData(filtered);
     }
   }
+
+  // 자동 완성 목록에서 항목을 선택했을 때 호출되는 함수
+  const handleSelectItem = (item: string) => {
+    setLocalQuery(item); // 로컬 상태 업데이트
+    setQuery(item); // 상위 컴포넌트의 상태 업데이트
+  };
 
   return (
     <SearchSection>
@@ -88,7 +98,10 @@ export const SearchFood: React.FC<{ setQuery: (query: string) => void }> = ({ se
           flatListProps={{
             keyExtractor: (item, index) => index.toString(),
             renderItem: ({ item }) => (
-              <ListButton onPress={() => { setQuery(item); setLocalQuery(item.title); }}>
+              // <ListButton onPress={() => { setQuery(item); setLocalQuery(item.title); }}>
+              //   <Text>{item}</Text>
+              // </ListButton>
+              <ListButton onPress={() => handleSelectItem(item)}>
                 <Text>{item}</Text>
               </ListButton>
             ),

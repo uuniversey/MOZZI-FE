@@ -1,5 +1,5 @@
-import { View, TextInput, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
-import React, { useState, useRef } from 'react';
+import { Keyboard, Dimensions, Platform } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
@@ -74,6 +74,10 @@ const MyFoodText = styled.Text`
   font-size: 20;
 `;
 
+const DeleteButton = styled.TouchableOpacity`
+  /* color: lightgray; */
+`
+
 const SendButton = styled.TouchableOpacity`
   position: absolute;
   top: 12;
@@ -85,21 +89,41 @@ const SendButton = styled.TouchableOpacity`
 const FridgeDetailScreen = ({ route }) => {
   const [text, setText] = useState<FoodItem | null>(null);
   const scrollViewRef = useRef(null);
+  const getMyFoods = useFridgeStore((state) => state.getMyFoods);
   const allFoods = useFridgeStore((state) => state.allFoods);
   const savedFoods = useFridgeStore((state) => state.savedFoods);
   const addFridge = useFridgeStore((state) => state.addFridge);
+  const deleteFood = useFridgeStore((state) => state.deleteFood);
 
   const { item } = route.params;
-  const { name, img } = item;
+  const { name, img , categoryId } = item;
 
   const navigation = useNavigation();
 
-  // 항목을 냉장고에 추가하는 함수
-  // const handleSend = () => {
-  //   addFridge(text?.food); // Zustand 스토어 업데이트 및 DB 업데이트
-  //   setText(null); // 텍스트 입력 필드 초기화
-  //   scrollViewRef.current.scrollToEnd({ animated: true }); // 스크롤을 맨 아래로 이동
-  // };
+  // useEffect(() => {
+  //   console.log(`카테고리 번호: ${categoryId}`);
+  //   // useFridgeStore.getState().clearSavedFoods()
+  //   // getMyFoods(categoryId)
+  //   if (categoryId) {
+  //     // categoryId가 배열인지 확인하고, 배열의 각 요소에 대해 getMyFoods를 호출합니다.
+  //     categoryId.forEach(async (id) => {
+  //       await getMyFoods(id);
+  //     });
+  //   }
+  // }, [getMyFoods, route.params]);
+
+  useEffect(() => {
+    console.log(`카테고리 번호: ${categoryId}`);
+    // 스토어의 상태를 직접 가져와서 clearSavedFoods 함수를 호출
+    useFridgeStore.getState().resetSavedFoods();
+    // categoryId가 배열이 아니라 단일 값일 경우에는 바로 getMyFoods를 호출
+    if (categoryId) {
+      // categoryId가 배열인지 확인하고, 배열의 각 요소에 대해 getMyFoods를 호출합니다.
+      categoryId.forEach(async (id) => {
+        await getMyFoods(id);
+      });
+    }
+  }, [getMyFoods, categoryId]); // useEffect의 의존성 배열에서 route.params를 제거
 
   const handleSend = () => {
     if (text) {
@@ -108,6 +132,13 @@ const FridgeDetailScreen = ({ route }) => {
       scrollViewRef.current.scrollToEnd({ animated: true }); // 스크롤을 맨 아래로 이동
     }
   };
+
+  // 삭제 버튼 클릭 시 해당 음식을 삭제하는 함수
+  const handleDelete = (foodName) => {
+    deleteFood(foodName); // delete 요청 수행
+  };
+
+
 
   return (
     <Container behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -120,11 +151,18 @@ const FridgeDetailScreen = ({ route }) => {
         <NoteImg source={note} />
         <TitleContainer>
           {img && <TitleImg source={img} />}
-          <MenuItem>{name}</MenuItem>
+          <MenuItem>
+            {name}
+          </MenuItem>
         </TitleContainer>
         <MyFood ref={scrollViewRef}>
           {savedFoods.map((item, index) => (
-            <MyFoodText key={index}>{item}</MyFoodText>
+            <MyFoodText key={index}>
+              {item}
+              <DeleteButton onPress={() => handleDelete(item)}>
+                <MaterialIcons name="close" size={20} />
+              </DeleteButton>
+          </MyFoodText>
           ))}
         </MyFood>
       </Note>
