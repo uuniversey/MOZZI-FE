@@ -9,7 +9,7 @@ import MainStack from './src/navigation/MainStack'
 import FridgeStack from './src/navigation/FridgeStack'
 import RecommendStack from './src/navigation/RecommendStack'
 import DiaryStack from './src/navigation/DiaryStack'
-import ProfileScreen from './src/screens/profile/ProfileScreen'
+import UserStack from './src/navigation/UserStack'
 // import LandingScreen from './src/screens/landing/LandingScreen';
 import LoginStack from './src/navigation/LoginStack'
 
@@ -74,7 +74,7 @@ const App: React.FC = () => {
                   iconName = 'kitchen'
                 } else if (route.name === 'DiaryTab') {
                   iconName = 'calendar-month'
-                } else if (route.name === 'ProfileTab') {
+                } else if (route.name === 'UserTab') {
                   iconName = 'account-circle'
                 }
 
@@ -123,7 +123,7 @@ const App: React.FC = () => {
             <Tab.Screen name="FridgeTab" component={FridgeStack} />
             <Tab.Screen name="RecommendTab" component={RecommendStack} />
             <Tab.Screen name="DiaryTab" component={DiaryStack} />
-            <Tab.Screen name="ProfileTab" component={ProfileScreen} />
+            <Tab.Screen name="UserTab" component={UserStack} />
           </Tab.Navigator>
         </NavigationContainer>
       ) : (

@@ -42,7 +42,7 @@ const TextSelectedStyle = styled.Text`
   font-size: 16px;
 `
 
-function Allergy () {
+function Dropdown () {
   const [selected, setSelected] = useState([])
 
   // open했을때 css
@@ -82,4 +82,4 @@ function Allergy () {
   )
 }
 
-export default Allergy
+export default Dropdown
