@@ -513,14 +513,12 @@ def add_ingredients_to_refrigerator(request):
         with connection.cursor() as cursor:
             for ingredient_id in ingredient_ids:
                 # 이미 존재하는지 확인
-                cursor.execute("SELECT COUNT(*) FROM refri_ingredients WHERE user_id = %s AND ingredient_id = %s", [user_id, ingredient_id[0]]) 
-                
-
+                cursor.execute("SELECT COUNT(*) as count FROM refri_ingredients WHERE user_id = %s AND ingredient_id = %s", [user_id, ingredient_id[0]]) 
                 row_count = cursor.fetchone()[0]
                 print(row_count)
                 
                 # 중복 삽입 방지
-                print(pos)
+
                 if row_count == 0:
                     cursor.execute("INSERT INTO refri_ingredients (user_id, ingredient_id, expiration_date, stored_pos) VALUES (%s, %s, %s, %s)",
                                 [user_id, ingredient_id, datetime.now(), ingredient_id[1]])
