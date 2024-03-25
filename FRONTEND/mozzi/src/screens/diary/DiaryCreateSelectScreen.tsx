@@ -17,7 +17,7 @@ interface FoodItem {
 
 function DiaryCreateSelectScreen () {
   const navigation = useNavigation()
-  const { getRecipe, recipeData2 } = useRecipeStore()
+  // const { getRecipe, recipeData2 } = useRecipeStore()
 
   const [searchQuery, setSearchQuery] = useState<string>('');
   

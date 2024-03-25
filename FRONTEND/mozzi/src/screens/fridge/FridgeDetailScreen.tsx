@@ -20,11 +20,6 @@ const Container = styled.KeyboardAvoidingView`
   background-color: #FFFEF2;
 `;
 
-const Title = styled.Text`
-  margin-top: 50px;
-  margin-bottom: 20px;
-`;
-
 const ClipImg = styled.Image`
   position: absolute;
   top: 20;
@@ -100,10 +95,18 @@ const FridgeDetailScreen = ({ route }) => {
   const navigation = useNavigation();
 
   // 항목을 냉장고에 추가하는 함수
+  // const handleSend = () => {
+  //   addFridge(text?.food); // Zustand 스토어 업데이트 및 DB 업데이트
+  //   setText(null); // 텍스트 입력 필드 초기화
+  //   scrollViewRef.current.scrollToEnd({ animated: true }); // 스크롤을 맨 아래로 이동
+  // };
+
   const handleSend = () => {
-    addFridge(text?.food); // Zustand 스토어 업데이트 및 DB 업데이트
-    setText(null); // 텍스트 입력 필드 초기화
-    scrollViewRef.current.scrollToEnd({ animated: true }); // 스크롤을 맨 아래로 이동
+    if (text) {
+      addFridge(text); // Zustand 스토어 업데이트 및 DB 업데이트
+      setText(''); // 텍스트 입력 필드 초기화
+      scrollViewRef.current.scrollToEnd({ animated: true }); // 스크롤을 맨 아래로 이동
+    }
   };
 
   return (
@@ -129,7 +132,7 @@ const FridgeDetailScreen = ({ route }) => {
       <InputContainer>
         <SearchFood
           data={allFoods}
-          setQuery={(query) => setText({ food: query })}
+          setQuery={setText} // 여기서 setQuery를 setText로 설정
           placeholder="재료를 입력하세요..."
         />
         {text && ( // 텍스트가 있을 때만 전송 버튼 표시

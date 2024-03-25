@@ -4,6 +4,7 @@ import styled from 'styled-components/native'
 import axios from 'axios'
 import { useNavigation } from '@react-navigation/native'
 import { Header } from '../../components/Header/Header'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Container = styled.View`
   flex: 1;
@@ -92,16 +93,16 @@ function MainScreen() {
   }
 
   const [recipe, setRecipe] = useState<string>('')
-  const accessToken = 'eyJraWQiOiI5ZjI1MmRhZGQ1ZjIzM2Y5M2QyZmE1MjhkMTJmZWEiLCJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiJkMGJjOTVkNzY3MGQ1NTIwNDlkZDVkYzQ2ZDc5OTlhMCIsInN1YiI6IjMzOTc4ODUyNTIiLCJhdXRoX3RpbWUiOjE3MTA5MjI3NTksImlzcyI6Imh0dHBzOi8va2F1dGgua2FrYW8uY29tIiwiZXhwIjoxNzEwOTY1OTU5LCJpYXQiOjE3MTA5MjI3NTl9.fB-MVI2EmpQRTZBX1gCTwP3_a22nyF9_djbphsfoPheVOj3tetp0GCEVyonNuurmfAvDZv3AFiGgFQ-tmlV_I60Dd1gShqxs-VN3HBDRwG-JG1izjBZfKYRYLIFdGkkA5gmoFDrKvQA2SmXk7Wllz_wipuq3Z3roMBVKIBTJ_V56clMK_CvnYbhNWbXsBfJbww-UQqDGPy9XWsBFlB-gJQJs8spcd7KG2SDCk9iFswp4E50xkL1ZLBqqgtH40MquEdVB4y9F2OcB5zgfLCPqOQwIAls1viU4zc3F0CiYyYTs_k8i1YVCQUxTmV4yLJI4R9nWL4ZwHGDyZv8E5qs7EQ'
   // 로그인 유저 호출
   // 최다 뷰카운트 호출
   const popularRecipe = async () => {
+    const token = await AsyncStorage.getItem('accessToken')
     try {
-      const response = await axios.get('http://127.0.0.1:8000/datas/get_highest_viewed_food/', {
+      const response = await axios.get(`recommend/datas/get_highest_viewed_food/`, {
         headers: {
-          // Bearer 토큰을 Authorization 헤더에 추가
-          Authorization: `Bearer ${accessToken}`
-        }
+          Authorization: `Bearer ${token}`,
+          'Content-type': 'application/json',
+        },
       })
       console.log(response)
       // data에 저장해둠(respose 어디에 값이 들어있는지 확인할 것)
@@ -126,12 +127,12 @@ function MainScreen() {
   // 여기 페이지 들어올 때마다 호출할지
   // 맨 처음에 한 번만 호출할지 생각해봐야할 듯
   useEffect(() => {
-    // popularRecipe()
+    popularRecipe()
     return () => {
     }
   }, [])
   
-
+ 
   return (
     <>
       <Header>
