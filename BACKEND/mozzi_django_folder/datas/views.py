@@ -527,33 +527,33 @@ def add_ingredients_to_refrigerator(request):
         foods = []
         # print(request)
         # print(request.data,'data')
-        category = request.GET.getlist('category')[0]
+        storedPos = request.GET.get('storedPos')
         # category = request.data.get('category')
         # print(category,'category')
         ingredient = Ingredient.objects.all()
         query = """
             SELECT * FROM refri_ingredients
-            WHERE user_id = %s
+            WHERE user_id = %s and stored_pos = %s
         """ 
        
 
         # 쿼리 실행
         with connection.cursor() as cursor:
-            cursor.execute(query, [user_id])
+            cursor.execute(query, [user_id, storedPos])
             rows = cursor.fetchall()
         # print(len(ingredient),'len_ingredient')
         # print(rows,'rows')
         # print(category,'category')
         # 결과 출력
-        for row in rows:
+        # for row in rows:
             
-        
-            for i in ingredient:
             
-                if i.id == row[1] and str(i.category_id) in category :
-                    foods.append({'foodName': i.ingredient_name, 'storedPos' : row[3]})
+        #     for i in ingredient:
+            
+        #         if i.id == row[1] and str(i.category_id) in category :
+        #             foods.append({'foodName': i.ingredient_name, 'storedPos' : row[3]})
 
-        return JsonResponse({'data': {"foods" : foods}})
+        return JsonResponse({'data': {"foods" : rows}})
 
     # DELETE 요청인 경우
     elif request.method == 'DELETE':
