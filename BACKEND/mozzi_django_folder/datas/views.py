@@ -533,8 +533,9 @@ def add_ingredients_to_refrigerator(request):
         with connection.cursor() as cursor:
             cursor.execute(query, [user_id])
             rows = cursor.fetchall()
-        
-        
+        print(len(ingredient,'len_ingredient'))
+        print(rows,'rows')
+        print(category,'category')
         # 결과 출력
         for row in rows:
             
