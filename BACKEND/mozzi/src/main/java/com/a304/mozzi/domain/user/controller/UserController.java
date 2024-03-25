@@ -248,7 +248,7 @@ public class UserController {
             List<UserIngredientDto> userIngredientDtoList = Collections.emptyList();
             for (UserIngredientModel userIngredientModel : userIngredientModels)
             {
-                log.info(userIngredientModel.getIngredients().getIngredientName());
+                log.info(userIngredientModel.getIngredients().getIngredientName() + "입니다");
                 UserIngredientDto userIngredientDto = UserIngredientDto.builder().ingredientName(userIngredientModel.getIngredients().getIngredientName()).isLike(userIngredientModel.getIsLike()).build();
                 userIngredientDtoList.add(userIngredientDto);
             }
@@ -256,6 +256,7 @@ public class UserController {
             return ResponseEntity.ok().body(userProfileDto);
         } catch (Exception e)
         {
+            log.info(e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
