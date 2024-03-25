@@ -535,6 +535,7 @@ def add_ingredients_to_refrigerator(request):
         ingredient = Ingredient.objects.all()
         query = """
             SELECT * FROM refri_ingredients
+            left join datas_ingredient on refri_ingredients.ingredient_id = datas_ingredient.id
             WHERE user_id = %s and stored_pos = %s
         """ 
        
@@ -547,15 +548,14 @@ def add_ingredients_to_refrigerator(request):
         # print(rows,'rows')
         # print(category,'category')
         # 결과 출력
-        # for row in rows:
+        for row in rows:
             
             
-        #     for i in ingredient:
             
-        #         if i.id == row[1] and str(i.category_id) in category :
-        #             foods.append({'foodName': i.ingredient_name, 'storedPos' : row[3]})
+            
+                    foods.append({'foodName': row[5], 'storedPos' : row[3]})
 
-        return JsonResponse({'data': {"foods" : rows}})
+        return JsonResponse({'data': {"foods" : foods}})
 
     # DELETE 요청인 경우
     elif request.method == 'DELETE':
