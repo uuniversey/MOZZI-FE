@@ -178,21 +178,7 @@ def get_random_food(request):
 def recipe_detail(request):
     start_time = datetime.now()
     food_name = request.GET.getlist('foodName')[0]
-    # body_unicode = request.body.decode('utf-8')
-    # print(body_unicode)
-    #
-    # lines = body_unicode.split("\n")
-    # food = json.loads(body_unicode)
-    # food_name = food['foodName']
     
-    # print(food)
-    # print(lines)
-    # for i in range(len(lines)):
-    #     if lines[i] == '\r':
-    #         food_name = lines[i+1]
-    #         break
-    
-    # 가져온 값 출력
    
     try:
       
@@ -211,6 +197,11 @@ def recipe_detail(request):
    
         end_time = datetime.now()
         # print(end_time - start_time)
+        print(food.food_views)
+        food.food_views+=1
+        print(food.food_views)
+        food.food_today_views+=1
+        food.save()
         return JsonResponse({'data': {
             # 'id': str(mongo_food.id),
             'RCP_PARTS_DTLS': mongo_food.food_recipe["RCP_PARTS_DTLS"],
@@ -264,6 +255,8 @@ def recipe_detail(request):
 
             
         }})
+    
+
     except MongoFood.DoesNotExist:
         return JsonResponse({'레시피': '음식을 찾을 수 없습니다'})
 
@@ -575,6 +568,7 @@ def add_ingredients_to_refrigerator(request):
                     DELETE FROM refri_ingredients 
                     WHERE user_id = %s AND ingredient_id = %s
                 """, [user_id, ingredient_id])
+                print(user_id,ingredient_id)
         return JsonResponse({"message": "Ingredients removed from refrigerator successfully."}, status=200)
 
     # 지원하지 않는 메서드인 경우
