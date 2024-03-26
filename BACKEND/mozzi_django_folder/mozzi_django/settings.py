@@ -26,8 +26,8 @@ SECRET_KEY = 'django-insecure-g)2howhcux-dfu^m@934()fjvvd%vezh=(-19oyhc7#&t5sb5h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+TIME_ZONE = 'Asia/Seoul'
 
 # Application definition
 
