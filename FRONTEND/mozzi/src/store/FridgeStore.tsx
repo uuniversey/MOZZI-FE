@@ -28,7 +28,7 @@ const useFridgeStore = create((set) => ({
 
 
   // 각 카테고리별 저장된 음식 호출
-  getMyFoods: async (categoryId) => {
+  getMyFoods: async (pos) => {
     // console.log(`categoryId: ${categoryId}`)
     const token = await AsyncStorage.getItem('accessToken');
     try {
@@ -39,7 +39,7 @@ const useFridgeStore = create((set) => ({
           headers: {
             Authorization: `Bearer ${token}`
           },
-          params: { category: categoryId } // 단일 값으로 쿼리 파라미터를 설정
+          params: { storedPos: pos } // 단일 값으로 쿼리 파라미터를 설정
         }
       );
 
@@ -50,38 +50,72 @@ const useFridgeStore = create((set) => ({
       set({
         savedFoods: response.data.data.foods // 새로운 음식 리스트로 상태를 완전히 교체합니다.
       });
-      console.log('냉장고 내용물 로딩 성공')
+      console.log('냉장고에 저장된 내용물 로딩 성공')
     } catch (error) {
-      console.error('냉장고 내용물 로딩 실패:', error);
+      console.error('냉장고에 저장된 내용물 로딩 실패:', error);
     }
   },
 
-
-  // 냉장고에 새로운 음식 저장하기
-  addFridge: async (food) => {
-    const token = await AsyncStorage.getItem('accessToken')
-    console.log('토큰:', token)
+  addFridge: async (food, pos) => {
+    const token = await AsyncStorage.getItem('accessToken');
+    console.log('토큰:', token);
+  
+    const newFood = { foodName: food, storedPos: pos };
+    console.log(`newFood: ${JSON.stringify(newFood)}`);
+  
     set((state) => {
-      const updatedFoods = [...state.savedFoods, food]
-      return { savedFoods: updatedFoods }
+      // 상태 업데이트를 위해 newFood 객체를 추가합니다.
+      const updatedFoods = [...state.savedFoods, newFood];
+      return { savedFoods: updatedFoods };
     });
-
+  
     try {
-      console.log(`내가 보낼 데이터: ${food}`)
-      await axios.post(
+      console.log(`내가 보낼 데이터: ${JSON.stringify({ foods: [newFood] })}`);
+      const response = await axios.post(
         'recommend/datas/add_ingredients_to_refrigerator/',
-        { foods: [food] },
+        { foods: [newFood] },
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
-      console.log('냉장고 업데이트 성공')
+      console.log('냉장고 업데이트 성공', response.data); // 성공 응답 로그에 추가
     } catch (error) {
-      console.error('냉장고 업데이트 실패:', error)
+      console.error('냉장고 업데이트 실패:', error.response ? error.response.data : error);
     }
   },
+  
+  // // 냉장고에 새로운 음식 저장하기
+  // addFridge: async (food, pos) => {
+  //   const token = await AsyncStorage.getItem('accessToken')
+  //   console.log('토큰:', token)
+  //   console.log(`food: ${food}`)
+  //   console.log(`storedPos: ${pos}`)
+  //   const newFood = { foodName: food, storedPos: pos };
+  //   console.log(`newFood: ${JSON.stringify(newFood)}`)
+
+  //   set((state) => {
+  //     const updatedFoods = [...state.savedFoods, food]
+  //     return { savedFoods: updatedFoods }
+  //   });
+
+  //   try {
+  //     console.log(`내가 보낼 데이터: ${food}`)
+  //     await axios.post(
+  //       'recommend/datas/add_ingredients_to_refrigerator/',
+  //       { foods: [newFood] },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`
+  //         }
+  //       }
+  //     );
+  //     console.log('냉장고 업데이트 성공')
+  //   } catch (error) {
+  //     console.error('냉장고 업데이트 실패:', error)
+  //   }
+  // },
 
 
   // 저장된 음식 삭제하기

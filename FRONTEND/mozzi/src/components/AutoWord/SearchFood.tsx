@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Text, TouchableOpacity, TextInput, View, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Text, TouchableOpacity, TextInput, View, StyleSheet, Keyboard } from 'react-native';
 import styled from 'styled-components/native';
 import Autocomplete from 'react-native-autocomplete-input';
 import useFridgeStore from '../../store/FridgeStore';
@@ -57,7 +57,7 @@ export const SearchFood: React.FC<{ setQuery: (query: string) => void }> = ({ se
   useEffect(() => {
     // 데이터를 가져온 후 상태를 업데이트
     getAllFoods().then(() => {
-      console.log('푸드 데이터 베이스 로딩 완료')
+      // console.log('푸드 데이터 베이스 로딩 완료')
       // console.log(`푸드 리스트: ${allFoods}`)
     });
   }, [getAllFoods]);
