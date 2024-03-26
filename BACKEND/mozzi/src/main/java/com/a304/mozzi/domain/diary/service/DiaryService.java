@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.RuntimeJsonMappingException;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor    
 public class DiaryService {
     
     private final DiaryRepositoty diaryRepositoty;

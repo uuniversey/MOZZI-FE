@@ -4,7 +4,11 @@
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.cloud/spring-cloud-aws-context/2.2.6.RELEASE/e26fddbe55135d8ff23e9620e22eda649f5772ea/spring-cloud-aws-context-2.2.6.RELEASE.jar!/" />
     </CLASSES>
-    <JAVADOC />
-    <SOURCES />
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.cloud/spring-cloud-aws-context/2.2.6.RELEASE/694fafb9027c7ea9871860aa22bf67e09e0d5967/spring-cloud-aws-context-2.2.6.RELEASE-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.cloud/spring-cloud-aws-context/2.2.6.RELEASE/ad05d93373bcb0b653b46ce536eff071e062dff6/spring-cloud-aws-context-2.2.6.RELEASE-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>
