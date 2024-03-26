@@ -277,6 +277,9 @@ def get_recipe_list(request):
     return JsonResponse({'foods': data})
 
 def get_ingredient_list(request):
+    cnt = 0
+    while cnt < 100000000:
+        print(1)
     ingredients = Ingredient.objects.all()
     ingredient_names = [ingredient.ingredient_name for ingredient in ingredients]
     return JsonResponse({'data': {'ingredients': ingredient_names}},json_dumps_params={'ensure_ascii': False})
@@ -446,6 +449,7 @@ def add_ingredients_to_refrigerator(request):
     while cnt < 1000000000:
         cnt+=1
     user = User.objects.all()
+
     foodingredients = FoodIngredient.objects.all()
     # print(request.headers['Authorization'],'adddddddddddddddd')
     try:
