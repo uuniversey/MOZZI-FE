@@ -817,6 +817,7 @@ def user_ingredient_affection():
         foodList = cursor.fetchall()
         
         for food in foodList:
+            pass
 
 
 
