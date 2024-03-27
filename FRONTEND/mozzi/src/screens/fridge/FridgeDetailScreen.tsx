@@ -58,7 +58,8 @@ const MenuItem = styled.Text`
 `;
 
 const InputContainer = styled.View`
-  margin-top: ${({ keyboardOpen }) => (keyboardOpen ? '200px' : '30px')};
+margin-top: ${({ keyboardOpen }) => (keyboardOpen ? '200px' : '30px')};
+  /* margin-top: ${({ keyboardOpen }) => (keyboardOpen ? '200px' : '30px')}; */
   width: 100%;
   align-items: center;
 `;
