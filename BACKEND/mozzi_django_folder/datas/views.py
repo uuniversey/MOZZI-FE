@@ -450,7 +450,6 @@ def add_ingredients_to_refrigerator(request):
     # print(request.headers['Authorization'],'adddddddddddddddd')
     token = request.headers['Authorization'].split(' ')[1]
     data = base64.b64decode(token)
-   
     data = data.decode('latin-1')
     
     index_e = data.index('"e":') + len('"e":')  # "e": 다음 인덱스부터 시작
@@ -692,7 +691,6 @@ def recommendFoods():
                         user = "ssafy",
                         password = "ssafy",
                          )
-
     with db.cursor() as cursor:
         query = "select food_id from mozzi.datas_foods order by food_id desc limit 1"
         cursor.execute(query)
@@ -712,28 +710,121 @@ def recommendFoods():
         for parameter in parameterList:
             # df[parameter[0]][parameter[1]] = parameter[2] / 100
             df.iloc[parameter[0] - 1, parameter[1] - 1] = parameter[2] / 100
-
+    
         # print(df)
         # print(df.T)
         # print(df.dot(df.T))
 
-
+        # print(df.loc[858])
         df_foods = pd.DataFrame(np.zeros((maxFoodsIndex, maxFoodsIndex)))
 
         for foodId1 in range(maxFoodsIndex):
-            for foodId2 in range(foodId1 + 1, maxFoodsIndex):
-                value = 0
-                for ingredientId in range(maxIngredientsIndex):
-                    value += (df.iloc[foodId1, ingredientId] - df.iloc[foodId2, ingredientId]) ** 2
-                value = value ** (1 / 2)
-                # print(value)s
-                df_foods.iloc[foodId1, foodId2] = 1 - value
-                df_foods.iloc[foodId2, foodId1] = 1 - value
-        print(df)
-        
+            print(foodId1)
+            for foodId2 in range(foodId1, maxFoodsIndex):
+                np1 = df.loc[[foodId1], :].to_numpy()
+                np2 = df.loc[[foodId2], :].T.to_numpy()
+                # print(np.linalg.norm(np2))
+                # print(np1, np2)
+                # print(np.dot(np1, np2) , "\n---------------------------------------------------------------------------\n")
+                # print(np.linalg.norm(np1))
+                # print(np.dot(np1, np2)/(np.linalg.norm(np1) * np.linalg.norm(np2)))
+                # print(np.linalg.norm(np1), np.linalg.norm(np2) )
+                if (np.linalg.norm(np2) == 0 or np.linalg.norm(np1) == 0): continue
+                result = np.dot(np1, np2)/(np.linalg.norm(np1) * np.linalg.norm(np2))
+                df_foods.iloc[foodId1, foodId2] = result 
+                df_foods.iloc[foodId2, foodId1] = result 
 
+                # print(result)
+                # break
+            # break
+        print(df_foods)
+        df_foods.to_pickle("df.pkl")
+
+        
+def readPkl():
+
+    print(pd.read_pickle("df.pkl"))
+    df = pd.read_pickle("df2.pkl")
+
+    print(df)    
+    print(df.sort_values(by=[0]))
     # print(pd.read_sql( "select * from mozzi.datas_foods" ,db))
     
+def set_Category():
+    df = pd.read_pickle("df.pkl")
+    db = pymysql.connect(
+                        host = "a304.site",
+                        port = 3306,
+                        user = "ssafy",
+                        password = "ssafy",
+                         )
+    
+    with db.cursor() as cursor:
+
+        query = "select food_id from mozzi.datas_foods order by food_id desc limit 1"
+        cursor.execute(query)
+        maxFoodsIndex = cursor.fetchall()[0][0]
+        df_foods_categories = pd.DataFrame(np.zeros((maxFoodsIndex, 19)))
+
+        query = "SELECT  food_ingredient.food_id, datas_ingredient.category_id, SUM(food_ingredient.ingredient_ratio),  COUNT(*)  FROM mozzi.food_ingredient LEFT JOIN mozzi.datas_ingredient ON food_ingredient.ingredient_id = datas_ingredient.id GROUP BY food_ingredient.food_id, datas_ingredient.category_id"
+        cursor.execute(query)
+        parameter_categories = cursor.fetchall()
+
+        for parameter_category in parameter_categories:
+            df_foods_categories.iloc[parameter_category[0] - 1, parameter_category[1] - 1] = parameter_category[2]
+
+        df_foods_foods = pd.read_pickle("df.pkl")
+
+        for foodId1 in range(maxFoodsIndex):
+            print(foodId1)
+            for foodId2 in range(foodId1 + 1, maxFoodsIndex):
+                np1 = df_foods_categories.loc[[foodId1], :].to_numpy()
+                np2 = df_foods_categories.loc[[foodId2], :].T.to_numpy()
+                # print(np.linalg.norm(np2))
+                # print(np1, np2)
+                # print(np.dot(np1, np2) , "\n---------------------------------------------------------------------------\n")
+                # print(np.linalg.norm(np1))
+                # print(np.dot(np1, np2)/(np.linalg.norm(np1) * np.linalg.norm(np2)))
+                # print(np.linalg.norm(np1), np.linalg.norm(np2))
+                if (np.linalg.norm(np2) == 0 or np.linalg.norm(np1) == 0): continue
+                result = np.dot(np1, np2)/(np.linalg.norm(np1) * np.linalg.norm(np2))
+                df_foods_foods.iloc[foodId1, foodId2] += result 
+                df_foods_foods.iloc[foodId1, foodId2] /= 2
+                df_foods_foods.iloc[foodId2, foodId1] += result
+                df_foods_foods.iloc[foodId2, foodId1] /= 2
+                
+                # print(df_foods_foods.iloc[foodId1, foodId2]) 
+        df_foods_foods.to_pickle("df2.pkl")
 
 
-recommendFoods()
+def user_ingredient_affection():
+    input_ingredient_name = "두부"
+
+    
+
+    db = pymysql.connect(
+                        host = "a304.site",
+                        port = 3306,
+                        user = "ssafy",
+                        password = "ssafy",
+                         )
+    
+    with db.cursor() as cursor:
+
+        query = "SELECT distinct food_id, ingredient_ratio from mozzi.food_ingredient LEFT JOIN mozzi.datas_ingredient ON food_ingredient.ingredient_id = datas_ingredient.id \
+                WHERE ingredient_name = '{input_ingredient_name}'"
+        cursor.execute(query)
+        foodList = cursor.fetchall()
+        
+        for food in foodList:
+
+
+
+
+        # 모든 리스트를 
+
+
+
+# recommendFoods()
+# readPkl()
+# set_Category()
