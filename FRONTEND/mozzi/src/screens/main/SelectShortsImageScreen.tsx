@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Alert, Dimensions, ScrollView, TouchableOpacity } from 'react-native'
+import { Image, View, Text, Alert, Dimensions, ScrollView, TouchableOpacity } from 'react-native'
 import styled from 'styled-components/native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome'
@@ -13,21 +13,22 @@ type ButtonProps = {
   onPress: () => void
 }
 
-const ScreenContainer = styled.View`
+const ScreenContainer = styled(View)`
   flex: 1;
   background-color: #FFFEF2;
   padding: 20px;
 `
 
-const HeaderTitle = styled.Text`
+const HeaderTitle = styled(Text)`
   font-size: 28px;
   font-weight: bold;
   text-align: center;
   margin-bottom: 20px;
   align-self: flex-start;
+  font-family: ${(props) => props.theme.fonts.title};
 `
 
-const ButtonContainer = styled.View`
+const ButtonContainer = styled(View)`
   flex-direction: column;
   margin-bottom: 20px;
   padding: 16px;
@@ -36,7 +37,7 @@ const ButtonContainer = styled.View`
   height: 129px;
 `
 
-const ButtonGroup = styled.View`
+const ButtonGroup = styled(View)`
   margin-top: 20px;
   flex-direction: row;
   justify-content: space-between;
@@ -44,27 +45,25 @@ const ButtonGroup = styled.View`
   border-radius: 10px;
 `
 
-const StyledButton = styled.TouchableOpacity`
+const StyledButton = styled(TouchableOpacity)`
   background-color: #E4E196;
   border-radius: 10px;
   padding: 5px 7px;
 `
 
-const ButtonText = styled.Text`
+const ButtonText = styled(Text)`
   color: #000;
   font-size: 12px;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
-const ImageText = styled.Text<{ excess?: boolean }>`
+const ImageText = styled(Text)<{ excess?: boolean }>`
   font-size: 15px;
+  font-family: ${(props) => props.theme.fonts.content};
   color: ${({ excess }) => (excess ? 'red' : '#000')};
 `
-const excessImageText = styled.Text`
-  color: #000;
-  font-size: 15px;
-`
 
-const ImageContainer = styled.View`
+const ImageContainer = styled(View)`
   padding: 16px;
   background-color: #F9F7BB;
   border-radius: 10px;
@@ -72,7 +71,7 @@ const ImageContainer = styled.View`
   /* height: 280; */
 `
 
-const ImageGroup = styled.View`
+const ImageGroup = styled(View)`
   height: 100%;
   flex-direction: row;
   justify-content: flex-start;
@@ -81,25 +80,25 @@ const ImageGroup = styled.View`
   border-radius: 10px;
 `
 
-const StyledImage = styled.Image`
+const StyledImage = styled(Image)`
   width: 105px;
   height: 105px;
   margin: 3px;
 `
 
-const StyledScrollView = styled.View`
+const StyledScrollView = styled(View)`
   height: 270px;
   margin-top: 16px;
 `
 
-const EnterContainer = styled.View`
+const EnterContainer = styled(View)`
   width: 100%;
   margin-top: 30px;
   flex-direction: row;
   justify-content: flex-end;
 `
 
-const EnterButton = styled.TouchableOpacity`
+const EnterButton = styled(TouchableOpacity)`
   background-color: #F9F7BB;
   border-radius: 10px;
   width: 80px;
@@ -107,9 +106,10 @@ const EnterButton = styled.TouchableOpacity`
   justify-content: center;
 `
 
-const EnterButtonText = styled.Text`
+const EnterButtonText = styled(Text)`
   font-size: 16px;
   text-align: center;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
 const SelectableImage = styled(StyledImage)<{ isSelected: boolean }>`
