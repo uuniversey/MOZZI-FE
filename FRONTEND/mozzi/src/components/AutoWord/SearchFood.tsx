@@ -142,7 +142,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderWidth: 0,
     borderColor: 'transparent',
-    maxHeight: 100,
+    // maxHeight: 100,
+    maxHeight: keyboardOpen ? 500 : 150 ,
     zIndex: 1,
   },
   shadow: {
