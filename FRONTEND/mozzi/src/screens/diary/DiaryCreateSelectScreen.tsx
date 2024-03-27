@@ -29,7 +29,7 @@ function DiaryCreateSelectScreen () {
       recipeName: selectedRecipeName,
     })
   }
-  
+   
   // 검색에서 레시피 선택 시 호출될 함수
   const handleSelectRecipe = (recipeName: string) => {
     setSelectedRecipeName(recipeName)
@@ -53,24 +53,6 @@ function DiaryCreateSelectScreen () {
   useEffect(() => {
     // console.log(recipeData)
     getRecipeList()
-    // setRecipeData([
-    //   {id: 1, image: '', title: "치즈"},
-    //   {id: 2, image: '', title: "치즈그라탕"},
-    //   {id: 3, image: '', title: "치즈피자"},
-    //   {id: 4, image: '', title: "치즈떡볶이"},
-    //   {id: 5, image: '', title: "포테이트치즈피자"},
-    //   {id: 1, image: '', title: "페퍼로니피자"},
-    //   {id: 2, image: '', title: "김치치즈돈가스"},
-    //   {id: 3, image: '', title: "치즈돈가스"},
-    //   {id: 4, image: '', title: "고르곤졸라피자"},
-    //   {id: 5, image: '', title: "콤비네이션피자"},
-    //   {id: 1, image: '', title: "고구마피자"},
-    //   {id: 2, image: '', title: "블랙타이거피자"},
-    //   {id: 3, image: '', title: "하와이안피자"},
-    //   {id: 4, image: '', title: "하와이안치즈피자"},
-    //   {id: 5, image: '', title: "햄버거"},
-    // ])
-
 
   }, [])
 
@@ -166,7 +148,7 @@ const styles = StyleSheet.create({
     width: '20%',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    zIndex: -10
+    zIndex: -10,
   },
   buttonText: {
     color: '#000',
