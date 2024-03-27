@@ -1,4 +1,6 @@
 import React, { useRef } from 'react'
+import { styled, ThemeProvider } from 'styled-components/native';
+import { setCustomText } from 'react-native-global-props'; 
 import { View, StyleSheet, TouchableOpacity, Dimensions, Animated } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
@@ -15,17 +17,27 @@ import LoginStack from './src/navigation/LoginStack'
 
 import useLoginStore from './src/store/LoginStore'
 
-// // App.tsx 파일 상단에 다음을 추가
-// import { setCustomText } from 'react-native-global-props'
+const customTextProps = {
+  style: {
+    fontFamily: 'Pretendard-Medium', // 실제 폰트 파일 내 정의된 이름 사용
+  }
+};
 
-// const customTextProps = {
-//   style: {
-//     fontFamily: 'MaruBuri-Bold', // 실제 폰트 파일 내 정의된 이름 사용
-//   }
-// };
+const theme = {
+  fonts: {
+    // main: 'NanumMyeongjo',
+    landing: 'Pretendard-Medium',
+    main: 'Pretendard-Regular',
+    fridge: 'MaruBuri-Regular'
+  },
+  palette: {
+    main: '#1c1a11',
+  }
+};
 
-// // 전역 폰트 설정 적용
-// setCustomText(customTextProps)
+
+// 전역 폰트 설정 적용
+setCustomText(customTextProps)
 
 const Tab = createBottomTabNavigator();
 const windowWidth = Dimensions.get('window').width
@@ -55,7 +67,7 @@ const App: React.FC = () => {
 
 
   return (
-    <> 
+    <ThemeProvider theme={theme}> 
       {isLogin ? (
         <NavigationContainer>
           <Tab.Navigator
@@ -131,7 +143,7 @@ const App: React.FC = () => {
           <LoginStack />
         </NavigationContainer>
       )}
-    </>
+    </ThemeProvider>
   )
 }
 

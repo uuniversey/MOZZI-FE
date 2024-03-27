@@ -25,6 +25,7 @@ const SearchSection = styled(View)`
 
 const InputForm = styled(View)`
   position: absolute;
+  /* top: 6; */
   top: 4;
   /* top: 50; */
   left: 20;
@@ -34,12 +35,13 @@ const StyledAutocomplete = styled(Autocomplete)`
   /* flex: 1; */
   z-index: 1001;
   width: 300px;
-  background-color: #fff;
+  background-color: rgba(255,255,255, 0.5);
   border: transparent;
 `;
 
 const ListButton = styled(TouchableOpacity)`
   flex-direction: row;
+  padding: 5px 0 5px 0;
 `
 
 
@@ -123,8 +125,9 @@ export const SearchFood: React.FC<{ setQuery: (query: string) => void }> = ({ se
           }}
           renderTextInput={(props) => <TextInput {...props} />}
           listContainerStyle={{
-            maxHeight: 150, // 조절 가능한 최대 
-            // maxHeight: keyboardOpen ? 500 : 150 ,
+            // maxHeight: 500, // 조절 가능한 최대 
+            maxHeight: keyboardOpen ? 300 : 150 ,
+            minHeight: keyboardOpen ? 300 : 0,
           }}
         />
       </InputForm>
@@ -142,7 +145,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderWidth: 0,
     borderColor: 'transparent',
-    maxHeight: 100,
+    maxHeight: 300,
+    // maxHeight: keyboardOpen ? 500 : 150 ,
     zIndex: 1,
   },
   shadow: {
