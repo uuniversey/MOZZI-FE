@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderWidth: 0,
     borderColor: 'transparent',
-    maxHeight: 100,
+    maxHeight: 220,
     zIndex: 1,
   },
   listButton: {

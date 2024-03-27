@@ -51,10 +51,10 @@ const diceImages = [
 
 function RecommendLandingScreen() {
   const navigation = useNavigation();
-  const rotateAnim = useRef(new Animated.Value(0)).current;
-  const bounceAnim = useRef(new Animated.Value(0)).current;
-  const animatedValue = useRef(new Animated.Value(0)).current;
-  let animationRef = useRef(null);
+  const rotateAnim = useRef(new Animated.Value(0)).current
+  const bounceAnim = useRef(new Animated.Value(0)).current
+  const animatedValue = useRef(new Animated.Value(0)).current
+  let animationRef = useRef(null)
 
   useEffect(() => {
     // 주사위 튀기기 및 회전 애니메이션
@@ -89,7 +89,7 @@ function RecommendLandingScreen() {
 
     // 3.5초 후 화면 전환
     const timer = setTimeout(() => {
-      navigation.navigate("Recommend");
+      navigation.navigate("Recommend")
     }, 3500);
 
     return () => {
@@ -118,7 +118,7 @@ function RecommendLandingScreen() {
           style={{
             transform: [{ rotate: spin }, { translateY: bounceAnim }],
           }}>
-          <Image source={diceImages[0]} style={{ width: 150, height: 150 }} />
+          <Image source={diceImages[0]} style={{ width: 150, height: 150, resizeMode: 'contain' }} />
         </Animated.View>
           <Description>아우엉님 님의 {'\n'}레시피를 찾고 있어요!</Description>
           <OuterBar>

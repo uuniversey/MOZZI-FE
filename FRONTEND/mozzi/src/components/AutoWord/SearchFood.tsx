@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, TouchableOpacity, TextInput, View, StyleSheet } from 'react-native';
+import { Text, TouchableOpacity, TextInput, View, StyleSheet, Keyboard } from 'react-native';
 import styled from 'styled-components/native';
 import Autocomplete from 'react-native-autocomplete-input';
 import useFridgeStore from '../../store/FridgeStore';
@@ -48,16 +48,29 @@ export const SearchFood: React.FC<{ setQuery: (query: string) => void }> = ({ se
   const [filteredData, setFilteredData] = useState<FoodItem[]>([]);
   const allFoods = useFridgeStore((state) => state.allFoods);
   const getAllFoods = useFridgeStore((state) => state.getAllFoods);
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
+
+  useEffect(() => {
+    // 키보드 상태 추적
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => setKeyboardOpen(true));
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => setKeyboardOpen(false));
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   useEffect(() => {
     // `query`가 변경될 때마다 `setQuery`를 호출
     setQuery(query);
   }, [query, setQuery]);
 
+
   useEffect(() => {
     // 데이터를 가져온 후 상태를 업데이트
     getAllFoods().then(() => {
-      console.log('푸드 데이터 베이스 로딩 완료')
+      // console.log('푸드 데이터 베이스 로딩 완료')
       // console.log(`푸드 리스트: ${allFoods}`)
     });
   }, [getAllFoods]);
@@ -110,7 +123,8 @@ export const SearchFood: React.FC<{ setQuery: (query: string) => void }> = ({ se
           }}
           renderTextInput={(props) => <TextInput {...props} />}
           listContainerStyle={{
-            maxHeight: 150, // 조절 가능한 최대 높이
+            maxHeight: 150, // 조절 가능한 최대 
+            // maxHeight: keyboardOpen ? 500 : 150 ,
           }}
         />
       </InputForm>

@@ -9,34 +9,64 @@ import { useNavigation } from '@react-navigation/native'
 
 import useRecipeStore from '../../store/RecipeStore'
 
-interface FoodItem {
-  id: number
-  image: string
-  title: string
-}
 
 const Container = styled.View`
   flex: 1;
   background-color: #FFFEF2;
 `
 
-const RecommendText = styled.Text`
-  font-size: 15px;
-  font-weight: bold;
-  margin-bottom: 200px;
+const SearchView = styled.View`
+  margin: 30px;
+  height: 60%;
+`
+
+const Hr = styled.View`
+  margin: 30px;
+  border-bottom-width: 1px;
+  border-bottom-color: rgb(128, 128, 128);
+`
+
+const Btn = styled.TouchableOpacity`
+  background-color: #F9F7BB;
+  border-radius: 10px;
+  width: 80px;
+  height: 35px;
+  justify-content: center;
+  align-self: flex-end;
+  margin: 30px;
+`
+
+const BtnText = styled.Text`
+  font-size: 16px;
+  text-align: center;
+`
+
+const SelectedText = styled.Text`
+  margin: 0px 30px 0px 30px;
 `
 
 function SearchScreen () {
   
   const navigation = useNavigation()
-  const { getRecipe, recipeData2 } = useRecipeStore()
+  const { getRecipe, recipeData, getRecipeDetail } = useRecipeStore()
 
-  const [recipeData, setRecipeData] = useState<FoodItem[] | null>(null)
-  const [ keyword, setKeyword ] = useState<string>('')
-  const handleKeyword = (newText: string) => {
-    setKeyword(newText)
+  const [selectedRecipeName, setSelectedRecipeName] = useState<string>('')
+
+
+  const handleSelectRecipe = (recipeName: string) => {
+    setSelectedRecipeName(recipeName)
   }
 
+  const moveRecipe = () => {
+    if (selectedRecipeName) {
+      getRecipeDetail(selectedRecipeName)
+    }
+    navigation.navigate("Recipe")
+  }
+
+  useEffect(() => {
+    getRecipe()
+  }, [])
   
   return (
     <Container>
@@ -44,13 +74,18 @@ function SearchScreen () {
         <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
       </Header>
 
-      <View style={{ margin: 30 }}>
-        {recipeData && <SearchBar data={recipeData} />}
-
-        <RecommendText>추천 검색어</RecommendText>
-
-        <View style={{ borderBottomWidth: 1, borderBottomColor: ' rgb(128, 128, 128)' }} />
-      </View>
+      <SearchView>
+        <SearchBar data={recipeData} onSelect={handleSelectRecipe}/>
+      </SearchView>
+      {selectedRecipeName ?
+       <SelectedText>
+        {selectedRecipeName}의 레시피로 이동할게요
+      </SelectedText> : ''
+      }
+      <Hr />
+      <Btn onPress={moveRecipe}>
+        <BtnText>이동</BtnText>
+      </Btn>
     </Container>
   )
 }
