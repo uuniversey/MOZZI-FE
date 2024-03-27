@@ -21,6 +21,7 @@ const useLoginStore = create((set) => ({
       if (response.data.data.info.isRegistered) {
         set({ isLogin: true })
         set({ userData: response.data.data.info })
+        console.log('유저 데이터입니다아아아아', response.data.data.info)
       }
 
       // 토큰 스토리지에 저장
