@@ -85,7 +85,7 @@ const SendButton = styled.TouchableOpacity`
   right: 32;
   bottom: 0;
   padding: 0 10px;
-`;
+`; 
 
 const FridgeDetailScreen = ({ route }) => {
   const [text, setText] = useState<FoodItem | null>(null);
