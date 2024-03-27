@@ -2,12 +2,13 @@ import { View, Text, TouchableOpacity, Animated } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import styled from 'styled-components/native'
-
+import SpeechToText from './SpeechToText'
+import TextToSpeech from './TextToSppeech'
 import { Header } from '../../components/Header/Header'
 
 import { useNavigation } from '@react-navigation/native'
 import { GestureHandlerRootView, PanGestureHandler, State } from 'react-native-gesture-handler'
-import { Image } from 'react-native-svg'
+import useRecipeStore from '../../store/RecipeStore'
 
 const Container = styled.View`
   flex: 1;
@@ -67,8 +68,9 @@ const Line = styled.View`
 `
 
 function RecipeScreen () {
-
   const navigation = useNavigation()
+
+  const { recipeDetailData } = useRecipeStore()
 
   const [ idx, setIdx ] = useState(1)
   const [ strIdx, setStrIdx ] = useState('01')
@@ -91,7 +93,7 @@ function RecipeScreen () {
     if (event.nativeEvent.oldState === State.ACTIVE) {
       const nextIdx = (parseInt(strIdx)+1).toString().padStart(2, '0')
 
-      if (lastTranslateY < 0 && dummyData[`MANUAL${nextIdx}`] !== "" ) {
+      if (lastTranslateY < 0 && recipeDetailData[`MANUAL${nextIdx}`] !== "" ) {
         setIdx(prevIdx => {
           const nextIdx = prevIdx + 1
           setStrIdx(nextIdx.toString().padStart(2, '0'))
@@ -126,7 +128,7 @@ function RecipeScreen () {
   
   useEffect(() => {
     const nextIdx = (parseInt(strIdx)+1).toString().padStart(2, '0')
-    if (dummyData[`MANUAL${nextIdx}`] === "" || nextIdx == '21')
+    if (recipeDetailData[`MANUAL${nextIdx}`] === "" || nextIdx == '21')
       {
         setIsLast(true)
       } else {
@@ -135,44 +137,45 @@ function RecipeScreen () {
   }, [strIdx])
   
   return (
-    <>
-      <Container>
-        <Header>
-          <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
-        </Header>
-        
-        <GestureHandlerRootView>
-          <PanGestureHandler
-            onGestureEvent={onGestureEvent}
-            onHandlerStateChange={onHandlerStateChange}>
-            <Animated.View
-              style={{
-                transform: [{ translateY: translateY }],
-              }}>
-              
-              <View>
-                <Title>{dummyData.RCP_NM}</Title>
-                <Line />
-                <Order>{dummyData[`MANUAL${strIdx}`]}</Order>
-                <Body>  
-                  <FoodImage
-                    source={{ uri: dummyData[`MANUAL_IMG${strIdx}`] }}
-                  />
-                </Body>
-                <Tip>TIP: {dummyData.RCP_NA_TIP}</Tip>
-                {isLast ? 
-                  '' :
-                  <Btn onPress={moveOrder}>
-                    <Icon name="keyboard-double-arrow-down" size={50} color="silver" />
-                  </Btn> 
-                }
-              </View>
+    <Container>
+      <Header>
+        <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
+      </Header>
+      
+      <SpeechToText />
+      <TextToSpeech text={recipeDetailData[`MANUAL${strIdx}`]} />
+
+      <GestureHandlerRootView>
+        <PanGestureHandler
+          onGestureEvent={onGestureEvent}
+          onHandlerStateChange={onHandlerStateChange}>
+          <Animated.View
+            style={{
+              transform: [{ translateY: translateY }],
+            }}>
             
-            </Animated.View>
-          </PanGestureHandler>
-        </GestureHandlerRootView>
-      </Container>
-    </>
+            <View>
+              <Title>{recipeDetailData.RCP_NM}</Title>
+              <Line />
+              <Order>{recipeDetailData[`MANUAL${strIdx}`]}</Order>
+              <Body>  
+                <FoodImage
+                  source={{ uri: recipeDetailData[`MANUAL_IMG${strIdx}`] }}
+                />
+              </Body>
+              <Tip>TIP: {recipeDetailData.RCP_NA_TIP}</Tip>
+              {isLast ? 
+                '' :
+                <Btn onPress={moveOrder}>
+                  <Icon name="keyboard-double-arrow-down" size={50} color="silver" />
+                </Btn> 
+              }
+            </View>
+          
+          </Animated.View>
+        </PanGestureHandler>
+      </GestureHandlerRootView>
+    </Container>
   )
 }
 

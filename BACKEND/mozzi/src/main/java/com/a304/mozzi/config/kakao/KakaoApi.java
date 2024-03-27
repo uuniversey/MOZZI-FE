@@ -79,7 +79,7 @@ public class KakaoApi {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("client_id", "e0fa9c3226566a2dcda49e672fe892ac");
-        params.add("redirect_uri", "http://localhost:8080/auth/Oauth2/KakaoToken");
+        params.add("redirect_uri", "http://localhost:8080/auth/Oauth2/KakaoWeb");
         params.add("code", code);
 
         // http 바디(params)와 http 헤더(headers)를 가진 엔티티

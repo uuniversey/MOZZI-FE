@@ -1,11 +1,12 @@
 import React, { useState, useRef } from 'react'
-import { View, Image, TouchableOpacity, Text, PermissionsAndroid, ToastAndroid } from 'react-native';
+import { View, Image, TouchableOpacity, PermissionsAndroid, ToastAndroid } from 'react-native';
 import Share from 'react-native-share'
 import Snackbar from 'react-native-snackbar'
 import { CameraRoll } from '@react-native-camera-roll/camera-roll'
 import { captureRef } from 'react-native-view-shot'
 import { Header } from '../../components/Header/Header'
 import styled from 'styled-components/native'
+import { defaultFontText as Text } from '../../components/Fonts/Text';
 
 const Container = styled(View)`
   flex: 1;
@@ -14,6 +15,7 @@ const Container = styled(View)`
 `;
 
 const HeaderText = styled.Text`
+  font-family: 'MaruBuri-Bold';
   font-size: 32px;
   font-weight: bold;
   margin-top: 20px;
@@ -34,16 +36,33 @@ const Body = styled.View`
   background-color: #F9F7BB;
 `
 const FoodTitle = styled.Text`
-  color: white;
-  box-shadow: 0px 0px 5px #444;
   padding: 5px;
   position: absolute;
   font-size: 16px;
   font-weight: bold;
   z-index: 1001;
   left: 5%;
-  top: 5%;
-`
+  top: ${({ frameType }) => {
+    switch (frameType) {
+      case '화이트':
+        return '5%';
+      case '스페셜':
+        return '87%';
+      default:
+        return '5%';
+    }
+  }};
+  color: ${({ frameType }) => {
+    switch (frameType) {
+      case '화이트':
+        return 'white';
+      case '스페셜':
+        return 'black';
+      default:
+        return 'black';
+    }
+  }};
+`;
 
 const FoodImage = styled.Image`
   width: 350px;
@@ -99,16 +118,19 @@ const FrameImage = styled.Image`
 `;
 
 const Stamp = ({ navigation, route }) => {
-  const { photo } = route.params;
+  const { date, dayData } = route.params;
   const viewRef = useRef();
-  const [selectedFrame, setSelectedFrame] = useState('프레임1');
+  const [selectedFrame, setSelectedFrame] = useState('기본');
+
+  // props 받아온 정보
+  console.log('이거보여줘', date, dayData)
 
   // 선택 가능한 프레임 목록
   // 프레임 이미지 경로를 객체로 관리
   const frameImages = {
-    '기본': require('../../assets/frames/frame1.png'),
-    '프레임2': require('../../assets/frames/frame2.png'),
-    '프레임3': require('../../assets/frames/frame3.png'),
+    '기본': require('../../assets/frames/defaultframe.png'),
+    '화이트': require('../../assets/frames/whiteframe.png'),
+    '스페셜': require('../../assets/frames/speacialframe.png'),
   };
 
   // 권한 확인
@@ -202,12 +224,13 @@ const Stamp = ({ navigation, route }) => {
 
       <Container>
         <HeaderText>공유 프레임 선택하기</HeaderText>
+        <Text>전역 폰트 테스트</Text>
 
         <Body ref={viewRef}>
           {/* store에서 불러온 food title로 수정하면 됨 */}
-          <FoodTitle>비비큐 황금올리브</FoodTitle> 
+          <FoodTitle frameType={selectedFrame}>{dayData.foodName}</FoodTitle> 
           <FoodImage
-            source={require('../../assets/recommend/chicken.jpg')}
+            source={{ uri: `${dayData.photoUrl}` }}
           />
           {/* <FoodImage source={photo} /> */}
           {/* 선택된 프레임을 이미지 위에 표시 */}

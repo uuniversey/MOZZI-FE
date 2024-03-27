@@ -4,9 +4,11 @@ import styled from 'styled-components/native'
 import { useNavigation } from '@react-navigation/native'
 import IconEntypo from 'react-native-vector-icons/Entypo'
 import { Header } from '../../components/Header/Header'
-import axios from 'axios'
+import axios from '../../../axios'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 interface RecipeCardProps {
+  id: number
   title: string
   imageSource: any
   day: string
@@ -93,7 +95,7 @@ const ButtonText = styled.Text`
 
 function RecapScreen() {
   const navigation = useNavigation()
-  // const [myRecipes, setMyRecipes] = useState<RecipeCardProps[]>([]);
+  const [myRecipes, setMyRecipes] = useState<RecipeCardProps[]>([])
 
   const callMakeVideoApi = async (userId: string, bgmCategory: number) => {
     try {
@@ -107,24 +109,32 @@ function RecapScreen() {
       console.error(error);
     }
   }
-  
-  useEffect(() => {
-    // callRecapFood({nickName})
-  }, [])
 
 
   // 랜덤으로 리캡 카드 2개 렌더링
-  const callRecapFood = async (nickName: string) => {
+  const callRecapFood = async () => {
+    const token = await AsyncStorage.getItem('accessToken')
     try {
-      const response = await axios.get(`http://10.0.2.2:8000/maker/video_yk/?nickname=${nickName}`);
-      console.log(response);
+      const response = await axios.get(`https://a304.site/api/mozzi/diary/getrandomdiaries`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-type': 'application/json',
+        },
+      })
+      console.log(response.data.foods)
       // response.data에 값이 들어가 있는지 확인 필요
-      // setRecapFoods(response.data)
+      setMyRecipes(response.data.foods)
     } catch (error) {
       //응답 실패
-      console.error(error);
+      console.error(error)
     }
   }
+
+  useEffect(() => {
+    
+    callRecapFood()
+
+  }, [])
 
   const SelectShortsImage = () => {
     navigation.navigate("SelectShortsImage")
@@ -135,11 +145,32 @@ function RecapScreen() {
     navigation.goBack()
   }
 
-  const myRecipes = [
-    { title: '양념장 전', day: '일주일 전 먹은 음식', imageSource: require('../../assets/recommend/pizza.jpg') },
-    { title: '한 접시 풀잎', day: '한 달 전 먹은 음식', imageSource: require('../../assets/recommend/chicken.jpg') },
-  ]
+  // const myRecipes = [
+  //   { title: '양념장 전', day: '2024-03-16', imageSource: require('../../assets/recommend/pizza.jpg') },
+  //   { title: '한 접시 풀잎', day: '2024-02-21', imageSource: require('../../assets/recommend/chicken.jpg') },
+  // ]
 
+  const convertDay = (day: string): string => {
+    const today = new Date();
+    const inputDate = new Date(day);
+    const difference = today.getTime() - inputDate.getTime();
+    const days = difference / (1000 * 3600 * 24);
+  
+    if (days < 7) {
+      return `${Math.floor(days)}일 전 먹은 음식`;
+    } else if (days < 30) {
+      return "지난 주 먹은 음식"
+    } else if (days < 90) {
+      return "한 달 전 먹은 음식"
+    } else if (days < 180) {
+      return "3달 전 먹은 음식"
+    } else if (days < 365) {
+      return "6개월 전 먹은 음식"
+    } else {
+      return "작년에 먹은 음식"
+    }
+  };
+  
   return (
     <>
       <Header>
@@ -147,13 +178,13 @@ function RecapScreen() {
       </Header>
       <Container>
         <HeaderText>나의 모찌 기록</HeaderText>
-        {myRecipes.map((recipe, index) => (
+        {myRecipes.map((recipe: RecipeCardProps, index) => (
           <RecipeCard
             key={index}
-            day={recipe.day}
+            day={convertDay(recipe.photoDate)}
             // day={`${recipe.day} 전 먹은 음식`}
-            title={recipe.title}
-            imageSource={recipe.imageSource}
+            title={recipe.foodName}
+            imageSource={{ uri: recipe.photoUrl }}
           />
         ))}
         <ActionButton 

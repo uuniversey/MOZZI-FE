@@ -34,7 +34,7 @@ const DiaryInfo = styled.View`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-bottom: 10;
+  margin-bottom: 10px;
 `
 
 const BtnContainer = styled.View`
@@ -72,58 +72,51 @@ const FoodTitle = styled.Text`
 `
 
 function DiaryDetailScreen ({ route }) {
-  const { date } = route.params
+  const { date, dayData } = route.params
   const navigation = useNavigation()
-
-  // getPhotoUri 함수 예시 구현
-  const getPhotoUri = () => {
-    return require('../../assets/recommend/chicken.jpg');
-  };
 
   // Stamp 화면으로 이동하는 함수
   const navigateToStamp = async () => {
-    // getPhotoUri 함수는 이미지 URI를 반환합니다. (이미 구현된 것으로 가정)
-    const photoUri = await getPhotoUri();
+
     // Stamp 화면으로 이동하면서 URI와 다른 필요한 데이터를 전달
-    navigation.navigate('Stamp', { photoUri });
-  };
-  
+    navigation.navigate('Stamp', {
+      date,
+      dayData,
+    })
+  }
   
   // 스탬프 페이지로 이동
   const moveStamp = async () => {
-    navigateToStamp();
+    navigateToStamp()
   }
 
   return (
-    <>
-      <Container>
-        <Header>
-          <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
-        </Header>
+    <Container>
+      <Header>
+        <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
+      </Header>
 
+      <View>
+        <Title> <Dot> ● </Dot> {date.year}년 {date.month}월 {date.day}일 요리 일기</Title>
+      </View>
+
+      <Body>
         <View>
-          <Title> <Dot> ● </Dot> {date.year}년 {date.month}월 {date.day}일 요리 일기</Title>
+          <DiaryInfo>
+            <FoodTitle>{dayData.foodName}</FoodTitle> 
+            <BtnContainer>
+              <ShareBtn onPress={moveStamp}>
+                <Icon name="ios-share" size={24} color="black" />
+              </ShareBtn>  
+            </BtnContainer>                  
+          </DiaryInfo>
+          <FoodImage
+            source={{ uri: `${dayData.photoUrl}` }}
+          />
         </View>
 
-        <Body>
-          <View>
-            <DiaryInfo>
-              <FoodTitle>비비큐 황금올리브</FoodTitle> 
-              <BtnContainer>
-                <ShareBtn onPress={moveStamp}>
-                  <Icon name="ios-share" size={24} color="black" />
-                </ShareBtn>  
-              </BtnContainer>                  
-            </DiaryInfo>
-            <FoodImage
-              source={require('../../assets/recommend/chicken.jpg')}
-            />
-            {/* <Stamp source={require('../../assets/recommend/chicken.jpg')} /> */}
-          </View>
-
-        </Body>
-      </Container>
-    </>
+      </Body>
+    </Container>
   )
 }
 

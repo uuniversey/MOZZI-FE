@@ -1,0 +1,49 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/MaruBuri-Bold.ttf",
+      "sha1": "2668b0299b1fe643763fa840bac95f26faca084a"
+    },
+    {
+      "path": "src/assets/fonts/MaruBuri-ExtraLight.ttf",
+      "sha1": "e9f23280feb6de98c36ce591d89dd6f43b75fcdc"
+    },
+    {
+      "path": "src/assets/fonts/MaruBuri-Light.ttf",
+      "sha1": "b991bf247083f10db8cb232408719bd99b7300a2"
+    },
+    {
+      "path": "src/assets/fonts/MaruBuri-Regular.ttf",
+      "sha1": "6da0d4b6d7e7d65336dcb3e7e6b0a5707531ccc0"
+    },
+    {
+      "path": "src/assets/fonts/MaruBuri-SemiBold.ttf",
+      "sha1": "8a8b27eefd3db0bc764b6f0201fca26d061680d4"
+    },
+    {
+      "path": "src/assets/fonts/NanumMyeongjo.otf",
+      "sha1": "1b75cb9703613cb75bb8fc8a2fdb538853473017"
+    },
+    {
+      "path": "src/assets/fonts/NanumMyeongjo.ttf",
+      "sha1": "fff5fd3f51dfff394c88948a703ea746b3ef52fb"
+    },
+    {
+      "path": "src/assets/fonts/NanumMyeongjoBold.otf",
+      "sha1": "42590d385125e8eedf8d448ba02f4aa0a87458b5"
+    },
+    {
+      "path": "src/assets/fonts/NanumMyeongjoBold.ttf",
+      "sha1": "4b5299e387fea8bab768cb78c228b304dfe35391"
+    },
+    {
+      "path": "src/assets/fonts/NanumMyeongjoExtraBold.otf",
+      "sha1": "1c3a975ea921c56d429bbf30a689dbb6510f839a"
+    },
+    {
+      "path": "src/assets/fonts/NanumMyeongjoExtraBold.ttf",
+      "sha1": "a891c3233a43468b46159004e253c095064b5de3"
+    }
+  ]
+}

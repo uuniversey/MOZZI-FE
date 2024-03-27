@@ -38,8 +38,8 @@ const RecommendItemScreen = ({
         <Line />
         <ButtonContainer>
           <TimerContainer>
-            <Icon name="timer" size={20} color="#000" />
-            <TimeText>1시간</TimeText>
+            {/* <Icon name="timer" size={20} color="#000" />
+            <TimeText>1시간</TimeText> */}
           </TimerContainer>
           <RecipeButton onPress={onSharePress}>
             <ButtonText>레시피 보러가기</ButtonText>
@@ -84,16 +84,21 @@ const DishImage = styled.Image`
   margin-bottom: 10px;
 `
 
-const DishNameText = styled.Text`
+const DishNameText = styled.Text.attrs(() => ({
+  numberOfLines: 1, // 한 줄만 표시
+  ellipsizeMode: 'tail', // 텍스트가 넘칠 때 끝에 ... 추가
+}))`
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 10px;
+  text-align: center;
+  width: 70%;
 `
 
 const Line = styled.View`
   border-bottom-color: #000;
   border-bottom-width: 2px;
-  width: 40%;
+  width: 78%;
   align-self: center;
   margin-bottom: 10px;
 `

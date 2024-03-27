@@ -1,43 +1,78 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
 import { useNavigation } from '@react-navigation/native'
 
-import Autocomplete from 'react-native-autocomplete-input'
 import { Header } from '../../components/Header/Header'
+import { SearchBar } from '../../components/AutoWord/SearchRecipe'
 
-interface Recipe {
-  id: number;
-  image: string;
-  title: string;
+import axios from '../../../axios'
+import useRecipeStore from '../../store/RecipeStore'
+
+interface FoodItem {
+  photoUrl: string
+  foodName: string
 }
 
 function DiaryCreateSelectScreen () {
-
-  const navigation = useNavigation() 
+  const navigation = useNavigation()
+  // const { recipeData } = useRecipeStore()
 
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [filteredData, setFilteredData] = useState<Recipe[]>([]);
-
-  const data: Recipe[] = [
-    {id: 1, image: '', title: "cheese"}, 
-    {id: 2, image: '', title: "cheesetoast"}, 
-    {id: 3, image: '', title: "cheesetaco"}, 
-    {id: 4, image: '', title: "cheeseball"},
-  ]; // 예시 데이터, 실제 사용시에는 서버에서 가져오거나 로컬 데이터베이스에서 조회할 수 있습니다.
-
+  
+  const [recipeData, setRecipeData] = useState<FoodItem[] | null>(null)
+  const [selectedRecipeName, setSelectedRecipeName] = useState<string>('')
+  
   const handleSearch = () => {
-    console.log('Performing search for:', searchQuery);
-    // Implement your search logic here
-  };
+    navigation.navigate('DiaryCreate', {
+      recipeName: selectedRecipeName,
+    })
+  }
+  
+  // 검색에서 레시피 선택 시 호출될 함수
+  const handleSelectRecipe = (recipeName: string) => {
+    setSelectedRecipeName(recipeName)
+  }
 
-  // 자동 완성 데이터 필터링
-  const handleAutoComplete = (text: string) => {
-    setSearchQuery(text);
-    const filtered = data.filter(item => item.title.toLowerCase().startsWith(text.toLowerCase()));
-    setFilteredData(filtered);
-  };
+  const getRecipeList = async () => {
+    try {
+      // console.log('gi')
+      //http://a304.site/api/mozzi/diary/setmydiary
+      // axios.get('/recommend/get_ingredients_from_refrigerator/
+      // http://a304.site/api/recommend/datas/get_recipe_list/
+      const response = await axios.get('recommend/datas/get_recipe_list/')
+      // console.log(response.data.foods)
+      setRecipeData(response.data.foods)
+    } catch (error) {
+      //응답 실패
+      console.error(error)
+    }
+  }
+
+  useEffect(() => {
+    // console.log(recipeData)
+    getRecipeList()
+    // setRecipeData([
+    //   {id: 1, image: '', title: "치즈"},
+    //   {id: 2, image: '', title: "치즈그라탕"},
+    //   {id: 3, image: '', title: "치즈피자"},
+    //   {id: 4, image: '', title: "치즈떡볶이"},
+    //   {id: 5, image: '', title: "포테이트치즈피자"},
+    //   {id: 1, image: '', title: "페퍼로니피자"},
+    //   {id: 2, image: '', title: "김치치즈돈가스"},
+    //   {id: 3, image: '', title: "치즈돈가스"},
+    //   {id: 4, image: '', title: "고르곤졸라피자"},
+    //   {id: 5, image: '', title: "콤비네이션피자"},
+    //   {id: 1, image: '', title: "고구마피자"},
+    //   {id: 2, image: '', title: "블랙타이거피자"},
+    //   {id: 3, image: '', title: "하와이안피자"},
+    //   {id: 4, image: '', title: "하와이안치즈피자"},
+    //   {id: 5, image: '', title: "햄버거"},
+    // ])
+
+
+  }, [])
 
   return (
     <>
@@ -45,38 +80,8 @@ function DiaryCreateSelectScreen () {
         <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
       </Header>
       <View style={styles.container}>
-      <View style={styles.searchSection}>
-        <Icon name="search" size={20} color="#000" style={styles.searchIcon} />
-        {/* <AutocompleteDropdown
-          clearOnFocus={false}
-          closeOnBlur={true}
-          closeOnSubmit={false}
-          onSelectItem={item => {item && setSelectedItem(item.id)}}
-          dataSet={data}  
-        /> */}
-       <Autocomplete
-        data={filteredData}
-        defaultValue={searchQuery}
-        onChangeText={handleAutoComplete}
-        // placeholder="어떤 레시피를 기록할까요?"
-        inputContainerStyle={styles.input}
-        flatListProps={{
-          renderItem: ({ item }: { item: Recipe }) => (
-            <TouchableOpacity style={styles.listButton} onPress={() => setSearchQuery(item.title)}>
-              <Text>{item.title}</Text>
-            </TouchableOpacity>
-          ),
-          // Make sure scrolling is enabled
-          scrollEnabled: true,
-          // Set a maximum height
-          style: { ...styles.list, ...styles.shadow }
-        }}
-      />
-      </View>
-      {/* <TextInput
-        style={[styles.input, styles.longInput]}
-        placeholder="치즈에 숨바꼭질"
-      /> */}
+        {/* 검색 컴포넌트 추가 */}
+        {recipeData && <SearchBar data={recipeData} onSelect={handleSelectRecipe}/>}
       <View style={styles.enterContainer}>
         <TouchableOpacity style={styles.button} onPress={handleSearch}>
           <Text style={styles.buttonText}>확인</Text>
@@ -125,7 +130,7 @@ const styles = StyleSheet.create({
     height: 20
   },
   list: {
-    position: 'absolute',
+    // position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
@@ -160,7 +165,8 @@ const styles = StyleSheet.create({
     padding: 10,
     width: '20%',
     alignItems: 'center',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
+    zIndex: -10
   },
   buttonText: {
     color: '#000',

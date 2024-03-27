@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
-import { Dimensions, ScrollView, TouchableOpacity } from 'react-native'
+import { Alert, Dimensions, ScrollView, TouchableOpacity } from 'react-native'
 import styled from 'styled-components/native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome'
 import { Header } from '../../components/Header/Header'
 import { useNavigation } from '@react-navigation/native'
-import MyCarousel from '../../components/Carousel/ImageCarousel'
-import { Text } from 'react-native-svg'
+import useVideoStore from '../../store/RecapStore'
+import axios from 'axios'
 
 type ButtonProps = {
   title: string
@@ -135,15 +135,13 @@ function SelectShortsImageScreen () {
   
   const navigation = useNavigation()
 
-  const moveRecapLanding = () => {
-    navigation.navigate("RecapLanding")
-  }
-
   const [selectedMusic, setSelectedMusic] = useState<number | null>(null)
   const [imageCount, setImageCount] = useState<number>(0)
   const [selectedImages, setSelectedImages] = useState<number[]>([]);
   // const [selectedButton, setSelectedButton] = useState<number | null>(null);
   const [excessImage, setExcessImage] = useState<boolean>(false)
+
+
 
   const toggleImageSelection = (index: number) => {
     if (selectedImages.includes(index)) {
@@ -161,6 +159,7 @@ function SelectShortsImageScreen () {
     }
   }
 
+
   const toggleMusicSelection = (index: number) => {
     if (selectedMusic !== index) {
       setSelectedMusic(index)
@@ -175,10 +174,21 @@ function SelectShortsImageScreen () {
     navigation.goBack()
   }
 
+  // 회원의 이미지 불러오는 axios 필요함.
+  const getImages = async () => {
+    try {
+      const response = await axios.get('http://10.0.2.2:8000/maker/get_image/')
+      console.log(response)
+    } catch (error) {
+      //응답 실패
+      console.error(error)
+    }
+  }
+
   const renderImages = () => {
-    const images = [];
+    const images = []
     for (let i = 0; i < 15; i++) {
-      const isImageSelected = selectedImages.includes(i);
+      const isImageSelected = selectedImages.includes(i)
       images.push(
         <TouchableOpacity key={i} onPress={() => toggleImageSelection(i)}>
           <SelectableImage
@@ -188,7 +198,7 @@ function SelectShortsImageScreen () {
         </TouchableOpacity>
       );
     }
-    return images;
+    return images
   }
 
   const renderMusic = () => {
@@ -210,29 +220,67 @@ function SelectShortsImageScreen () {
       mood: "발랄한"
     }
   ]
+
   const musicImages = musicList.map((music, index) => (
-    <SelectableMusic isSelected={selectedMusic === music.moodId}>
-      <MoodButton key={index} title={music.mood} onPress={() => toggleMusicSelection(music.moodId)} />
+    <SelectableMusic key={index} isSelected={selectedMusic === music.moodId}>
+      <MoodButton title={music.mood} onPress={() => toggleMusicSelection(music.moodId)} />
     </SelectableMusic>
   ))
 
     return musicImages
   } 
 
-  //   for (let i = 0; i < 15; i++) {
-  //     const isImageSelected = selectedImages.includes(i);
-  //     images.push(
-  //       <TouchableOpacity key={i} onPress={() => toggleImageSelection(i)}>
-  //         <SelectableImage
-  //           source={require('../../assets/recommend/pizza.jpg')}
-  //           isSelected={isImageSelected && imageCount <= 10}
-  //         />
-  //       </TouchableOpacity>
-  //     )
-  //   }
-  //   return images;
-  // };
+  // 선택한 이미지 번호랑, 노래 번호 전달
+  const createShorts =  async (userId: string, selectedMusic: number, selectedImages: number[]) => {
+    try {
+      console.log(userId, selectedImages, selectedMusic)
+      // useVideoStore.getState().setVideoComplete(true)
+      navigation.navigate("RecapLanding")
+      const response = await axios.post('http://10.0.2.2:8000/maker/video_yk/', {
+        user_id: userId,
+        image_list: selectedImages,
+        bgm_category: selectedMusic
+      })
+      console.log(response)
+      useVideoStore.getState().setVideoComplete(true)
 
+      // if ((imageCount > 0) && (selectedMusic !== null )) {
+      // navigation.navigate("RecapLanding")
+      
+      //   // console.log(imageCount, selectedMusic, "선택하지 않은 항목이 있습니다.")
+      // } else {
+      //   // console.log(imageCount, selectedMusic, "선택하지 않은 항목이 있습니다.")
+      // }
+
+    } catch (error) {
+      //응답 실패
+      console.error(error);
+    }
+  }
+
+  // const moveRecapLanding = () => {
+  //   if ((imageCount > 0) && (selectedMusic !== null )) {
+  //     navigation.navigate("RecapLanding") 
+  //     // console.log(imageCount, selectedMusic, "선택하지 않은 항목이 있습니다.")
+  //   } else {
+  //     // console.log(imageCount, selectedMusic, "선택하지 않은 항목이 있습니다.")
+  //   }
+  // }
+
+
+  // const callMakeVideoApi = async (userId: string, bgmCategory: number) => {
+  //   try {
+  //     const response = await axios.post('http://10.0.2.2:8000/maker/video_yk/', {
+  //       user_id: userId,
+  //       bgm_category: bgmCategory,
+  //     });
+  //     console.log(response);
+  //   } catch (error) {
+  //     //응답 실패
+  //     console.error(error);
+  //   }
+  // }
+  
   return (
     <>
       <Header>
@@ -261,7 +309,13 @@ function SelectShortsImageScreen () {
               </StyledScrollView>
           </ImageContainer>
           <EnterContainer>
-          <EnterButton onPress={moveRecapLanding}>
+          <EnterButton onPress={() => {
+            if (imageCount > 0 && selectedMusic !== null) {
+                    createShorts('baloo365', selectedMusic, selectedImages);
+            } else {
+              Alert.alert("Missing Selection", "Please select at least one image and a music mood.");
+            }
+          }}>
             <EnterButtonText>등록</EnterButtonText>
           </EnterButton>
         </EnterContainer>

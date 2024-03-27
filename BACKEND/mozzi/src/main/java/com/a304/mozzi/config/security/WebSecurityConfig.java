@@ -1,6 +1,8 @@
 package com.a304.mozzi.config.security;
 
 import com.a304.mozzi.config.jwt.JwtAuthenticationFilter;
+import com.a304.mozzi.global.filter.LogFilter;
+import jakarta.servlet.Filter;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.annotation.Bean;
@@ -18,6 +20,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.SecurityContextHolderFilter;
+import org.springframework.security.web.session.SessionManagementFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -26,10 +30,13 @@ public class WebSecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomUserDetailService customUserDetailService;
+    private final LogFilter logFilter;
 
     @Bean
     public SecurityFilterChain applicationSecurity(HttpSecurity http) throws Exception {
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(logFilter, SessionManagementFilter.class);
+
         http.cors(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(manage -> manage.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -40,10 +47,14 @@ public class WebSecurityConfig {
                         .requestMatchers("/auth/Oauth2/KakaoToken").permitAll()
                         .requestMatchers("/auth/Oauth2/KakaoLogin").permitAll()
                         .requestMatchers("/auth/login", "/auth/signup")
-                        .permitAll().anyRequest().authenticated());
+                        .permitAll().anyRequest().permitAll());
         return http.build();
 
     }
+
+//    private Filter logFilter() {
+//        return new LogFilter();
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {

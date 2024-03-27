@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, TouchableOpacity, Image } from 'react-native';
 import styled from 'styled-components/native';
+import axios from 'axios';
 
 import { useNavigation } from '@react-navigation/native';
 import KakaoLogins, {login as kakaoLoginFunc, getProfile} from '@react-native-seoul/kakao-login';
@@ -66,10 +67,10 @@ const AnimatedLoginButton = Animated.createAnimatedComponent(TouchableOpacity);
 
 function LandingScreen() {
   const navigation = useNavigation();
-  const { login: storeLogin } = useLoginStore()
+  const { login: storeLogin, userData } = useLoginStore()
 
-  
   const kakaoLogin = async () => {
+    console.log("테스팅 중")
     try {
       // 여기에서 함수 이름을 kakaoLoginFunc로 변경했습니다.
       const res = await kakaoLoginFunc();
@@ -78,9 +79,11 @@ function LandingScreen() {
       // accessToken을 전달하기 전에 res가 정상인지 확인
       if (res) {
         // 성공적으로 토큰을 받아오고 로그인 처리
-        await storeLogin(res.accessToken);
+        await storeLogin(res.idToken);
+
         // 로그인 후 LandingInputScreen으로 이동
         navigation.navigate('LandingInput');
+        
       } else {
         console.log('Login response is undefined');
       }
@@ -91,7 +94,28 @@ function LandingScreen() {
         console.error(error)
       }
     }
-  };
+  }
+  
+  // const signInWithKakao = async (): Promise<void> => {
+  //   try {
+  //     const token = await kakaoLoginFunc();
+  //     setResult(JSON.stringify(token));
+  //   } catch (err) {
+  //     console.error('login err', err);
+  //   }
+  // };
+
+  // // 테스트 코드
+  // const sendRequest = async () => {
+  //   try {
+  //     const response = await axios.get('https://a304.site/api/mozzi/test');
+  //     console.log('성공:', response.data);
+  //   } catch (error) {
+  //     console.error('에러:', error);
+  //   }
+  // };  
+  // // sendRequest 함수 호출
+  // sendRequest();
 
   // const fadeAnims = useRef(
   //   Array.from({ length: 9 }, () => new Animated.Value(0))

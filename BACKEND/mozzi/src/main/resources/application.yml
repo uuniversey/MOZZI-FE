@@ -1,8 +1,7 @@
 spring:
-  datasource:
-    url: jdbc:mysql://a304.site:3306/mozzi
-    username: ssafy
-    password: ssafy
+  config:
+    import:
+      - application-db.yml
   jpa:
     properties:
       hibernate:
@@ -11,4 +10,10 @@ spring:
     active: dev
 security:
   jwt:
-    secret-key: tlqkrtprtmtprtmtprtmtprtmtprtmtprtmtprtmtprtm
+    secret-key: mozziisthemostperfectprojectintheworld
+
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled:true

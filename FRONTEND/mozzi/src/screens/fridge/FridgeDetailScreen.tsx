@@ -1,34 +1,33 @@
-import { View, Text, TouchableOpacity, TextInput, KeyboardAvoidingView, ScrollView } from 'react-native'
-import React, { useState, useRef } from 'react'
-import styled from 'styled-components/native'
-
-import { useNavigation } from '@react-navigation/native'
-
-import { Header } from '../../components/Header/Header'
+import { Keyboard, Dimensions, Platform } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import styled from 'styled-components/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-import note from '../../assets/fridge/note.png'
-import clip from '../../assets/fridge/clip.png'
+import { useNavigation } from '@react-navigation/native';
+
+import { Header } from '../../components/Header/Header';
+import { SearchFood } from '../../components/AutoWord/SearchFood';
+import useFridgeStore from '../../store/FridgeStore';
+import note from '../../assets/fridge/note.png';
+import clip from '../../assets/fridge/clip.png';
+
+interface FoodItem {
+  food: string;
+}
 
 const Container = styled.KeyboardAvoidingView`
   flex: 1;
   background-color: #FFFEF2;
-  /* justify-content: center; */
 `;
-
-const Title = styled.Text`
-  margin-top: 50px;
-  margin-bottom: 20px;
-`
 
 const ClipImg = styled.Image`
   position: absolute;
   top: 20;
   z-index: 1001;
-`
+`;
 
 const NoteImg = styled.Image`
-  height: ${({ keyboardOpen }) => (keyboardOpen ? '300px' : '460px')}; /* 키보드가 열렸을 때 이미지 높이 조절 */
+  height: ${({ keyboardOpen }) => (keyboardOpen ? '300px' : '460px')};
   box-shadow: 5px 5px 5px gray;
 `;
 
@@ -38,30 +37,31 @@ const Note = styled.View`
   justify-content: center;
   align-items: center;
   position: relative;
-`
+`;
 
 const TitleContainer = styled.View`
   position: absolute;
   top: 110;
   display: flex;
   align-items: center;
-`
+`;
 
 const TitleImg = styled.Image`
   display: inline;
   width: 30px;
   height: 30px;
-`
+`;
 
 const MenuItem = styled.Text`
   display: inline;
   font-size: 12px;
-`
+`;
 
 const InputContainer = styled.View`
-  margin-top: 30px;
-  width: 100%; 
-  align-items: center; 
+margin-top: ${({ keyboardOpen }) => (keyboardOpen ? '200px' : '30px')};
+  /* margin-top: ${({ keyboardOpen }) => (keyboardOpen ? '200px' : '30px')}; */
+  width: 100%;
+  align-items: center;
 `;
 
 const MyFood = styled.ScrollView`
@@ -69,21 +69,14 @@ const MyFood = styled.ScrollView`
   top: 170;
   width: 280px;
   height: 300px;
-`
+`;
 
 const MyFoodText = styled.Text`
   font-size: 20;
-`
+`;
 
-const InputFood = styled.TextInput`
-  width: 100%; 
-  max-width: 350px; 
-  border-width: 2px;
-  border-color: #E4E196;
-  border-radius: 5px;
-  padding: 10px 20px;
-  background-color: white;
-  position: relative;
+const DeleteButton = styled.TouchableOpacity`
+  /* color: lightgray; */
 `;
 
 const SendButton = styled.TouchableOpacity`
@@ -91,88 +84,98 @@ const SendButton = styled.TouchableOpacity`
   top: 12;
   right: 32;
   bottom: 0;
-  padding: 0 10px; /* 전송 버튼의 패딩 설정 */
+  padding: 0 10px;
 `;
 
-const AutoWord = styled.View`
-`
+const FridgeDetailScreen = ({ route }) => {
+  const [text, setText] = useState<FoodItem | null>(null);
+  const scrollViewRef = useRef(null);
+  const getMyFoods = useFridgeStore((state) => state.getMyFoods);
+  const allFoods = useFridgeStore((state) => state.allFoods);
+  const savedFoods = useFridgeStore((state) => state.savedFoods);
+  const addFridge = useFridgeStore((state) => state.addFridge);
+  const deleteFood = useFridgeStore((state) => state.deleteFood);
+  const [keyboardOpen, setKeyboardOpen] = useState(false); // 키보드 상태를 추적하는 상태 변수 추가
 
-const MiniTitleContainer = styled.View`
-  width: 350px;
-  align-self: center;
-`;
+  const { item } = route.params;
+  const { name, img , storedPos } = item;
 
-const MiniTitle = styled.Text`
-  font-size: 12;
-  margin-top: 20px;
-  align-self: flex-start;
-`
+  const navigation = useNavigation();
 
-function FridgeDetailScreen ({route}) {
-  const [text, setText] = useState('');
-  const [keyboardOpen, setKeyboardOpen] = useState(false); // 키보드 상태를 저장하는 상태 추가
-  const [savedText, setSavedText] = useState('');
-  const scrollViewRef = useRef(null); // ScrollView에 대한 참조 생성
-  
-  const { item } = route.params; // item을 받음
-  const { name, img } = item;
+  useEffect(() => {
+    console.log(`저장된 위치: ${storedPos}`);
+    getMyFoods(storedPos)
+    const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+      setKeyboardOpen(true); // 키보드가 열리면 keyboardOpen을 true로 설정
+    });
+    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+      setKeyboardOpen(false); // 키보드가 닫히면 keyboardOpen을 false로 설정
+    });
 
-  const navigation = useNavigation()
+    return () => {
+      useFridgeStore.getState().resetSavedFoods();
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, [getMyFoods, route.params]);
 
   const handleSend = () => {
-    // 전송 버튼을 눌렀을 때 텍스트 상태 초기화 및 위치 조정
-    setSavedText(savedText + text + '\n');
-    setText('');
-    scrollViewRef.current.scrollToEnd({ animated: true });
-  }
-  
+    if (text) {
+      addFridge(text, storedPos); // Zustand 스토어 업데이트 및 DB 업데이트
+      setText(null); // 텍스트 입력 필드 초기화
+      Keyboard.dismiss(); // 키보드를 닫음
+      scrollViewRef.current?.scrollToEnd({ animated: true }); // 스크롤을 맨 아래로 이동
+    }
+  };
+
+  const handleDelete = async (foodName) => {
+    await deleteFood(foodName);
+    getMyFoods(storedPos);
+  };
+
   return (
-    <Container behavior={Platform.OS === "ios" ? "padding" : "height"}>
-        <Header>
-          <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
-        </Header>
-      
-      <Note>
-        <ClipImg source={clip} />
-        <NoteImg source={note} />
-        <TitleContainer>
-          {img && <TitleImg source={img} />}
-          <MenuItem>{name}</MenuItem>
-        </TitleContainer>
-        <MyFood ref={scrollViewRef}>
-          {/* 여기서 savedText를 바로 표시하는 대신,
-               개별 텍스트 항목을 각각의 MyFoodText로 렌더링합니다. */}
-          {savedText.split('\n').map((item, index) => (
-            <MyFoodText key={index}>{item}</MyFoodText>
-          ))}
-        </MyFood>
-      </Note>
+    <Container behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <Header>
+        <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
+      </Header>
+
+      {!keyboardOpen && ( // 키보드가 열려있지 않을 때만 노트와 그 내용을 렌더링
+        <Note>
+          <ClipImg source={clip} />
+          <NoteImg source={note} keyboardOpen={keyboardOpen}/>
+          <TitleContainer>
+            {img && <TitleImg source={img} />}
+            <MenuItem>
+              {name}
+            </MenuItem>
+          </TitleContainer>
+          <MyFood ref={scrollViewRef}>
+            {savedFoods.map((item, index) => (
+              <MyFoodText key={index}>
+                {item.foodName}
+                <DeleteButton onPress={() => handleDelete(item.foodName)}>
+                  <MaterialIcons name="close" size={20} />
+                </DeleteButton>
+              </MyFoodText>
+            ))}
+          </MyFood>
+        </Note>
+      )}
 
       <InputContainer>
-        <InputFood
-          onChangeText={setText}
-          value={text}
-          placeholder="재료를 입력해 주세요..."
+        <SearchFood
+          data={allFoods}
+          setQuery={setText}
+          placeholder="재료를 입력하세요..."
         />
-        {text.length > 0 && ( // 텍스트가 있을 때만 전송 버튼 표시
-          <SendButton 
-            onPress={handleSend}
-          >
-            <MaterialIcons 
-              name="arrow-upward"
-              size={25}
-            />
+        {text && (
+          <SendButton onPress={handleSend}>
+            <MaterialIcons name="arrow-upward" size={25} />
           </SendButton>
         )}
-        
-        <MiniTitleContainer>
-          <MiniTitle>추천 검색어</MiniTitle>
-        </MiniTitleContainer>
-        <AutoWord></AutoWord>
       </InputContainer>
-      
     </Container>
-  )
-}
+  );
+};
 
-export default FridgeDetailScreen
+export default FridgeDetailScreen;

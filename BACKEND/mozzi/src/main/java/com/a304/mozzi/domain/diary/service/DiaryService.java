@@ -36,7 +36,9 @@ public class DiaryService {
     {
         return  diaryRepositoty.findByUser(user);
     }
-
+    public List<Diary> findByUserAndDiaryDate(Integer userId, String foodYear, String foodMonth){
+        return diaryRepositoty.findByUserAndDiaryDate(userId, foodYear, foodMonth);
+    };
 
       
     public List<DiaryDto> toDtoList(List<Diary> diaries)
@@ -48,6 +50,7 @@ public class DiaryService {
         return diaries.stream()
         .map(entity -> DiaryDto.builder()
             .id(entity.getDiaryId())
+            .foodName(entity.getFoodId().getFoodName())
             .photoUrl(entity.getDiaryPhoto())
             .build())
         .collect(Collectors.toList());

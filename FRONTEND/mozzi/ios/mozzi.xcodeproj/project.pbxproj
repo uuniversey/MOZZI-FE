@@ -14,6 +14,17 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		7699B88040F8A987B510C191 /* libPods-mozzi-mozziTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-mozzi-mozziTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		908F0A6E239C499C8DD41C29 /* MaruBuri-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FA2906244AF7469BB2AA952A /* MaruBuri-Bold.ttf */; };
+		EE8439DAD552484082925467 /* MaruBuri-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2B16B00E631C467D9B315AD9 /* MaruBuri-ExtraLight.ttf */; };
+		F6B09DAF31D444CFB023157E /* MaruBuri-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D61073FC69FE4EF98D30227D /* MaruBuri-Light.ttf */; };
+		E9A75A5BAF574B94B98D82CB /* MaruBuri-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45714D9AE4894B87ADF8FDEC /* MaruBuri-Regular.ttf */; };
+		2102A37C1A6140CAAE85848F /* MaruBuri-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E3C8702986F740E9BF94C301 /* MaruBuri-SemiBold.ttf */; };
+		5F99F1A988BF4A04973A6A2C /* NanumMyeongjo.otf in Resources */ = {isa = PBXBuildFile; fileRef = F848A24D23E348DFB0C21EBF /* NanumMyeongjo.otf */; };
+		EFFA5A4EF8BE454F8A563C29 /* NanumMyeongjoBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1F0FC3646BC94D09A3CD94CB /* NanumMyeongjoBold.otf */; };
+		DF9275D81ACD45409F2A2AFE /* NanumMyeongjoExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = F157F87A03A542CBABBF22EF /* NanumMyeongjoExtraBold.otf */; };
+		FE296CA526754804ABBD0EB4 /* NanumMyeongjo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DB0E120CA5414CF0BC88B84E /* NanumMyeongjo.ttf */; };
+		8627268A667F437DA5BB7B81 /* NanumMyeongjoBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A01FA906B36E4B77A4A9292F /* NanumMyeongjoBold.ttf */; };
+		5878FCD726994327BFF825E1 /* NanumMyeongjoExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C9F16984BF5249238DE46E1D /* NanumMyeongjoExtraBold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +55,17 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = mozzi/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-mozzi-mozziTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mozzi-mozziTests.release.xcconfig"; path = "Target Support Files/Pods-mozzi-mozziTests/Pods-mozzi-mozziTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		FA2906244AF7469BB2AA952A /* MaruBuri-Bold.ttf */ = {isa = PBXFileReference; name = "MaruBuri-Bold.ttf"; path = "../src/assets/fonts/MaruBuri-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		2B16B00E631C467D9B315AD9 /* MaruBuri-ExtraLight.ttf */ = {isa = PBXFileReference; name = "MaruBuri-ExtraLight.ttf"; path = "../src/assets/fonts/MaruBuri-ExtraLight.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		D61073FC69FE4EF98D30227D /* MaruBuri-Light.ttf */ = {isa = PBXFileReference; name = "MaruBuri-Light.ttf"; path = "../src/assets/fonts/MaruBuri-Light.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		45714D9AE4894B87ADF8FDEC /* MaruBuri-Regular.ttf */ = {isa = PBXFileReference; name = "MaruBuri-Regular.ttf"; path = "../src/assets/fonts/MaruBuri-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		E3C8702986F740E9BF94C301 /* MaruBuri-SemiBold.ttf */ = {isa = PBXFileReference; name = "MaruBuri-SemiBold.ttf"; path = "../src/assets/fonts/MaruBuri-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F848A24D23E348DFB0C21EBF /* NanumMyeongjo.otf */ = {isa = PBXFileReference; name = "NanumMyeongjo.otf"; path = "../src/assets/fonts/NanumMyeongjo.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		1F0FC3646BC94D09A3CD94CB /* NanumMyeongjoBold.otf */ = {isa = PBXFileReference; name = "NanumMyeongjoBold.otf"; path = "../src/assets/fonts/NanumMyeongjoBold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		F157F87A03A542CBABBF22EF /* NanumMyeongjoExtraBold.otf */ = {isa = PBXFileReference; name = "NanumMyeongjoExtraBold.otf"; path = "../src/assets/fonts/NanumMyeongjoExtraBold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		DB0E120CA5414CF0BC88B84E /* NanumMyeongjo.ttf */ = {isa = PBXFileReference; name = "NanumMyeongjo.ttf"; path = "../src/assets/fonts/NanumMyeongjo.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		A01FA906B36E4B77A4A9292F /* NanumMyeongjoBold.ttf */ = {isa = PBXFileReference; name = "NanumMyeongjoBold.ttf"; path = "../src/assets/fonts/NanumMyeongjoBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		C9F16984BF5249238DE46E1D /* NanumMyeongjoExtraBold.ttf */ = {isa = PBXFileReference; name = "NanumMyeongjoExtraBold.ttf"; path = "../src/assets/fonts/NanumMyeongjoExtraBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +144,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				BD488D584B80402B86732194 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -147,6 +170,25 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
+		};
+		BD488D584B80402B86732194 /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				FA2906244AF7469BB2AA952A /* MaruBuri-Bold.ttf */,
+				2B16B00E631C467D9B315AD9 /* MaruBuri-ExtraLight.ttf */,
+				D61073FC69FE4EF98D30227D /* MaruBuri-Light.ttf */,
+				45714D9AE4894B87ADF8FDEC /* MaruBuri-Regular.ttf */,
+				E3C8702986F740E9BF94C301 /* MaruBuri-SemiBold.ttf */,
+				F848A24D23E348DFB0C21EBF /* NanumMyeongjo.otf */,
+				1F0FC3646BC94D09A3CD94CB /* NanumMyeongjoBold.otf */,
+				F157F87A03A542CBABBF22EF /* NanumMyeongjoExtraBold.otf */,
+				DB0E120CA5414CF0BC88B84E /* NanumMyeongjo.ttf */,
+				A01FA906B36E4B77A4A9292F /* NanumMyeongjoBold.ttf */,
+				C9F16984BF5249238DE46E1D /* NanumMyeongjoExtraBold.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -243,6 +285,17 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				908F0A6E239C499C8DD41C29 /* MaruBuri-Bold.ttf in Resources */,
+				EE8439DAD552484082925467 /* MaruBuri-ExtraLight.ttf in Resources */,
+				F6B09DAF31D444CFB023157E /* MaruBuri-Light.ttf in Resources */,
+				E9A75A5BAF574B94B98D82CB /* MaruBuri-Regular.ttf in Resources */,
+				2102A37C1A6140CAAE85848F /* MaruBuri-SemiBold.ttf in Resources */,
+				5F99F1A988BF4A04973A6A2C /* NanumMyeongjo.otf in Resources */,
+				EFFA5A4EF8BE454F8A563C29 /* NanumMyeongjoBold.otf in Resources */,
+				DF9275D81ACD45409F2A2AFE /* NanumMyeongjoExtraBold.otf in Resources */,
+				FE296CA526754804ABBD0EB4 /* NanumMyeongjo.ttf in Resources */,
+				8627268A667F437DA5BB7B81 /* NanumMyeongjoBold.ttf in Resources */,
+				5878FCD726994327BFF825E1 /* NanumMyeongjoExtraBold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

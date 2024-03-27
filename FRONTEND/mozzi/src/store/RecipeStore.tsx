@@ -1,20 +1,39 @@
 import { create } from 'zustand'
-import axios from 'axios'
+import axios from '../../axios'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const useRecipeStore = create((set) => ({
   
   recipeData: [],
+  recipeDetailData: [],
 
-  getRecipe: async (url) => {
-    console.log(url) // url이 잘 받아와지는지 확인
+  getRecipe: async () => {
     try {
-      const response = await axios.get(url)
-      console.log('Backend response:', response.data) // 백엔드 응답 로깅
-      set({ recipeData: response.data })
+      const response = await axios.get('recommend/datas/get_recipe_list/')
+      set({ recipeData: response.data.foods })
     } catch (error) {
       console.error('레시피 데이터 얻기 실패:', error)
     }
   },
+
+  getRecipeDetail: async (foodName) => {
+    const token = await AsyncStorage.getItem('accessToken')
+    console.log(foodName)
+    try {
+      const response = await axios.get('recommend/datas/recipe_detail/',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          params: { foodName } // 단일 값으로 쿼리 파라미터를 설정
+        }
+      )
+      set({ recipeDetailData: response.data.data })
+      console.log('레시피 상세 데이터 얻기 성공')
+    } catch (error) {
+      console.error('레시피 상세 데이터 얻기 실패:', error)
+    }
+  }
 
 }))
 

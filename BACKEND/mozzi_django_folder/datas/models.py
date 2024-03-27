@@ -18,9 +18,10 @@ class Foods(models.Model):
     food_sour_rate = models.FloatField()
     food_umami_rate = models.FloatField()
     food_spicy_rate = models.FloatField()
-    food_category = models.CharField(max_length = 5)
+    food_category = models.CharField(max_length=5)
     food_today_views = models.IntegerField()
     food_category_count = models.IntegerField()
+
 
 
 
@@ -51,3 +52,14 @@ class User(models.Model):
 
     def __str__(self):
         return self.user_code  # 객체를 출력할 때 사용할 문자열 반환
+    
+class FoodIngredient(models.Model):
+    food_ingredient_id = models.AutoField(primary_key=True)
+    food_id = models.ForeignKey(Foods, on_delete=models.CASCADE, db_column='food_id')
+    ingredient_id = models.ForeignKey(Ingredient, on_delete=models.CASCADE, db_column='ingredient_id')
+    ingredient_ratio = models.FloatField()
+    ingredient_count = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'food_ingredient'
