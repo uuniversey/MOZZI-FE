@@ -177,9 +177,10 @@ def get_random_food(request):
 
 def recipe_detail(request):
     start_time = datetime.now()
+    print(request.GET.get('foodName'))
     food_name = request.GET.getlist('foodName')[0]
     
-   
+    print(food_name)
     try:
       
         foodsss = Foods.objects.all()
