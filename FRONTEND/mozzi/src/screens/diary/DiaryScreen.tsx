@@ -126,7 +126,7 @@ function DiaryScreen () {
         }}
 
         dayComponent={({date, state}) => {
-          const dayData = dummyfood.filter(food => food.photoDate === date.dateString)
+          const dayData = calendarData.filter(food => food.photoDate === date.dateString)
 
           let textColor = '#000' // 기본 텍스트 색상
 
@@ -143,7 +143,7 @@ function DiaryScreen () {
                   {date.day}
                 </DayNum>
                 {state !== 'disabled' && 
-                  dummyfood.map((food) => {
+                  calendarData.map((food) => {
                     return food.photoDate === date.dateString ? 
                     <CalendarImage
                       key={food.id}
@@ -163,7 +163,7 @@ function DiaryScreen () {
 export default DiaryScreen
 
 
-const dummyfood = [
+const dummyData = [
   { "id": 1,  "foodName": "김치 볶음밥" , "photoUrl" : 'https://i.namu.wiki/i/pspe5vjdPCZZ_5fKatNEzPXtxlNCXBViBW6clJIt0h8JkmTng-HrZ8oUTi5rsTeIM8QNkinpscMsxN_OVGFEe7Fli7g0WMkdjnSooiGRVnjG3K2oWN9hsUzLwl5Mk-E4Nd8xv1DTiS2cEbhSDU_2fQ.webp' , "photoDate" : "2024-03-05"},
   { "id": 2, "foodName": "떡볶이" , "photoUrl" : 'https://i.namu.wiki/i/0e2H0MymA2D0hthFVdH0MpUTxcVHLuAMaVv7mpWlyMHzxsFIaDkN1VRfX_nLLTlUde0t3sq97DIfteY0XrucKC7BnO4X4xtAVbC5O1TKYG0XTUXlOVMnbM7LdoBCiGkXqPT6qE1RuaaKqsrj5ojweQ.webp' , "photoDate" : "2024-03-11"},
   { "id": 3, "foodName": "갈비찜" , "photoUrl" : 'https://i.namu.wiki/i/tDfglDAem96NXwHVOFDTKYhqPLk2ZIP9UdFJvsjfdeUQjkmJYwRCgp6xlZy9r_APahob2Em7LZ0h5yI1CjM6UMxd1ME3HsILSE9OEQWpxR45VSEc-PwTvsjMWqSLf9qWubvPliRBE7cHLw9DkHLL1A.webp' , "photoDate" : "2024-03-13"},
