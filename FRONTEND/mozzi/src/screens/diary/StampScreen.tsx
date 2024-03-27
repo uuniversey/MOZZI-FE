@@ -1,12 +1,11 @@
 import React, { useState, useRef } from 'react'
-import { View, Image, TouchableOpacity, PermissionsAndroid, ToastAndroid } from 'react-native';
+import { View, Image, TouchableOpacity, PermissionsAndroid, ToastAndroid, Text } from 'react-native';
 import Share from 'react-native-share'
 import Snackbar from 'react-native-snackbar'
 import { CameraRoll } from '@react-native-camera-roll/camera-roll'
 import { captureRef } from 'react-native-view-shot'
 import { Header } from '../../components/Header/Header'
 import styled from 'styled-components/native'
-import { defaultFontText as Text } from '../../components/Fonts/Text';
 
 const Container = styled(View)`
   flex: 1;
@@ -14,7 +13,7 @@ const Container = styled(View)`
   align-items: center;
 `;
 
-const HeaderText = styled.Text`
+const HeaderText = styled(Text)`
   font-family: 'MaruBuri-Bold';
   font-size: 32px;
   font-weight: bold;
@@ -220,11 +219,9 @@ const Stamp = ({ navigation, route }) => {
         <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
       </Header>
 
-      
-
       <Container>
         <HeaderText>공유 프레임 선택하기</HeaderText>
-        <Text>전역 폰트 테스트</Text>
+        
 
         <Body ref={viewRef}>
           {/* store에서 불러온 food title로 수정하면 됨 */}

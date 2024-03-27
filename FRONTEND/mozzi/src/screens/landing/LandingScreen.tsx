@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, TouchableOpacity, Image } from 'react-native';
+import { Animated, TouchableOpacity, Image, Text } from 'react-native';
 import styled from 'styled-components/native';
 import axios from 'axios';
 
@@ -48,12 +48,16 @@ const TitleContainer = styled.View`
   padding-left: 15%;
 `;
 
-const SmallTitle = styled.Text`
+const SmallTitle = styled(Text)`
+  font-family: ${(props) => props.theme.fonts.landing};
   font-size: 48px;
+  color: ${(props) => props.theme.palette.main};;
 `;
 
-const BigTitle = styled.Text`
+const BigTitle = styled(Text)`
+  font-family: ${(props) => props.theme.fonts.landing};
   font-size: 96px;
+  color: ${(props) => props.theme.palette.main};
 `;
 
 const LoginContainer = styled.View`

@@ -22,28 +22,52 @@
       "sha1": "8a8b27eefd3db0bc764b6f0201fca26d061680d4"
     },
     {
-      "path": "src/assets/fonts/NanumMyeongjo.otf",
-      "sha1": "1b75cb9703613cb75bb8fc8a2fdb538853473017"
-    },
-    {
       "path": "src/assets/fonts/NanumMyeongjo.ttf",
       "sha1": "fff5fd3f51dfff394c88948a703ea746b3ef52fb"
-    },
-    {
-      "path": "src/assets/fonts/NanumMyeongjoBold.otf",
-      "sha1": "42590d385125e8eedf8d448ba02f4aa0a87458b5"
     },
     {
       "path": "src/assets/fonts/NanumMyeongjoBold.ttf",
       "sha1": "4b5299e387fea8bab768cb78c228b304dfe35391"
     },
     {
-      "path": "src/assets/fonts/NanumMyeongjoExtraBold.otf",
-      "sha1": "1c3a975ea921c56d429bbf30a689dbb6510f839a"
-    },
-    {
       "path": "src/assets/fonts/NanumMyeongjoExtraBold.ttf",
       "sha1": "a891c3233a43468b46159004e253c095064b5de3"
+    },
+    {
+      "path": "src/assets/fonts/Pretendard-Black.ttf",
+      "sha1": "efdd3af40aad863d177cecb58698dee4d96e5dd2"
+    },
+    {
+      "path": "src/assets/fonts/Pretendard-Bold.ttf",
+      "sha1": "5014ee949529efb25dc8d2555fb8d4586f43e058"
+    },
+    {
+      "path": "src/assets/fonts/Pretendard-ExtraBold.ttf",
+      "sha1": "7fa8f67e3a7a377341c8028468121212050eb681"
+    },
+    {
+      "path": "src/assets/fonts/Pretendard-ExtraLight.ttf",
+      "sha1": "e6f5c192eb5472551669e177f55b0ebae6e03dd1"
+    },
+    {
+      "path": "src/assets/fonts/Pretendard-Light.ttf",
+      "sha1": "1714361a51ce1fd7f0700b16a735022946f5cd27"
+    },
+    {
+      "path": "src/assets/fonts/Pretendard-Medium.ttf",
+      "sha1": "68efbed10e1229e9c9ed49d8c620a8fef87cda07"
+    },
+    {
+      "path": "src/assets/fonts/Pretendard-Regular.ttf",
+      "sha1": "f5e25d12ff08ff058acd8a64d5f9b5f9c92b9d17"
+    },
+    {
+      "path": "src/assets/fonts/Pretendard-SemiBold.ttf",
+      "sha1": "e247ab351a1797b1a81f7a5e945c416de9f7fd91"
+    },
+    {
+      "path": "src/assets/fonts/Pretendard-Thin.ttf",
+      "sha1": "cadc88516dbaaf19e0009f2d0c1e36329fe25c7f"
     }
   ]
 }
