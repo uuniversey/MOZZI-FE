@@ -4,32 +4,28 @@ import styled from 'styled-components/native'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { Header } from '../../components/Header/Header'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import { Text } from 'react-native'
 
-const Container = styled.View`
+const Container = styled(View)`
   flex: 1;
   background-color: #FFFEF2;
 `
 
-const InnerContainer = styled.View`
+const InnerContainer = styled(View)`
   flex: 1;
   align-items: center;
   justify-content: center;
 `
 
-const DiceImage = styled.Image`
-  width: 200px;
-  height: 182.4px;
-  /* resize-mode: contain; */
-`
-
-const Description = styled.Text`
+const Description = styled(Text)`
   font-size: 24px;
   margin-top: 24px;
   text-align: center;
   color: #000;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
-const OuterBar = styled.View`
+const OuterBar = styled(View)`
   background-color: #F9F7BB;
   width: 65%;
   height: 6px;

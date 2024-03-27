@@ -8,11 +8,12 @@ import {SearchFood} from '../../components/AutoWord/SearchFood'
 import useProfileStore from '../../store/ProfileStore'
 import useFridgeStore from '../../store/FridgeStore'
 
-const Label = styled.Text`
+const Label = styled(Text)`
   margin-top: 30px;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
-const StyledInput = styled.TextInput`
+const StyledInput = styled(TextInput)`
   height: 40px;
   margin: 10px 0px 10px 0px;
   border-bottom-width: 1px;

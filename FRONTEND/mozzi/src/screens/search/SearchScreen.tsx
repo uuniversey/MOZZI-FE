@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import styled from 'styled-components/native'
@@ -10,23 +10,23 @@ import { useNavigation } from '@react-navigation/native'
 import useRecipeStore from '../../store/RecipeStore'
 
 
-const Container = styled.View`
+const Container = styled(View)`
   flex: 1;
   background-color: #FFFEF2;
 `
 
-const SearchView = styled.View`
+const SearchView = styled(View)`
   margin: 30px;
   height: 60%;
 `
 
-const Hr = styled.View`
+const Hr = styled(View)`
   margin: 30px;
   border-bottom-width: 1px;
   border-bottom-color: rgb(128, 128, 128);
 `
 
-const Btn = styled.TouchableOpacity`
+const Btn = styled(TouchableOpacity)`
   background-color: #F9F7BB;
   border-radius: 10px;
   width: 80px;
@@ -36,13 +36,15 @@ const Btn = styled.TouchableOpacity`
   margin: 30px;
 `
 
-const BtnText = styled.Text`
+const BtnText = styled(Text)`
   font-size: 16px;
   text-align: center;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
-const SelectedText = styled.Text`
+const SelectedText = styled(Text)`
   margin: 0px 30px 0px 30px;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
 function SearchScreen () {

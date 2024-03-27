@@ -51,7 +51,7 @@ const TitleContainer = styled.View`
 const SmallTitle = styled(Text)`
   font-family: ${(props) => props.theme.fonts.landing};
   font-size: 48px;
-  color: ${(props) => props.theme.palette.main};;
+  color: ${(props) => props.theme.palette.main};
 `;
 
 const BigTitle = styled(Text)`

@@ -34,7 +34,7 @@ const Body = styled.View`
   border-radius: 20px;
   background-color: #F9F7BB;
 `
-const FoodTitle = styled.Text`
+const FoodTitle = styled(Text)`
   padding: 5px;
   position: absolute;
   font-size: 16px;

@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native'
 
 import { Header } from '../../components/Header/Header'
 
-const Container = styled.View`
+const Container = styled(View)`
   flex: 1;
   background-color: #FFFEF2;
 `

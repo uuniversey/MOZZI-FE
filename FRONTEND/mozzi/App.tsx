@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { styled, ThemeProvider } from 'styled-components/native';
+import { ThemeProvider } from 'styled-components/native';
 import { setCustomText } from 'react-native-global-props'; 
 import { View, StyleSheet, TouchableOpacity, Dimensions, Animated } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
@@ -27,12 +27,14 @@ const theme = {
   fonts: {
     // main: 'NanumMyeongjo',
     landing: 'Pretendard-Bold',
-    title: 'Pretendard-Medium',
+    title: 'Pretendard-Bold',
     content: 'Pretendard-Regular',
-    fridge: 'MaruBuri-Regular'
+    fridge: 'MaruBuri-Bold'
   },
   palette: {
     main: '#1c1a11',
+    point: 'F9F7BB',
+    pointDark: 'E4E196',
   }
 };
 
@@ -186,3 +188,8 @@ const styles = StyleSheet.create({
 })
 
 export default App
+
+
+
+
+
