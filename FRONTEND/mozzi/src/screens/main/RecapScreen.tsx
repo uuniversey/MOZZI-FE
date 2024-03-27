@@ -8,6 +8,7 @@ import axios from '../../../axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 interface RecipeCardProps {
+  id: number
   title: string
   imageSource: any
   day: string
@@ -114,7 +115,7 @@ function RecapScreen() {
   const callRecapFood = async () => {
     const token = await AsyncStorage.getItem('accessToken')
     try {
-      const response = await axios.get(`mozzi/diary/getrandomdiaries`, {
+      const response = await axios.get(`https://a304.site/api/mozzi/diary/getrandomdiaries`, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-type': 'application/json',
@@ -177,15 +178,15 @@ function RecapScreen() {
       </Header>
       <Container>
         <HeaderText>나의 모찌 기록</HeaderText>
-        {/* {myRecipes.map((recipe, index) => (
+        {myRecipes.map((recipe: RecipeCardProps, index) => (
           <RecipeCard
             key={index}
-            day={convertDay(recipe.day)}
+            day={convertDay(recipe.photoDate)}
             // day={`${recipe.day} 전 먹은 음식`}
-            title={recipe.title}
-            imageSource={recipe.imageSource}
+            title={recipe.foodName}
+            imageSource={{ uri: recipe.photoUrl }}
           />
-        ))} */}
+        ))}
         <ActionButton 
           onPress={SelectShortsImage}>
           <IconEntypo name="video" size={50} color="#000" />
