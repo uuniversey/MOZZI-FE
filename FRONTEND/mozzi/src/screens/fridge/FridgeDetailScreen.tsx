@@ -1,5 +1,5 @@
-import { Keyboard, Dimensions, Platform } from 'react-native';
 import React, { useState, useRef, useEffect } from 'react';
+import { Keyboard, Platform, Text } from 'react-native';
 import styled from 'styled-components/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
@@ -52,9 +52,11 @@ const TitleImg = styled.Image`
   height: 30px;
 `;
 
-const MenuItem = styled.Text`
+const MenuItem = styled(Text)`
+  font-family: ${(props) => props.theme.fonts.title};
+  color: ${(props) => props.theme.palette.main};
   display: inline;
-  font-size: 12px;
+  font-size: 20px;
 `;
 
 const InputContainer = styled.View`
@@ -66,13 +68,15 @@ margin-top: ${({ keyboardOpen }) => (keyboardOpen ? '200px' : '30px')};
 
 const MyFood = styled.ScrollView`
   position: absolute;
-  top: 170;
+  top: 200;
   width: 280px;
-  height: 300px;
+  height: 280px;
 `;
 
-const MyFoodText = styled.Text`
+const MyFoodText = styled(Text)`
   font-size: 20;
+  font-family: ${(props) => props.theme.fonts.fridge};
+  /* color: ${(props) => props.theme.palette.main}; */
 `;
 
 const DeleteButton = styled.TouchableOpacity`
