@@ -26,8 +26,9 @@ const customTextProps = {
 const theme = {
   fonts: {
     // main: 'NanumMyeongjo',
-    landing: 'Pretendard-Medium',
-    main: 'Pretendard-Regular',
+    landing: 'Pretendard-Bold',
+    title: 'Pretendard-Medium',
+    content: 'Pretendard-Regular',
     fridge: 'MaruBuri-Regular'
   },
   palette: {
