@@ -101,7 +101,6 @@ public class DiaryController {
 //            }
 //
 //            // destinationFile.getParentFile().mkdirs();
-//
 //            photo.transferTo(destinationFile);
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             // log.info(photoDate);
@@ -116,10 +115,13 @@ public class DiaryController {
             // log.error("Failed to parse photoDate: " + photoDate, e);
             // // 예외 처리 로직 추가
             // }
+
             LocalDate parsedDate = LocalDate.parse(photoDate, formatter);
             LocalDateTime parsedDateTime = parsedDate.atStartOfDay();
 
+            log.info(parsedDateTime.toString());
             Food food = foodService.findFoodByFoodName(foodName);
+
             Diary diary = Diary.builder()
                     .user(user)
                     .diaryPhoto(fileUrl + destinationFileName)
@@ -127,8 +129,10 @@ public class DiaryController {
                     .foodId(food)
                     .build();
 
+
             Diary registeredDiary = diaryService.create(diary);
             ResponseMessageDto responseMessageDto = ResponseMessageDto.builder().message("Diary Created").build();
+
 
             return ResponseEntity.ok().body(responseMessageDto);
         } catch (Exception e) {
