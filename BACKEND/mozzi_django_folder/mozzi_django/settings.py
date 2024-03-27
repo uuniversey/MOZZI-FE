@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from mongoengine import connect
+from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,8 +27,8 @@ SECRET_KEY = 'django-insecure-g)2howhcux-dfu^m@934()fjvvd%vezh=(-19oyhc7#&t5sb5h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+TIME_ZONE = 'Asia/Seoul'
 
 # Application definition
 
@@ -71,6 +72,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'mozzi_django.wsgi.application'
+
 
 
 # Database
@@ -137,6 +139,28 @@ connect(
     authentication_source='admin',
     authentication_mechanism='SCRAM-SHA-1'
 )
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://a304.site:6379/1',  # 여기서 '1'은 레디스 데이터베이스 번호입니다.
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+CELERY_BROKER_URL = 'redis://a304.iste:6379/0'
+CELERY_RESULT_BACKEND = 'redis://a304.iste:6379/0'
+
+CELERY_BEAT_SCHEDULE = {
+    'reset_food_today_views': {
+        'task': 'your_app.tasks.reset_food_views',
+        'schedule': crontab(hour=0, minute=0),  # 매일 오전 12시 실행
+    },
+}
+# 추가로, 세션, 캐시 및 기타 사용 사례에 레디스를 사용하려면 다음과 같이 설정할 수 있습니다.
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 

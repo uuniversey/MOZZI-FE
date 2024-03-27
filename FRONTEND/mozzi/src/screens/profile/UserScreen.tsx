@@ -17,9 +17,15 @@ const Container = styled.View`
 const Title = styled.Text`
   font-size: 36px;
   font-weight: bold;
-  margin: 50px 0px 0px 40px;
-  text-align: left;
-  width: 100%;
+  margin: 50px 0px 0px 0px;
+  height: 100%;
+`
+
+const JustifyView = styled.View`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-bottom: 40px;
 `
 
 const Btn = styled.TouchableOpacity`
@@ -48,8 +54,8 @@ const ListBtnText = styled.Text`
 `
 
 function UserScreen() {
-  const { userData, setIsLogin } = useLoginStore()
-  const { } = useProfileStore()
+  const { setIsLogin } = useLoginStore()
+  const { profileData } = useProfileStore()
   const navigation = useNavigation()
 
   const handleLogout = async (navigation) => {
@@ -79,11 +85,12 @@ function UserScreen() {
 
   return (
     <Container>
-      <Title>{userData.nickname} 님</Title>
-      <Btn onPress={handleLogout}>
-        <BtnText>로그아웃</BtnText>
-      </Btn>
-
+      <JustifyView>
+        <Title>{profileData.nickname} 님</Title>
+        <Btn onPress={handleLogout}>
+          <BtnText>로그아웃</BtnText>
+        </Btn>
+      </JustifyView>
       <ScrollView>
         <ListButton onPress={moveProfile}>
           <ListBtnText>내 정보 관리</ListBtnText>

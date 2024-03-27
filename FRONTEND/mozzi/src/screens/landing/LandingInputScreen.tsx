@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
 import styled from 'styled-components/native'
-import Dropdown from '../../components/Dropdown/Dropdown'
+import CustomDropdown from '../../components/Dropdown/CustomDropdown'
 
 import { useNavigation } from '@react-navigation/native'
 import useProfileStore from '../../store/ProfileStore'
@@ -128,7 +128,11 @@ function ProfileScreen () {
         
         <Label>알레르기 정보</Label>
         <StyledView>
-          <Dropdown />
+        <CustomDropdown
+          data={allergyList}
+          placeholder="보유하고 있는 알레르기 정보를 선택해 주세요"
+          isMulti={true}
+        />
         </StyledView>
 
         <Label>좋아하는 음식</Label>
@@ -170,3 +174,27 @@ function ProfileScreen () {
 }
 
 export default ProfileScreen
+
+const allergyList = [
+  { label: '난류', value: 'egg' },
+  { label: '우유', value: 'milk' },
+  { label: '메밀', value: 'buckwheat' },
+  { label: '땅콩', value: 'peanut' },
+  { label: '대두', value: 'soy' },
+  { label: '밀', value: 'wheat' },
+  { label: '고등어', value: 'mackerel' },
+  { label: '새우', value: 'shrimp' },
+  { label: '게', value: 'crab' },
+  { label: '돼지고기', value: 'pork' },
+  { label: '복숭아', value: 'peach' },
+  { label: '토마토', value: 'tomato' },
+  { label: '아황산류', value: 'sulfites' },
+  { label: '호두', value: 'walnut' },
+  { label: '닭고기', value: 'chicken' },
+  { label: '쇠고기', value: 'beef' },
+  { label: '오징어', value: 'squid' },
+  { label: '굴', value: 'oyster' },
+  { label: '전복', value: 'abalone' },
+  { label: '홍합', value: 'mussel' },
+  { label: '잣', value: 'pine_nut' }
+]

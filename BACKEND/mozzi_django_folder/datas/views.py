@@ -177,23 +177,10 @@ def get_random_food(request):
 
 def recipe_detail(request):
     start_time = datetime.now()
+    print(request.GET.get('foodName'))
     food_name = request.GET.getlist('foodName')[0]
-    # body_unicode = request.body.decode('utf-8')
-    # print(body_unicode)
-    #
-    # lines = body_unicode.split("\n")
-    # food = json.loads(body_unicode)
-    # food_name = food['foodName']
     
-    # print(food)
-    # print(lines)
-    # for i in range(len(lines)):
-    #     if lines[i] == '\r':
-    #         food_name = lines[i+1]
-    #         break
-    
-    # 가져온 값 출력
-   
+    print(food_name)
     try:
       
         foodsss = Foods.objects.all()
@@ -211,6 +198,11 @@ def recipe_detail(request):
    
         end_time = datetime.now()
         # print(end_time - start_time)
+        print(food.food_views)
+        food.food_views+=1
+        print(food.food_views)
+        food.food_today_views+=1
+        food.save()
         return JsonResponse({'data': {
             # 'id': str(mongo_food.id),
             'RCP_PARTS_DTLS': mongo_food.food_recipe["RCP_PARTS_DTLS"],
@@ -264,6 +256,8 @@ def recipe_detail(request):
 
             
         }})
+    
+
     except MongoFood.DoesNotExist:
         return JsonResponse({'레시피': '음식을 찾을 수 없습니다'})
 
@@ -284,6 +278,7 @@ def get_recipe_list(request):
     return JsonResponse({'foods': data})
 
 def get_ingredient_list(request):
+    
     ingredients = Ingredient.objects.all()
     ingredient_names = [ingredient.ingredient_name for ingredient in ingredients]
     return JsonResponse({'data': {'ingredients': ingredient_names}},json_dumps_params={'ensure_ascii': False})
@@ -449,7 +444,9 @@ def migrate_sql_to_neo4j(request):
 
 @api_view(['POST', 'GET','DELETE'])
 def add_ingredients_to_refrigerator(request):
+
     user = User.objects.all()
+
     foodingredients = FoodIngredient.objects.all()
     # print(request.headers['Authorization'],'adddddddddddddddd')
     try:
@@ -535,6 +532,7 @@ def add_ingredients_to_refrigerator(request):
         ingredient = Ingredient.objects.all()
         query = """
             SELECT * FROM refri_ingredients
+            left join datas_ingredient on refri_ingredients.ingredient_id = datas_ingredient.id
             WHERE user_id = %s and stored_pos = %s
         """ 
        
@@ -547,15 +545,14 @@ def add_ingredients_to_refrigerator(request):
         # print(rows,'rows')
         # print(category,'category')
         # 결과 출력
-        # for row in rows:
+        for row in rows:
             
             
-        #     for i in ingredient:
             
-        #         if i.id == row[1] and str(i.category_id) in category :
-        #             foods.append({'foodName': i.ingredient_name, 'storedPos' : row[3]})
+            
+                    foods.append({'foodName': row[5], 'storedPos' : row[3]})
 
-        return JsonResponse({'data': {"foods" : rows}})
+        return JsonResponse({'data': {"foods" : foods}})
 
     # DELETE 요청인 경우
     elif request.method == 'DELETE':
@@ -575,6 +572,7 @@ def add_ingredients_to_refrigerator(request):
                     DELETE FROM refri_ingredients 
                     WHERE user_id = %s AND ingredient_id = %s
                 """, [user_id, ingredient_id])
+                print(user_id,ingredient_id)
         return JsonResponse({"message": "Ingredients removed from refrigerator successfully."}, status=200)
 
     # 지원하지 않는 메서드인 경우

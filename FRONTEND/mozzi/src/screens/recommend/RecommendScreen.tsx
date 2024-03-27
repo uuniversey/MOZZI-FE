@@ -5,6 +5,8 @@ import axios from 'axios'
 import RecommendLandingScreen from './RecommendLandingScreen';
 import { nextDay } from 'date-fns';
 
+import useRecipeStore from '../../store/RecipeStore'
+
 type Recipe = {
   recipeId: number
   dishName: string
@@ -14,8 +16,10 @@ type Recipe = {
 function RecommendScreen () {
 
   const navigation = useNavigation()
+  const { getRecipeDetail } = useRecipeStore()
 
   const moveRecipe = () => {
+    getRecipeDetail(todayRecipe.dishName)
     navigation.navigate("Recipe")
   }
 
@@ -46,22 +50,22 @@ function RecommendScreen () {
 
   const dummyRecipe = [{
     recipeId: 1,
-    dishName: "고등어구이",
+    dishName: "부추 콩가루 찜",
     imageUri: "https://i.namu.wiki/i/QncptNs6gl_Zyh-LEPsb_pEOkFhYKjvlOHUm0yNGp9iwCRUmUVjdJT9uxEEHIH6I0YW8BMq2YnvDlSV10wI3apuzbl_hDUpgH8KYCNFUqRc-E2s4JqnsVwWMqdHt26Kqsw3O4qSK9NLlvdjzOnk1Xw.webp"
   },
   {
     recipeId: 2,
-    dishName: "니노막시무스카이저소제쏘냐도르앤돈가스파르타",
+    dishName: "부추 콩가루 찜",
     imageUri: "https://i.namu.wiki/i/870lvjrMKGTyx00arSIaji0nFXyrxh7C-8uMe4WA0k9mhlJUOnkRFz4r4w5411--p2I4Vl1TmDHjEWOJ5xpUladA9gGNBWJmJDR2kHavjNUGh6K3HVSbygWa3GsUMbjr0M755QOGtqS5Pc7M3LpXSg.webp"
   },
   {
     recipeId: 3,
-    dishName: "뼈해장국",
+    dishName: "부추 콩가루 찜",
     imageUri: "https://i.namu.wiki/i/ywRdkOZAdp4dU3ItrNm36NjVx3sbEE6PYVvNVYpRa9MUDtKIxxejpM-jAXGl9fHGavoYESWtzbf7C0LA9RBGsS63D8KY1eINfE4ZQf-36gNq-fDtiJu9fXkS5hE01eY2ArhJcagnO7pMdtRz2e0dsA.webp"
   },
   {
     recipeId: 4,
-    dishName: "떡볶이",
+    dishName: "부추 콩가루 찜",
     imageUri: "https://i.namu.wiki/i/0e2H0MymA2D0hthFVdH0MpUTxcVHLuAMaVv7mpWlyMHzxsFIaDkN1VRfX_nLLTlUde0t3sq97DIfteY0XrucKC7BnO4X4xtAVbC5O1TKYG0XTUXlOVMnbM7LdoBCiGkXqPT6qE1RuaaKqsrj5ojweQ.webp"
   },
   ]
@@ -126,7 +130,7 @@ function RecommendScreen () {
       question="오늘의 추천 메뉴는?" // 아침?, 점심?, 저녁?
       dishName={todayRecipe?.dishName} // 글자수가 긴 거에 대한 라인 수정 필요할 듯
       imageUri={todayRecipe?.imageUri}
-      onSharePress={() => navigation.navigate("Recipe")}
+      onSharePress={moveRecipe}
       onRetryPress={moveRecommendLanding}
     />
   )

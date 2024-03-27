@@ -3,7 +3,7 @@ import { Image, TouchableOpacity, Text } from 'react-native'
 import styled from 'styled-components/native'
 import axios from 'axios'
 import { useNavigation } from '@react-navigation/native'
-import { Header } from '../../components/Header/Header'
+import { SearchHeader } from '../../components/Header/SearchHeader'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import useProfileStore from '../../store/ProfileStore'
 
@@ -145,9 +145,9 @@ function MainScreen() {
  
   return (
     <>
-      <Header>
-        <Header.Icon iconName="search" onPress={moveSearch} />
-      </Header>
+      <SearchHeader>
+        <SearchHeader.Icon iconName="search" onPress={moveSearch} />
+      </SearchHeader>
       <Container>
         <ContentContainer>
           {/* <Greeting>환영해요, 아우엉님 님!</Greeting> */}
