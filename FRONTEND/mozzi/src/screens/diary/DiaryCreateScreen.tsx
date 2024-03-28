@@ -253,7 +253,10 @@ function DiaryCreateScreen () {
         },
       })
       console.log(response.data)
-      navigation.navigate("Diary")
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Diary' }],
+      })
     } catch (error) {
       //응답 실패
       console.error(error)

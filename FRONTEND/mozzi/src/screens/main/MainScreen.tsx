@@ -5,7 +5,7 @@ import axios from 'axios'
 import { useNavigation } from '@react-navigation/native'
 import { SearchHeader } from '../../components/Header/SearchHeader'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import useProfileStore from '../../store/ProfileStore'
+import useLoginStore from '../../store/LoginStore'
 
 interface RecipeItem {
   foodName: string
@@ -104,7 +104,7 @@ function MainScreen() {
   }
 
   const [recipe, setRecipe] = useState<RecipeItem | null>(null)
-  const { profileData } = useProfileStore()
+  const { userData } = useLoginStore()
   // 로그인 유저 호출
   // 최다 뷰카운트 호출
   const popularRecipe = async () => {
@@ -141,7 +141,7 @@ function MainScreen() {
   // 여기 페이지 들어올 때마다 호출할지
   // 맨 처음에 한 번만 호출할지 생각해봐야할 듯
   useEffect(() => {
-    console.log(profileData)
+    console.log(userData)
     popularRecipe()
     return () => {
     }
@@ -156,7 +156,7 @@ function MainScreen() {
       <Container>
         <ContentContainer>
           {/* <Greeting>환영해요, 아우엉님 님!</Greeting> */}
-          <Greeting>환영해요, {profileData.nickname} 님!</Greeting>
+          <Greeting>환영해요, {userData.nickname} 님!</Greeting>
           <Question>오늘은 어떤 레시피를 도전할까요?</Question>
           <TouchableOpacity
             onPress={moveRecipeDetail}>
