@@ -9,18 +9,18 @@ import Video from 'react-native-video'
 
 const Container = styled(View)`
   flex: 1;
-  background-color: #FFFEF2;
+  background-color: ${(props) => props.theme.palette.background};
   align-items: center;
 `
 
 const HeaderText = styled(Text)`
   font-size: 32px;
-  font-weight: bold;
   margin-top: 50px;
   margin-bottom: 20px;
   align-self: flex-start;
   padding-left: 28px;
   padding-right: 28px;
+  color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.title};
 `
 
@@ -36,7 +36,7 @@ const PlayButton = styled(View)`
   align-items: center;
   justify-content: center;
   border-color: rgba(0, 0, 0, 0.2);
-  background-color: #FFFEF2;
+  background-color: ${(props) => props.theme.palette.background};
   border-width: 2px;
   elevation: 2;
 `
@@ -51,14 +51,14 @@ const DownloadButton = styled(TouchableOpacity)`
   margin-right: 16px;
   align-items: center;
   border-color: rgba(0, 0, 0, 0.2);
-  background-color: #F9F7BB;
+  background-color: ${(props) => props.theme.palette.point};
   border-width: 2px;
   elevation: 2;
 `
 
 const DownloadButtonText = styled(Text)`
   font-size: 16px;
-  font-weight: bold;
+  color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.content};
 `
 

@@ -15,7 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 // Styled components definitions
 const Container = styled(View)`
   flex: 1;
-  background-color: #FFFEF2;
+  background-color: ${(props) => props.theme.palette.background};
   align-items: center;
 `
 
@@ -31,6 +31,7 @@ const DateContainer = styled(View)`
 
 const DateText = styled(Text)`
   font-weight: 600;
+  color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.content};
 `
 
@@ -44,7 +45,7 @@ const Line = styled(View)`
 
 const ImageContainer = styled(View)`
   border-width: 1px;
-  border-color: #E4E196;
+  background-color: ${(props) => props.theme.palette.point};
   width: 350px;
   height: 350px;
   justify-content: center;
@@ -73,11 +74,12 @@ const ImageButton = styled(TouchableOpacity)`
 
 const ImagePlaceholderText = styled(Text)`
   font-size: 24px;
+  color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.content};
 `
 
 const RecipeButton = styled(TouchableOpacity)`
-  background-color: #F9F7BB;
+  background-color: ${(props) => props.theme.palette.point};
   border-color: rgba(0, 0, 0, 0.2);
   border-width: 2px;
   padding: 20px;
@@ -100,6 +102,7 @@ const ButtonText = styled(Text)`
   font-size: 16px;
   text-align: center;
   margin-left: 6px;
+  color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.content};
 `
 
@@ -114,6 +117,7 @@ const EnterButton = styled(TouchableOpacity)`
 const EnterButtonText = styled(Text)`
   font-size: 16px;
   text-align: center;
+  color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.content};
 `
 

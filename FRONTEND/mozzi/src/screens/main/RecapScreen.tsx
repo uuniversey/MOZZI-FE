@@ -15,7 +15,7 @@ interface RecipeCardProps {
 }
 
 const RecipeCardContainer = styled(View)`
-  background-color: #F9F7BB;
+  background-color: ${(props) => props.theme.palette.point};
   border-radius: 20px;
   padding: 16px;
   margin-top: 8px;
@@ -27,7 +27,7 @@ const RecipeCardContainer = styled(View)`
 `
 
 const NoRecipeCardContainer = styled(View)`
-  background-color: #F9F7BB;
+  background-color: ${(props) => props.theme.palette.point};
   border-radius: 20px;
   padding: 16px;
   margin-top: 8px;
@@ -41,14 +41,14 @@ const NoRecipeCardContainer = styled(View)`
 
 const NoRecipeText = styled(Text)`
   font-size: 18px;
-  font-weight: bold;
+  color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.content};
 `
 
 const CardDay = styled(Text)`
   font-size: 16px;
-  font-weight: bold;
   align-self: flex-start;
+  color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.content};
 `
 
@@ -60,8 +60,8 @@ const CardImage = styled(Image)`
 
 const CardTitle = styled(Text)`
   font-size: 14px;
-  font-weight: bold;
   margin-top: 8px;
+  color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.title};
 `
 
@@ -77,14 +77,14 @@ const RecipeCard = ({ id, foodName, photoUrl, photoDate }: RecipeCardProps) => {
 
 const Container = styled(View)`
   flex: 1;
-  background-color: #FFFEF2;
+  background-color: ${(props) => props.theme.palette.background};
   padding-right: 10px;
   padding-left: 10px;
 `
 
 const HeaderText = styled(Text)`
   font-size: 32px;
-  font-weight: bold;
+  color: ${(props) => props.theme.palette.font};
   margin-top: 20px;
   margin-bottom: 20px;
   align-self: flex-start;
@@ -112,7 +112,7 @@ const ActionButton = styled(TouchableOpacity)`
 const ButtonText = styled(Text)`
   margin-left: 8px;
   font-size: 16px;
-  font-weight: bold;
+  color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.content};
 `
 
