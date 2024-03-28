@@ -111,7 +111,7 @@ function UserScreen() {
   }
 
   const movePolicy = () => {
-    navigation.navigate("Policy")
+    navigation.navigate("PolicyMenu")
   }
 
   return (

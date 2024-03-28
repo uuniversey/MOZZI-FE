@@ -37,7 +37,7 @@ const PolicyText = styled(Text)`
   color: ${(props) => props.theme.palette.font};
 `
 
-function PolicyScreen() {
+function PrivacyScreen() {
   const navigation = useNavigation()
   return (
     <Container>
@@ -85,4 +85,4 @@ function PolicyScreen() {
   )
 }
 
-export default PolicyScreen
+export default PrivacyScreen
