@@ -45,7 +45,7 @@ const Line = styled(View)`
 
 const ImageContainer = styled(View)`
   border-width: 1px;
-  background-color: ${(props) => props.theme.palette.point};
+  background-color: ${(props) => props.theme.palette.background};
   width: 350px;
   height: 350px;
   justify-content: center;
