@@ -814,7 +814,7 @@ def set_Category():
 @api_view(["PUT"])
 def user_ingredient_affection(request):
     input_ingredient_name = "두부"
-    print(1111111111111111)
+
     # print(request.data['foods'])
     token = request.headers['Authorization'].split(' ')[1]
     data = base64.b64decode(token)
@@ -826,7 +826,6 @@ def user_ingredient_affection(request):
     e_value = data[index_e:index_comma]
     user_number = e_value[1:-1]
     print(user_number)
-    user = User.objects.get(user_code = user_number).user_id
 
     
     # print(type(user))
