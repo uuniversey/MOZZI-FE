@@ -1,48 +1,40 @@
 import { useNavigation } from '@react-navigation/native'
 import React, { useRef, useEffect, useState } from 'react'
-import { Text, StyleSheet, TouchableOpacity, Animated } from 'react-native'
+import { Text, StyleSheet, TouchableOpacity, Animated, View } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import styled from 'styled-components/native'
 import useVideoStore from '../../store/RecapStore'
+import { Image } from 'react-native-svg'
 
-const Container = styled.View`
+const Container = styled(View)`
   flex: 1;
   align-items: center;
   justify-content: center;
   background-color: #FFFEF2;
 `
 
-const BackButton = styled.TouchableOpacity`
+const BackButton = styled(TouchableOpacity)`
   position: absolute;
   top: 40px;
   left: 10px;
 `
 
-const View = styled.View``
-
-// const FilmReel = styled(Animated.Image)`
-//   width: 100px; 
-//   height: 100px; 
-//   position: absolute; 
-//   left: 130px;
-//   top: -30px;
-// `
-
-const Image = styled.Image`
+const ImageContainer = styled(Image)`
   width: 200px; 
   height: 200px; 
   border-radius: 100px; 
   margin-bottom: 8px;
 `
 
-const Description = styled.Text`
+const Description = styled(Text)`
   font-size: 24px;
   margin-top: 24px;
   text-align: center;
   color: #000;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
-const OuterBar = styled.View`
+const OuterBar = styled(View)`
   background-color: #F9F7BB;
   width: 65%;
   height: 6px;
@@ -71,7 +63,7 @@ const RecapLandingScreen: React.FC = () => {
 
 
   if (isVideoComplete) {
-    navigation.navigate("MakeShorts");
+    navigation.navigate("MakeShorts")
     useVideoStore.getState().setVideoComplete(false) // 상태 초기화
   }
     // 컴포넌트가 언마운트될 때 타이머를 정리함
@@ -135,7 +127,7 @@ const RecapLandingScreen: React.FC = () => {
               { transform: [{ rotate: spin }] }, 
             ]}
           /> 
-        <Image
+        <ImageContainer
           source={require('../../assets/recommend/pot.png')}
         />
       </View>

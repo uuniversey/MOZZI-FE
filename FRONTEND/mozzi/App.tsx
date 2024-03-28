@@ -1,4 +1,6 @@
 import React, { useRef } from 'react'
+import { ThemeProvider } from 'styled-components/native';
+import { setCustomText } from 'react-native-global-props'; 
 import { View, StyleSheet, TouchableOpacity, Dimensions, Animated } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
@@ -9,20 +11,33 @@ import MainStack from './src/navigation/MainStack'
 import FridgeStack from './src/navigation/FridgeStack'
 import RecommendStack from './src/navigation/RecommendStack'
 import DiaryStack from './src/navigation/DiaryStack'
-import ProfileScreen from './src/screens/profile/ProfileScreen'
+import UserStack from './src/navigation/UserStack'
 // import LandingScreen from './src/screens/landing/LandingScreen';
 import LoginStack from './src/navigation/LoginStack'
 
 import useLoginStore from './src/store/LoginStore'
 
-// App.tsx 파일 상단에 다음을 추가
-import { setCustomText } from 'react-native-global-props'
-
 const customTextProps = {
   style: {
-    fontFamily: 'MaruBuri-Bold', // 실제 폰트 파일 내 정의된 이름 사용
+    fontFamily: 'Pretendard-Medium', // 실제 폰트 파일 내 정의된 이름 사용
   }
 };
+
+const theme = {
+  fonts: {
+    // main: 'NanumMyeongjo',
+    landing: 'Pretendard-Bold',
+    title: 'Pretendard-Bold',
+    content: 'Pretendard-Regular',
+    fridge: 'MaruBuri-Bold'
+  },
+  palette: {
+    main: '#1c1a11',
+    point: 'F9F7BB',
+    pointDark: 'E4E196',
+  }
+};
+
 
 // 전역 폰트 설정 적용
 setCustomText(customTextProps)
@@ -55,7 +70,7 @@ const App: React.FC = () => {
 
 
   return (
-    <> 
+    <ThemeProvider theme={theme}> 
       {isLogin ? (
         <NavigationContainer>
           <Tab.Navigator
@@ -74,7 +89,7 @@ const App: React.FC = () => {
                   iconName = 'kitchen'
                 } else if (route.name === 'DiaryTab') {
                   iconName = 'calendar-month'
-                } else if (route.name === 'ProfileTab') {
+                } else if (route.name === 'UserTab') {
                   iconName = 'account-circle'
                 }
 
@@ -123,7 +138,7 @@ const App: React.FC = () => {
             <Tab.Screen name="FridgeTab" component={FridgeStack} />
             <Tab.Screen name="RecommendTab" component={RecommendStack} />
             <Tab.Screen name="DiaryTab" component={DiaryStack} />
-            <Tab.Screen name="ProfileTab" component={ProfileScreen} />
+            <Tab.Screen name="UserTab" component={UserStack} />
           </Tab.Navigator>
         </NavigationContainer>
       ) : (
@@ -131,7 +146,7 @@ const App: React.FC = () => {
           <LoginStack />
         </NavigationContainer>
       )}
-    </>
+    </ThemeProvider>
   )
 }
 
@@ -173,3 +188,8 @@ const styles = StyleSheet.create({
 })
 
 export default App
+
+
+
+
+

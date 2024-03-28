@@ -25,7 +25,7 @@ public class UserIngredientModel {
     private UserModel user;
 
     @ManyToOne
-    @JoinColumn(name = "ingredients_id")
+    @JoinColumn(name = "ingredient_id")
     private IngredientsModel ingredients;
 
     private Integer isLike;

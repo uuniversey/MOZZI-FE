@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Alert, TouchableOpacity, Image } from 'react-native'
+import { View, Text, Alert, TouchableOpacity, Image } from 'react-native'
 import styled from 'styled-components/native'
 import { useNavigation } from '@react-navigation/native'
 import IconEntypo from 'react-native-vector-icons/Entypo'
@@ -8,12 +8,13 @@ import axios from '../../../axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 interface RecipeCardProps {
+  id: number
   title: string
   imageSource: any
   day: string
 }
 
-const RecipeCardContainer = styled.View`
+const RecipeCardContainer = styled(View)`
   background-color: #F9F7BB;
   border-radius: 20px;
   padding: 16px;
@@ -25,22 +26,24 @@ const RecipeCardContainer = styled.View`
   justify-content: center;
 `
 
-const CardDay = styled.Text`
+const CardDay = styled(Text)`
   font-size: 16px;
   font-weight: bold;
   align-self: flex-start;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
-const CardImage = styled.Image`
+const CardImage = styled(Image)`
   width: 150px;
   height: 150px;
   border-radius: 75px;
 `
 
-const CardTitle = styled.Text`
+const CardTitle = styled(Text)`
   font-size: 14px;
   font-weight: bold;
   margin-top: 8px;
+  font-family: ${(props) => props.theme.fonts.title};
 `
 
 const RecipeCard = ({ title, imageSource, day }: RecipeCardProps) => {
@@ -53,14 +56,14 @@ const RecipeCard = ({ title, imageSource, day }: RecipeCardProps) => {
   )
 }
 
-const Container = styled.View`
+const Container = styled(View)`
   flex: 1;
   background-color: #FFFEF2;
   padding-right: 10px;
   padding-left: 10px;
 `
 
-const HeaderText = styled.Text`
+const HeaderText = styled(Text)`
   font-size: 32px;
   font-weight: bold;
   margin-top: 20px;
@@ -68,6 +71,7 @@ const HeaderText = styled.Text`
   align-self: flex-start;
   padding-left: 20px;
   padding-right: 20px;
+  font-family: ${(props) => props.theme.fonts.title};
 `
 
 const ActionButton = styled(TouchableOpacity)`
@@ -86,15 +90,16 @@ const ActionButton = styled(TouchableOpacity)`
   elevation: 2;
 `
 
-const ButtonText = styled.Text`
+const ButtonText = styled(Text)`
   margin-left: 8px;
   font-size: 16px;
   font-weight: bold;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
 function RecapScreen() {
   const navigation = useNavigation()
-  const [myRecipes, setMyRecipes] = useState<RecipeCardProps[]>([]);
+  const [myRecipes, setMyRecipes] = useState<RecipeCardProps[]>([])
 
   const callMakeVideoApi = async (userId: string, bgmCategory: number) => {
     try {
@@ -114,7 +119,7 @@ function RecapScreen() {
   const callRecapFood = async () => {
     const token = await AsyncStorage.getItem('accessToken')
     try {
-      const response = await axios.get(`mozzi/diary/getrandomdiaries`, {
+      const response = await axios.get(`https://a304.site/api/mozzi/diary/getrandomdiaries`, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-type': 'application/json',
@@ -156,7 +161,7 @@ function RecapScreen() {
     const days = difference / (1000 * 3600 * 24);
   
     if (days < 7) {
-      return `${Math.floor(days)}일 전 먹은 음식`;
+      return `${Math.floor(days)}일 전 먹은 음식`
     } else if (days < 30) {
       return "지난 주 먹은 음식"
     } else if (days < 90) {
@@ -177,15 +182,16 @@ function RecapScreen() {
       </Header>
       <Container>
         <HeaderText>나의 모찌 기록</HeaderText>
-        {/* {myRecipes.map((recipe, index) => (
+        {myRecipes.map((recipe: RecipeCardProps, index) => (
           <RecipeCard
             key={index}
-            day={convertDay(recipe.day)}
+            day={convertDay(recipe.photoDate)}
             // day={`${recipe.day} 전 먹은 음식`}
-            title={recipe.title}
-            imageSource={recipe.imageSource}
+            title={recipe.foodName}
+            imageSource={{ uri: recipe.photoUrl }}
           />
-        ))} */}
+        ))}
+        
         <ActionButton 
           onPress={SelectShortsImage}>
           <IconEntypo name="video" size={50} color="#000" />

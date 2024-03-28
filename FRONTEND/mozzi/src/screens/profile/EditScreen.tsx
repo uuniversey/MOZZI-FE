@@ -2,19 +2,18 @@ import React, { useState } from 'react'
 import { View, Text, TextInput, Button } from 'react-native'
 import styled from 'styled-components/native'
 
-interface UserProfileState {
-  nickname: string
-  allergyInfo: string
-  favoriteFood: string
-  dislikedFood: string
-  isVegan: string
-}
+import CustomDropdown from '../../components/Dropdown/CustomDropdown'
+import {SearchFood} from '../../components/AutoWord/SearchFood'
 
-const Label = styled.Text`
+import useProfileStore from '../../store/ProfileStore'
+import useFridgeStore from '../../store/FridgeStore'
+
+const Label = styled(Text)`
   margin-top: 30px;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
-const StyledInput = styled.TextInput`
+const StyledInput = styled(TextInput)`
   height: 40px;
   margin: 10px 0px 10px 0px;
   border-bottom-width: 1px;
@@ -22,13 +21,10 @@ const StyledInput = styled.TextInput`
 `
 
 function EditScreen() {
-  const [form, setForm] = useState<UserProfileState>({
-    nickname: '',
-    allergyInfo: '',
-    favoriteFood: '',
-    dislikedFood: '',
-    isVegan: ''
-  })
+  const { form, setForm } = useProfileStore()
+  const { allFoods } = useFridgeStore()
+
+  const [text, setText] = useState('')
 
   const handleNicknameChange = (nickname: string) => setForm({ ...form, nickname })
   const handleAllergyInfoChange = (allergyInfo: string) => setForm({ ...form, allergyInfo })
@@ -38,6 +34,11 @@ function EditScreen() {
 
   return (
     <View>
+      {allFoods.map((val) => {
+        console.log(val)
+      })}
+
+
       <Label>닉네임</Label>
       <StyledInput
         placeholder="닉네임을 입력하세요"
@@ -45,36 +46,65 @@ function EditScreen() {
         onChangeText={handleNicknameChange}
         placeholderTextColor="#ccc"
       />
+
       <Label>알레르기 정보</Label>
-      <StyledInput
-        placeholder="알레르기 정보를 입력하세요"
-        value={form.allergyInfo}
-        onChangeText={handleAllergyInfoChange}
-        placeholderTextColor="#ccc"
+      <CustomDropdown
+        data={allergyList}
+        placeholder="보유하고 있는 알레르기 정보를 선택해 주세요"
+        isMulti={true}
       />
-      <Label>좋아하는 음식</Label>
-      <StyledInput
-        placeholder="좋아하는 음식을 입력하세요"
-        value={form.favoriteFood}
-        onChangeText={handleFavoriteFoodChange}
-        placeholderTextColor="#ccc"
+
+      <Label>좋아하는 식재료</Label>
+      <CustomDropdown
+        data={allFoods}
+        placeholder="좋아하는 식재료를 입력하세요"
+        isMulti={true}
       />
-      <Label>싫어하는 음식</Label>
-      <StyledInput
-        placeholder="싫어하는 음식을 입력하세요"
-        value={form.dislikedFood}
-        onChangeText={handleDislikedFoodChange}
-        placeholderTextColor="#ccc"
+
+      <Label>싫어하는 식재료</Label>
+            <CustomDropdown
+        data={allFoods}
+        placeholder="싫어하는 식재료를 입력하세요"
+        isMulti={true}
       />
+
       <Label>비건 여부</Label>
-      <StyledInput
-        placeholder="예/아니오로 입력하세요"
-        value={form.isVegan}
-        onChangeText={handleIsVeganChange}
-        placeholderTextColor="#ccc"
+      <CustomDropdown
+        data={isYes}
+        placeholder="비건 여부를 알려주세요"
+        isMulti={false}
       />
     </View>
   )
 }
 
 export default EditScreen
+
+const allergyList = [
+  { label: '난류', value: 'egg' },
+  { label: '우유', value: 'milk' },
+  { label: '메밀', value: 'buckwheat' },
+  { label: '땅콩', value: 'peanut' },
+  { label: '대두', value: 'soy' },
+  { label: '밀', value: 'wheat' },
+  { label: '고등어', value: 'mackerel' },
+  { label: '새우', value: 'shrimp' },
+  { label: '게', value: 'crab' },
+  { label: '돼지고기', value: 'pork' },
+  { label: '복숭아', value: 'peach' },
+  { label: '토마토', value: 'tomato' },
+  { label: '아황산류', value: 'sulfites' },
+  { label: '호두', value: 'walnut' },
+  { label: '닭고기', value: 'chicken' },
+  { label: '쇠고기', value: 'beef' },
+  { label: '오징어', value: 'squid' },
+  { label: '굴', value: 'oyster' },
+  { label: '전복', value: 'abalone' },
+  { label: '홍합', value: 'mussel' },
+  { label: '잣', value: 'pine_nut' }
+]
+
+const isYes = [
+  {label:'Yes', value: true},
+  {label:'No', value: false}
+]

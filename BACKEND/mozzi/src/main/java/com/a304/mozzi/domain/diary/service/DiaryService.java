@@ -52,6 +52,7 @@ public class DiaryService {
             .id(entity.getDiaryId())
             .foodName(entity.getFoodId().getFoodName())
             .photoUrl(entity.getDiaryPhoto())
+            .photoDate(entity.getDiaryDate().toLocalDate())
             .build())
         .collect(Collectors.toList());
     }

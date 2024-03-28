@@ -4,32 +4,28 @@ import styled from 'styled-components/native'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { Header } from '../../components/Header/Header'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import { Text } from 'react-native'
 
-const Container = styled.View`
+const Container = styled(View)`
   flex: 1;
   background-color: #FFFEF2;
 `
 
-const InnerContainer = styled.View`
+const InnerContainer = styled(View)`
   flex: 1;
   align-items: center;
   justify-content: center;
 `
 
-const DiceImage = styled.Image`
-  width: 200px;
-  height: 182.4px;
-  /* resize-mode: contain; */
-`
-
-const Description = styled.Text`
+const Description = styled(Text)`
   font-size: 24px;
   margin-top: 24px;
   text-align: center;
   color: #000;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
-const OuterBar = styled.View`
+const OuterBar = styled(View)`
   background-color: #F9F7BB;
   width: 65%;
   height: 6px;
@@ -46,15 +42,15 @@ const InnerBar = styled(Animated.View)`
 `
 
 const diceImages = [
-  require('../../assets/recommend/dice.png'),
+  require('../../assets/recommend/dice2.png'),
 ]
 
 function RecommendLandingScreen() {
   const navigation = useNavigation();
-  const rotateAnim = useRef(new Animated.Value(0)).current;
-  const bounceAnim = useRef(new Animated.Value(0)).current;
-  const animatedValue = useRef(new Animated.Value(0)).current;
-  let animationRef = useRef(null);
+  const rotateAnim = useRef(new Animated.Value(0)).current
+  const bounceAnim = useRef(new Animated.Value(0)).current
+  const animatedValue = useRef(new Animated.Value(0)).current
+  let animationRef = useRef(null)
 
   useEffect(() => {
     // 주사위 튀기기 및 회전 애니메이션
@@ -89,7 +85,7 @@ function RecommendLandingScreen() {
 
     // 3.5초 후 화면 전환
     const timer = setTimeout(() => {
-      navigation.navigate("Recommend");
+      navigation.navigate("Recommend")
     }, 3500);
 
     return () => {
@@ -118,7 +114,7 @@ function RecommendLandingScreen() {
           style={{
             transform: [{ rotate: spin }, { translateY: bounceAnim }],
           }}>
-          <Image source={diceImages[0]} style={{ width: 150, height: 150 }} />
+          <Image source={diceImages[0]} style={{ width: 150, height: 150, resizeMode: 'contain' }} />
         </Animated.View>
           <Description>아우엉님 님의 {'\n'}레시피를 찾고 있어요!</Description>
           <OuterBar>

@@ -1,13 +1,23 @@
 import { create } from 'zustand'
 import axios from '../../axios'
-import useLoginStore from './LoginStore'
-
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const useProfileStore = create((set) => ({
   profileData: '',
+  form: {
+    nickname: '',
+    allergyInfo: '',
+    favoriteFood: '',
+    dislikedFood: '',
+    isVegan: ''
+  },
+  setForm: (newForm) => {
+    set({ form: newForm })
+  },
+  
   getProfile: async () => {
     const token = await AsyncStorage.getItem('accessToken')
+    console.log(token)
     try {
       const response = await axios.get('mozzi/auth/getUserProfile', {
         headers: {
@@ -21,10 +31,9 @@ const useProfileStore = create((set) => ({
     }
   },
 
-  // 닉네임 변경
+ // 닉네임 변경
   editNickname: async (nickname) => {
     const token = await AsyncStorage.getItem('accessToken')
-    console.log('토큰이다', token)
     console.log('닉네임 잘넘어오니?', nickname)
     try {
       const response = await axios.patch('mozzi/auth/setnickname', {
@@ -44,12 +53,12 @@ const useProfileStore = create((set) => ({
     } catch (error) {
       console.error('닉네임 변경 실패', error)
     }
-  },
+  }, 
   
   // 비건 여부 변경
   editIsVegan: async (isVegan) => {
     const token = await AsyncStorage.getItem('accessToken')
-    console.log(token)
+    console.log(typeof(isVegan), '불린확인', isVegan)
     try {
       const response = await axios.patch('mozzi/auth/setvegan', {
         isVegan
@@ -67,6 +76,25 @@ const useProfileStore = create((set) => ({
       }))
     } catch (error) {
       console.error('비건 여부 변경 실패', error)
+    }
+  },
+
+   // 음식 정보 변경
+   editFoodInfo: async (foods) => {
+    const token = await AsyncStorage.getItem('accessToken')
+    console.log('정보 잘 넘어오니?', foods)
+    try {
+      const response = await axios.post('mozzi/auth/setfood', {
+        foods
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}` // 헤더에 토큰 포함
+        }
+      })
+      console.log('음식 정보 변경 성공', response.data)
+
+    } catch (error) {
+      console.error('음식 정보 변경 실패', error)
     }
   },
 

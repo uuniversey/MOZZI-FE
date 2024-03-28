@@ -10,6 +10,8 @@ import com.a304.mozzi.domain.ingredients.service.IngrdientsService;
 import com.a304.mozzi.domain.user.customfood.dto.UserFoodInpDto;
 import com.a304.mozzi.domain.user.customfood.model.UserFood;
 import com.a304.mozzi.domain.user.customfood.repository.UserFoodRepository;
+import com.a304.mozzi.domain.user.customfood.service.UserFoodService;
+import com.a304.mozzi.domain.user.customingredient.dto.IngredientsListDto;
 import com.a304.mozzi.domain.user.customingredient.dto.UserIngredientDto;
 import com.a304.mozzi.domain.user.customingredient.model.UserIngredientModel;
 import com.a304.mozzi.domain.user.customingredient.repository.UserIngredientRepository;
@@ -22,9 +24,11 @@ import com.a304.mozzi.domain.user.service.UserService;
 import com.a304.mozzi.global.dto.ResponseDto;
 
 import com.a304.mozzi.global.dto.ResponseMessageDto;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.commons.logging.Log;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,9 +53,9 @@ public class UserController {
     private final KakaoApi kakaoApi;
     private final JwtIssuer jwtIssuer;
     private final FoodService foodService;
-    private final UserFoodRepository userFoodRepository;
     private  final  IngrdientsService ingredientsService;
     private final UserIngredientRepository userIngredientRepository;
+    private  final UserFoodService userFoodService;
     @GetMapping("/Oauth2/KakaoLogin")
     public ResponseEntity<java.util.Map<String, String>> ClientKakaoLogin() {
         // TODO: process POST request
@@ -71,10 +75,7 @@ public class UserController {
     @GetMapping("/Oauth2/KakaoToken")
     public ResponseEntity<?> login(@RequestParam("code") String code) {
         try {
-            // log.info(code);
-//            KakaoApi.OAuthToken token = kakaoApi.getOAuthToken(code);
-//            String str = token.getId_token();
-//            log.info(str);
+
             log.info(code);
             String[] whatIneed = code.split("\\.");
 
@@ -94,6 +95,7 @@ public class UserController {
                         List.of("ROLE_GUEST")
 
                 );
+                userFoodService.createWholeRelation(registerUserModel.getUserId());
                 Map<String, String> token = new HashMap<>();
                 token.put("accessToken", MyAccesstoken);
                 token.put("refreshToken", MyAccesstoken);
@@ -125,7 +127,6 @@ public class UserController {
                 Map<String, String> token = new HashMap<>();
                 token.put("accessToken", MyAccesstoken);
                 token.put("refreshToken", MyAccesstoken);
-
                 LoginResponseDto.LoginInfo loginInfo = new LoginResponseDto.LoginInfo();
                 loginInfo.setIsRegistered(true);
                 loginInfo.setNickname(user.getUserNickname());
@@ -145,6 +146,20 @@ public class UserController {
         }
     }
 
+    @DeleteMapping("/deleteuser")
+    public  ResponseEntity<?> deleteAccount()
+    {
+        try {
+            UserModel user = userService.findCurrentUser();
+            userService.delete(user);
+
+            return ResponseEntity.ok(HttpStatus.NO_CONTENT);
+        } catch (Exception e)
+        {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
+    }
     @GetMapping("/Oauth2/KakaoWeb")
     public ResponseEntity<?> loginForWeb(@RequestParam("code") String code) {
         try {
@@ -152,7 +167,6 @@ public class UserController {
             KakaoApi.OAuthToken token = kakaoApi.getOAuthToken(code);
             String str = token.getId_token();
             log.info(str);
-//            log.info(code);
             String[] whatIneed = str.split("\\.");
 
             KakaoApi.KakaoOpenIdToken kakaoOpenIdToken = kakaoApi
@@ -178,7 +192,7 @@ public class UserController {
                 LoginResponseDto.LoginInfo loginInfo = new LoginResponseDto.LoginInfo();
                 loginInfo.setIsRegistered(false);
                 loginInfo.setNickname("");
-
+                userFoodService.createWholeRelation(registerUserModel.getUserId());
                 LoginResponseDto loginResponse = LoginResponseDto.builder().token(tokenContainer).info(loginInfo).build();
                 ResponseMessageDto responseMessageDto = ResponseMessageDto.builder().message("회원가입 완료").data(loginResponse).build();
                 return ResponseEntity.ok().body(responseMessageDto);
@@ -229,9 +243,10 @@ public class UserController {
         {
             UserModel user = userService.findCurrentUser();
             List<UserIngredientModel> userIngredientModels = userIngredientRepository.findUserIngredientModelsByUser(user);
-            List<UserIngredientDto> userIngredientDtoList = Collections.emptyList();
+            List<UserIngredientDto> userIngredientDtoList = new ArrayList<>();
             for (UserIngredientModel userIngredientModel : userIngredientModels)
             {
+                log.info(userIngredientModel.getIngredients().getIngredientName() + "입니다");
                 UserIngredientDto userIngredientDto = UserIngredientDto.builder().ingredientName(userIngredientModel.getIngredients().getIngredientName()).isLike(userIngredientModel.getIsLike()).build();
                 userIngredientDtoList.add(userIngredientDto);
             }
@@ -239,6 +254,7 @@ public class UserController {
             return ResponseEntity.ok().body(userProfileDto);
         } catch (Exception e)
         {
+            log.info(e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
@@ -298,22 +314,28 @@ public class UserController {
 //    }
 
     @PostMapping("/setfood")
-    ResponseEntity<?> addIsLike(@RequestBody List<UserFoodInpDto> listInp) {
+    @Transactional
+    ResponseEntity<?> addIsLike(@RequestBody IngredientsListDto listInp) {
         try {
+
             UserModel user = userService.findCurrentUser();
-            for (UserFoodInpDto userFoodInpDto : listInp) {
+            userIngredientRepository.deleteAllByUser(user);
+            for (UserFoodInpDto userFoodInpDto : listInp.getFoods()) {
 
                 IngredientsModel ingredientsModel =ingredientsService.findIngredientsByIngredientsName(userFoodInpDto.getFoodName());
-//                Food food = foodService.findFoodByFoodName(userFoodInpDto.getFoodName());
+                log.info(userFoodInpDto.getFoodName());
+//              Food food = foodService.findFoodByFoodName(userFoodInpDto.getFoodName());
                 UserIngredientModel userIngredientModel = UserIngredientModel.builder()
                         .user(user)
                         .ingredients(ingredientsModel)
+                        .isLike(userFoodInpDto.getValue())
                         .build();
 //                UserFood userFood = UserFood.builder()
 //                        .food(food)
 //                        .user(user)
 //                        .userFoodPreference(userFoodInpDto.getValue())
 //                        .build();
+
                 userIngredientRepository.save(userIngredientModel);
             }
             ResponseMessageDto responseMessageDto = ResponseMessageDto.builder().message("Item Created").build();

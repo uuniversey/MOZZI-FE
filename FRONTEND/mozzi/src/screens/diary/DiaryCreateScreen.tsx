@@ -13,13 +13,13 @@ import styled from 'styled-components/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 // Styled components definitions
-const Container = styled.View`
+const Container = styled(View)`
   flex: 1;
   background-color: #FFFEF2;
   align-items: center;
 `
 
-const DateContainer = styled.View`
+const DateContainer = styled(View)`
   width: 100%;
   height: 50px;
   flex-direction: row;
@@ -29,11 +29,12 @@ const DateContainer = styled.View`
   padding-right: 20px;
 `;
 
-const DateText = styled.Text`
+const DateText = styled(Text)`
   font-weight: 600;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
-const Line = styled.View`
+const Line = styled(View)`
   border-bottom-color: #A4A4A4;
   border-bottom-width: 1px;
   width: 85%;
@@ -41,7 +42,7 @@ const Line = styled.View`
   margin-bottom: 10px;
 `
 
-const ImageContainer = styled.View`
+const ImageContainer = styled(View)`
   border-width: 1px;
   border-color: #E4E196;
   width: 350px;
@@ -51,12 +52,7 @@ const ImageContainer = styled.View`
   margin-bottom: 20px;
 `
 
-const FoodNameText = styled.Text`
-  font-weight: 600;
-  font-size: 16px;
-`
-
-const ImageInnerContainer = styled.TouchableOpacity`
+const ImageInnerContainer = styled(TouchableOpacity)`
   border-width: 1px;
   border-color: #A4A4A4;
   border-radius: 10px;
@@ -67,7 +63,7 @@ const ImageInnerContainer = styled.TouchableOpacity`
   align-items: center;
 `
 
-const ImageButton = styled.TouchableOpacity`
+const ImageButton = styled(TouchableOpacity)`
   width: 100%;
   height: 100%;
   justify-content: center;
@@ -75,11 +71,12 @@ const ImageButton = styled.TouchableOpacity`
   border-radius: 10px;
 `
 
-const ImagePlaceholderText = styled.Text`
+const ImagePlaceholderText = styled(Text)`
   font-size: 24px;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
-const RecipeButton = styled.TouchableOpacity`
+const RecipeButton = styled(TouchableOpacity)`
   background-color: #F9F7BB;
   border-color: rgba(0, 0, 0, 0.2);
   border-width: 2px;
@@ -92,45 +89,37 @@ const RecipeButton = styled.TouchableOpacity`
   elevation: 2;
 `
 
-const EnterContainer = styled.View`
+const EnterContainer = styled(View)`
   width: 85%;
   margin-top: 50px;
   flex-direction: row;
   justify-content: flex-end;
 `
 
-const ButtonText = styled.Text`
+const ButtonText = styled(Text)`
   font-size: 16px;
   text-align: center;
   margin-left: 6px;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
-const EnterButton = styled.TouchableOpacity`
-  background-color: #F9F7BB;
+const EnterButton = styled(TouchableOpacity)`
   border-radius: 10px;
   width: 80px;
   height: 35px;
   justify-content: center;
+  background-color: ${props => props.disabled ? '#cccccc' : '#F9F7BB'};
 `
 
-const EnterButtonText = styled.Text`
+const EnterButtonText = styled(Text)`
   font-size: 16px;
   text-align: center;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
-const CalendarButton = styled.TouchableOpacity`
+const CalendarButton = styled(TouchableOpacity)`
   padding: 10px;
   border-radius: 20px;
-`
-
-const FoodNameContainer = styled.View`
-  width: 86%;
-  height: 40px;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  background-color: #F9F7BB;
-  margin-bottom: 10px;
 `
 
 function DiaryCreateScreen () {
@@ -168,17 +157,38 @@ function DiaryCreateScreen () {
   const [imageType, setImageType] = useState<string | undefined>()
   const [imageName, setImageName] = useState<string | undefined>()
   const route = useRoute()
-  const [selectedRecipeKey, setSelectedRecipeKey] = useState<number | null>(null)
   const [selectedRecipeName, setSelectedRecipeName] = useState<string>('')
+
+  const [isButtonEnabled, setIsButtonEnabled] = useState(false)
 
   useEffect(() => {
     // route.params에서 데이터 가져오기
     if (route.params) {
-      const { recipeKey, recipeName } = route.params as { recipeKey: number; recipeName: string }
-      setSelectedRecipeKey(recipeKey)
+      const { recipeName } = route.params as { recipeName: string }
       setSelectedRecipeName(recipeName)
     }
+
+    return () => {
+      selectedRecipeName
+    }
   }, [route.params])
+
+  useEffect(() => {
+    // 모든 조건(날짜 선택, 레시피 선택, 사진 첨부)이 충족되었는지 확인
+    if (selectedDate && selectedRecipeName && imageUri) {
+      setIsButtonEnabled(true) // 모든 조건이 충족되면 버튼을 활성화
+    } else {
+      setIsButtonEnabled(false) // 하나라도 충족되지 않으면 버튼을 비활성화
+    }
+  }, [selectedDate, selectedRecipeName, imageUri])
+
+  const handleCreateDiaryPress = () => {
+    if (isButtonEnabled) {
+      createDiary()
+    } else {
+      console.log('모든 정보를 입력해주세요.')
+    }
+  }
 
   const handleChoosePhoto = () => {
     launchImageLibrary({
@@ -220,8 +230,9 @@ function DiaryCreateScreen () {
       formData.append('photo', {
         name: imageName,
         type: imageType,
-        uri: 'https://i.namu.wiki/i/ywRdkOZAdp4dU3ItrNm36NjVx3sbEE6PYVvNVYpRa9MUDtKIxxejpM-jAXGl9fHGavoYESWtzbf7C0LA9RBGsS63D8KY1eINfE4ZQf-36gNq-fDtiJu9fXkS5hE01eY2ArhJcagnO7pMdtRz2e0dsA.webp',
-      })
+        uri: imageUri,
+        // uri: 'http://www.foodsafetykorea.go.kr/uploadimg/20141118/20141118102019_1416273619379.jpg',
+      }) 
     }
 
   const createDiary = async () => {
@@ -237,11 +248,12 @@ function DiaryCreateScreen () {
           Authorization: `Bearer ${token}`,
           'Content-type': 'multipart/form-data',
         },
-        transformRequest: (data, headers) => {
+        transformRequest: (data) => {
           return data
         },
       })
       console.log(response.data)
+      navigation.navigate("DiaryDetail", {date: selectedDate})
     } catch (error) {
       //응답 실패
       console.error(error)
@@ -263,15 +275,12 @@ function DiaryCreateScreen () {
             )}
         </DateContainer>
         <Line />
-        <FoodNameContainer>
-              <FoodNameText>{selectedRecipeName}</FoodNameText>
-        </FoodNameContainer>
         <DateTimePickerModal
           isVisible={isDatePickerVisible}
           mode="date"
           onConfirm={handleConfirm}
           onCancel={hideDatePicker}
-          accentColor="#F9F7BB"
+          maximumDate={new Date()}
         />
         <ImageContainer>
           <ImageInnerContainer onPress={handleChoosePhoto}>
@@ -292,10 +301,13 @@ function DiaryCreateScreen () {
         <RecipeButton
           onPress={moveDiaryCreateSelect} >
           <Icon name="menu-book" size={20}/>
-          <ButtonText>레시피 불러오기</ButtonText>
+          <ButtonText>{selectedRecipeName ? selectedRecipeName : '레시피 불러오기'}</ButtonText>
         </RecipeButton>
         <EnterContainer>
-          <EnterButton onPress={createDiary}>
+          <EnterButton 
+            onPress={handleCreateDiaryPress} 
+            disabled={!isButtonEnabled}
+            >
             <EnterButtonText>등록</EnterButtonText>
           </EnterButton>
         </EnterContainer>

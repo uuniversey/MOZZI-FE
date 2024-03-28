@@ -3,6 +3,8 @@ from .models import Foods,Category,Ingredient,User,FoodIngredient
 from .serializers import FoodSerializer 
 import requests
 import json
+import base64
+import binascii
 import random
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
@@ -24,6 +26,7 @@ from pyvis.network import Network
 import pandas as pd
 import numpy as np
 import pymysql
+from django.utils.http import urlsafe_base64_decode
 # 식재료 뽑기
 def get_ingredients(start, last):
     URL = f"http://openapi.foodsafetykorea.go.kr/api/2055492edca74694aa38/COOKRCP01/json/{start}/{last}"
@@ -128,7 +131,7 @@ def save_food(request):
             # 'food_pic' 필드가 비어 있는 경우를 처리합니다.
             # 이 부분에 대해 원하는 동작을 수행하거나 오류를 처리할 수 있습니다.
             continue
-        print(mongo_food.id)
+        # print(mongo_food.id)
         save_data = {
             'food_name': item.get('RCP_NM'),
             'food_recipe': str(mongo_food.id),  # MongoDB의 ObjectId를 문자열로 변환하여 저장합니다.
@@ -173,26 +176,14 @@ def get_random_food(request):
 
 def recipe_detail(request):
     start_time = datetime.now()
-    body_unicode = request.body.decode('utf-8')
-    # print(body_unicode)
-    #
-    # lines = body_unicode.split("\n")
-    food = json.loads(body_unicode)
-    food_name = food['foodName']
+    print(request.GET.get('foodName'))
+    food_name = request.GET.getlist('foodName')[0]
     
-    # print(food)
-    # print(lines)
-    # for i in range(len(lines)):
-    #     if lines[i] == '\r':
-    #         food_name = lines[i+1]
-    #         break
-    
-    # 가져온 값 출력
-   
+    print(food_name)
     try:
       
         foodsss = Foods.objects.all()
-      
+        
         food = Foods.objects.get(food_name=food_name.strip())
      
         food_recipe_id = food.food_recipe  # MongoDB의 레시피 ID
@@ -206,6 +197,11 @@ def recipe_detail(request):
    
         end_time = datetime.now()
         # print(end_time - start_time)
+        print(food.food_views)
+        food.food_views+=1
+        print(food.food_views)
+        food.food_today_views+=1
+        food.save()
         return JsonResponse({'data': {
             # 'id': str(mongo_food.id),
             'RCP_PARTS_DTLS': mongo_food.food_recipe["RCP_PARTS_DTLS"],
@@ -259,11 +255,12 @@ def recipe_detail(request):
 
             
         }})
+    
+
     except MongoFood.DoesNotExist:
         return JsonResponse({'레시피': '음식을 찾을 수 없습니다'})
 
 def get_recipe_list(request):
-    print(11111)
     authorization_header = request.headers.get('Authorization')
     print('Authorization header:', authorization_header)
     foods = Foods.objects.all()
@@ -271,7 +268,7 @@ def get_recipe_list(request):
     data = []
     
     for food in foods:
-        print(food)
+        # print(food)
         food_data = {
             "foodName": food.food_name,
             "photoUrl": food.food_pic
@@ -280,6 +277,7 @@ def get_recipe_list(request):
     return JsonResponse({'foods': data})
 
 def get_ingredient_list(request):
+    
     ingredients = Ingredient.objects.all()
     ingredient_names = [ingredient.ingredient_name for ingredient in ingredients]
     return JsonResponse({'data': {'ingredients': ingredient_names}},json_dumps_params={'ensure_ascii': False})
@@ -445,11 +443,14 @@ def migrate_sql_to_neo4j(request):
 
 @api_view(['POST', 'GET','DELETE'])
 def add_ingredients_to_refrigerator(request):
+
     user = User.objects.all()
+
     foodingredients = FoodIngredient.objects.all()
     # print(request.headers['Authorization'],'adddddddddddddddd')
     token = request.headers['Authorization'].split(' ')[1]
     data = base64.b64decode(token)
+   
     data = data.decode('latin-1')
     
     index_e = data.index('"e":') + len('"e":')  # "e": 다음 인덱스부터 시작
@@ -468,6 +469,7 @@ def add_ingredients_to_refrigerator(request):
     
     category_id = request.data.get('category')
     foods = request.data.get('foods')
+
     if request.method == 'POST':
         
         for i in user:
@@ -479,45 +481,55 @@ def add_ingredients_to_refrigerator(request):
         
         ingredient_ids = []
         for food_name in foods:
-            ingredient_id = Ingredient.objects.filter(ingredient_name=food_name).values_list('id', flat=True).first()
-            ingredient_ids.append(ingredient_id)
+            print(food_name)
+            ingredient_id = Ingredient.objects.filter(ingredient_name=food_name['foodName']).values_list('id', flat=True).first()
+            pos = food_name['storedPos']
+            ingredient_ids.append((ingredient_id, pos))
 
         with connection.cursor() as cursor:
             for ingredient_id in ingredient_ids:
                 # 이미 존재하는지 확인
-                cursor.execute("SELECT COUNT(*) FROM refri_ingredients WHERE user_id = %s AND ingredient_id = %s", [user_id, ingredient_id])
+                cursor.execute("SELECT COUNT(*) as count FROM refri_ingredients WHERE user_id = %s AND ingredient_id = %s", [user_id, ingredient_id[0]]) 
                 row_count = cursor.fetchone()[0]
+                print(row_count)
                 
                 # 중복 삽입 방지
+
                 if row_count == 0:
-                    cursor.execute("INSERT INTO refri_ingredients (user_id, ingredient_id, expiration_date) VALUES (%s, %s, %s)",
-                                [user_id, ingredient_id, datetime.now()])
+                    cursor.execute("INSERT INTO refri_ingredients (user_id, ingredient_id, expiration_date, stored_pos) VALUES (%s, %s, %s, %s)",
+                                [user_id, ingredient_id[0], datetime.now(), ingredient_id[1]])
 
         return JsonResponse({"message": "Ingredients added to refrigerator successfully."}, status=201)
     elif request.method == 'GET':
+        print(1)
         foods = []
-        category = request.data.get('category')
+        # print(request)
+        # print(request.data,'data')
+        storedPos = request.GET.get('storedPos')
+        # category = request.data.get('category')
+        # print(category,'category')
         ingredient = Ingredient.objects.all()
         query = """
             SELECT * FROM refri_ingredients
-            WHERE user_id = %s
+            left join datas_ingredient on refri_ingredients.ingredient_id = datas_ingredient.id
+            WHERE user_id = %s and stored_pos = %s
         """ 
        
 
         # 쿼리 실행
         with connection.cursor() as cursor:
-            cursor.execute(query, [user_id])
+            cursor.execute(query, [user_id, storedPos])
             rows = cursor.fetchall()
-        
-        
+        # print(len(ingredient),'len_ingredient')
+        # print(rows,'rows')
+        # print(category,'category')
         # 결과 출력
         for row in rows:
             
-        
-            for i in ingredient:
             
-                if i.id == row[1] and i.category_id in category :
-                    foods.append(i.ingredient_name)
+            
+            
+                    foods.append({'foodName': row[5], 'storedPos' : row[3]})
 
         return JsonResponse({'data': {"foods" : foods}})
 
@@ -539,6 +551,7 @@ def add_ingredients_to_refrigerator(request):
                     DELETE FROM refri_ingredients 
                     WHERE user_id = %s AND ingredient_id = %s
                 """, [user_id, ingredient_id])
+                print(user_id,ingredient_id)
         return JsonResponse({"message": "Ingredients removed from refrigerator successfully."}, status=200)
 
     # 지원하지 않는 메서드인 경우

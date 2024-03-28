@@ -8,35 +8,31 @@ import { Header } from '../../components/Header/Header'
 import { SearchBar } from '../../components/AutoWord/SearchRecipe'
 
 import axios from '../../../axios'
+import useRecipeStore from '../../store/RecipeStore'
 
 interface FoodItem {
-  id: number;
-  image: string;
-  title: string;
+  photoUrl: string
+  foodName: string
 }
 
 function DiaryCreateSelectScreen () {
   const navigation = useNavigation()
-  // const { getRecipe, recipeData2 } = useRecipeStore()
+  // const { recipeData } = useRecipeStore()
 
   const [searchQuery, setSearchQuery] = useState<string>('');
   
   const [recipeData, setRecipeData] = useState<FoodItem[] | null>(null)
-  const [selectedRecipeKey, setSelectedRecipeKey] = useState<number | null>(null)
   const [selectedRecipeName, setSelectedRecipeName] = useState<string>('')
   
   const handleSearch = () => {
     navigation.navigate('DiaryCreate', {
-      recipeKey: selectedRecipeKey,
       recipeName: selectedRecipeName,
     })
   }
-  
+   
   // 검색에서 레시피 선택 시 호출될 함수
-  const handleSelectRecipe = (recipeKey: number, recipeName: string) => {
-    setSelectedRecipeKey(recipeKey)
+  const handleSelectRecipe = (recipeName: string) => {
     setSelectedRecipeName(recipeName)
-    console.log(recipeKey, recipeName)
   }
 
   const getRecipeList = async () => {
@@ -46,36 +42,19 @@ function DiaryCreateSelectScreen () {
       // axios.get('/recommend/get_ingredients_from_refrigerator/
       // http://a304.site/api/recommend/datas/get_recipe_list/
       const response = await axios.get('recommend/datas/get_recipe_list/')
-      console.log(response.data)
-      setRecipeData(response.data)
+      // console.log(response.data.foods)
+      setRecipeData(response.data.foods)
     } catch (error) {
       //응답 실패
-      console.error(error);
+      console.error(error)
     }
   }
 
   useEffect(() => {
-    // getRecipeList()
-    setRecipeData([
-      {id: 1, image: '', title: "치즈"},
-      {id: 2, image: '', title: "치즈그라탕"},
-      {id: 3, image: '', title: "치즈피자"},
-      {id: 4, image: '', title: "치즈떡볶이"},
-      {id: 5, image: '', title: "포테이트치즈피자"},
-      {id: 1, image: '', title: "페퍼로니피자"},
-      {id: 2, image: '', title: "김치치즈돈가스"},
-      {id: 3, image: '', title: "치즈돈가스"},
-      {id: 4, image: '', title: "고르곤졸라피자"},
-      {id: 5, image: '', title: "콤비네이션피자"},
-      {id: 1, image: '', title: "고구마피자"},
-      {id: 2, image: '', title: "블랙타이거피자"},
-      {id: 3, image: '', title: "하와이안피자"},
-      {id: 4, image: '', title: "하와이안치즈피자"},
-      {id: 5, image: '', title: "햄버거"},
-    ])
+    // console.log(recipeData)
+    getRecipeList()
 
-
-  }, []);
+  }, [])
 
   return (
     <>
@@ -169,7 +148,7 @@ const styles = StyleSheet.create({
     width: '20%',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    zIndex: -10
+    zIndex: -10,
   },
   buttonText: {
     color: '#000',

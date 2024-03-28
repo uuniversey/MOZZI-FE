@@ -42,6 +42,10 @@ public class UserService {
         // userModel.setRole("ROLE_GUEST");
         return userRepository.save(userModel);
     }
+    public void delete(final UserModel userModel)
+    {
+        userRepository.delete(userModel);
+    }
 
     public boolean existsByUserCode(String user_code) {
         return userRepository.existsByUserCode(user_code);

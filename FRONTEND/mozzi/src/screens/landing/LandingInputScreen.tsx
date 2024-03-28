@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, TextInput, Button } from 'react-native'
+import { View, Text, TextInput, Button, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
 import styled from 'styled-components/native'
-import Allergy from '../../components/Dropdown/Allergy'
+import CustomDropdown from '../../components/Dropdown/CustomDropdown'
 
 import { useNavigation } from '@react-navigation/native'
 import useProfileStore from '../../store/ProfileStore'
@@ -18,52 +18,55 @@ interface UserProfileState {
   isVegan: string
 }
 
-const Container = styled.View`
+const Container = styled(View)`
   flex: 1;
   background-color: #FFFEF2;
 `
 
-const Title = styled.Text`
+const Title = styled(Text)`
   font-size: 36px;
   font-weight: bold;
   margin: 50px 0px 0px 40px;
   text-align: left;
   width: 100%;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
-const BgText = styled.Text`
+const BgText = styled(Text)`
   background-color: #F9F7BB;
   font-size: 18px;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
-const Body = styled.View`
+const Body = styled(View)`
   margin: 0px 40px 0px 40px;
 `
 
-const Label = styled.Text`
+const Label = styled(Text)`
   margin-top: 30px;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
-const StyledInput = styled.TextInput`
+const StyledInput = styled(TextInput)`
   height: 40px;
   margin: 10px 0px 10px 0px;
   border-bottom-width: 1px;
   border-bottom-color: silver;
 `
 
-const StyledView = styled.View`
+const StyledView = styled(View)`
   height: auto;
   margin: 10px 0px 10px 0px;
 `
 
-const JustifyView = styled.View`
+const JustifyView = styled(View)`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   margin-top: 20px;
 `
 
-const Btn = styled.TouchableOpacity`
+const Btn = styled(TouchableOpacity)`
   background-color: #F9F7BB;
   border-radius: 10px;
   width: 80px;
@@ -73,9 +76,10 @@ const Btn = styled.TouchableOpacity`
   margin-top: 30px;
 `
 
-const BtnText = styled.Text`
+const BtnText = styled(Text)`
   font-size: 16px;
   text-align: center;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
 function ProfileScreen () {
@@ -101,7 +105,7 @@ function ProfileScreen () {
   }
 
   const completeEnter = () => {
-    settingProfile()
+    console.log('여기에 엑시오스 넣어라')
   }
 
   useEffect(() => {
@@ -128,7 +132,11 @@ function ProfileScreen () {
         
         <Label>알레르기 정보</Label>
         <StyledView>
-          <Allergy />
+        <CustomDropdown
+          data={allergyList}
+          placeholder="보유하고 있는 알레르기 정보를 선택해 주세요"
+          isMulti={true}
+        />
         </StyledView>
 
         <Label>좋아하는 음식</Label>
@@ -170,3 +178,27 @@ function ProfileScreen () {
 }
 
 export default ProfileScreen
+
+const allergyList = [
+  { label: '난류', value: 'egg' },
+  { label: '우유', value: 'milk' },
+  { label: '메밀', value: 'buckwheat' },
+  { label: '땅콩', value: 'peanut' },
+  { label: '대두', value: 'soy' },
+  { label: '밀', value: 'wheat' },
+  { label: '고등어', value: 'mackerel' },
+  { label: '새우', value: 'shrimp' },
+  { label: '게', value: 'crab' },
+  { label: '돼지고기', value: 'pork' },
+  { label: '복숭아', value: 'peach' },
+  { label: '토마토', value: 'tomato' },
+  { label: '아황산류', value: 'sulfites' },
+  { label: '호두', value: 'walnut' },
+  { label: '닭고기', value: 'chicken' },
+  { label: '쇠고기', value: 'beef' },
+  { label: '오징어', value: 'squid' },
+  { label: '굴', value: 'oyster' },
+  { label: '전복', value: 'abalone' },
+  { label: '홍합', value: 'mussel' },
+  { label: '잣', value: 'pine_nut' }
+]

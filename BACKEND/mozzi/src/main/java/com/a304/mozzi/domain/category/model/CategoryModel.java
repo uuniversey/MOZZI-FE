@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Data
-@Table(name = "category")
+@Table(name = "datas_category")
 @Entity
 @Getter
 @Setter
@@ -14,7 +14,7 @@ import lombok.*;
 public class CategoryModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer categoryId;
+    private Integer id;
     private String categoryPic;
     private String categoryName;
 }
