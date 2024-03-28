@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image} from 'react-native'
+import { View, ScrollView, Text, TouchableOpacity, Image} from 'react-native'
 import React from 'react'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import styled from 'styled-components/native'
@@ -44,13 +44,8 @@ const BtnContainer = styled(View)`
   flex-direction: row;
 `
 
-const SaveBtn = styled(TouchableOpacity)`
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 28px;
-  margin-right: 5;
+const CardView = styled(View)`
+  margin-bottom: 20px;
 `
 
 const ShareBtn = styled(TouchableOpacity)`
@@ -76,21 +71,16 @@ const FoodTitle = styled(Text)`
 
 function DiaryDetailScreen ({ route }) {
   const { date, dayData } = route.params
+  console.log(dayData, '받은 데이데이터')
   const navigation = useNavigation()
 
-  // Stamp 화면으로 이동하는 함수
-  const navigateToStamp = async () => {
-
-    // Stamp 화면으로 이동하면서 URI와 다른 필요한 데이터를 전달
-    navigation.navigate('Stamp', {
-      date,
-      dayData,
-    })
-  }
   
   // 스탬프 페이지로 이동
-  const moveStamp = async () => {
-    navigateToStamp()
+  const moveStamp = (data) => {
+    navigation.navigate('Stamp', {
+      date,
+      data,
+    })
   }
 
   return (
@@ -103,22 +93,29 @@ function DiaryDetailScreen ({ route }) {
         <Title> <Dot> ● </Dot> {date.year}년 {date.month}월 {date.day}일 요리 일기</Title>
       </View>
 
-      <Body>
-        <View>
-          <DiaryInfo>
-            <FoodTitle>{dayData.foodName}</FoodTitle> 
-            <BtnContainer>
-              <ShareBtn onPress={moveStamp}>
-                <Icon name="ios-share" size={24} color="black" />
-              </ShareBtn>  
-            </BtnContainer>                  
-          </DiaryInfo>
-          <FoodImage
-            source={{ uri: `${dayData.photoUrl}` }}
-          />
-        </View>
-
-      </Body>
+      <ScrollView>
+        {dayData.map((data) => (
+          <CardView key={data.id}>
+            <Body>
+              <View>
+                <DiaryInfo>
+                  <FoodTitle>{data.foodName}</FoodTitle> 
+                  <BtnContainer>
+                    <ShareBtn onPress={() => moveStamp(data)}>
+                      <Icon name="ios-share" size={24} color="black" />
+                    </ShareBtn>  
+                  </BtnContainer>                  
+                </DiaryInfo>
+                <FoodImage
+                  source={{ uri: `${data.photoUrl}` }}
+                />
+              </View>
+            </Body>
+          </CardView>
+          ))
+        }
+        
+      </ScrollView>
     </Container>
   )
 }

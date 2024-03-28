@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { ThemeProvider } from 'styled-components/native';
+import { ThemeProvider, styled } from 'styled-components/native';
 import { setCustomText } from 'react-native-global-props'; 
 import { View, StyleSheet, TouchableOpacity, Dimensions, Animated } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
@@ -12,7 +12,6 @@ import FridgeStack from './src/navigation/FridgeStack'
 import RecommendStack from './src/navigation/RecommendStack'
 import DiaryStack from './src/navigation/DiaryStack'
 import UserStack from './src/navigation/UserStack'
-// import LandingScreen from './src/screens/landing/LandingScreen';
 import LoginStack from './src/navigation/LoginStack'
 
 import useLoginStore from './src/store/LoginStore'
@@ -32,9 +31,10 @@ const theme = {
     fridge: 'MaruBuri-Bold'
   },
   palette: {
-    main: '#1c1a11',
-    point: 'F9F7BB',
-    pointDark: 'E4E196',
+    background: '#FFFEF2',
+    font: '#1c1a11',
+    point: '#F9F7BB',
+    pointDark: '#E4E196',
   }
 };
 
@@ -80,7 +80,7 @@ const App: React.FC = () => {
               headerShown: false,
               tabBarStyle: styles.tabBarStyle,
               tabBarIcon: ({ focused, size }) => {
-                const color = focused ? 'gray' : 'lightgray' // Update color based on focused state
+                const color = focused ? '#E4E196' : 'lightgray' // Update color based on focused state
                 let iconName
 
                 if (route.name === 'MainTab') {
