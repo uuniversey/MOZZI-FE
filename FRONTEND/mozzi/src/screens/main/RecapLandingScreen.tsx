@@ -1,16 +1,15 @@
 import { useNavigation } from '@react-navigation/native'
 import React, { useRef, useEffect, useState } from 'react'
-import { Text, StyleSheet, TouchableOpacity, Animated, View } from 'react-native'
+import { Image, Text, StyleSheet, TouchableOpacity, Animated, View } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import styled from 'styled-components/native'
 import useVideoStore from '../../store/RecapStore'
-import { Image } from 'react-native-svg'
 
 const Container = styled(View)`
   flex: 1;
   align-items: center;
   justify-content: center;
-  background-color: #FFFEF2;
+  background-color: ${(props) => props.theme.palette.background};
 `
 
 const BackButton = styled(TouchableOpacity)`
@@ -30,12 +29,12 @@ const Description = styled(Text)`
   font-size: 24px;
   margin-top: 24px;
   text-align: center;
-  color: #000;
+  color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.content};
 `
 
 const OuterBar = styled(View)`
-  background-color: #F9F7BB;
+  background-color: ${(props) => props.theme.palette.point};
   width: 65%;
   height: 6px;
   margin-top: 40px;
@@ -44,7 +43,7 @@ const OuterBar = styled(View)`
 `
 
 const InnerBar = styled(Animated.View)`
-  background-color: #E4E196;
+  background-color: ${(props) => props.theme.palette.pointDark};
   width: 15%;
   height: 6px;
   border-radius: 10px;

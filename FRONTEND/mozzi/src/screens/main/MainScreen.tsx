@@ -14,7 +14,7 @@ interface RecipeItem {
 
 const Container = styled(View)`
   flex: 1;
-  background-color: ${(props) => props.theme.palette.background};;
+  background-color: ${(props) => props.theme.palette.background};
   align-items: center;
 `
 
@@ -84,7 +84,6 @@ const Button = styled(TouchableOpacity)`
 
 const ButtonText = styled(Text)`
   font-size: 24px;
-  font-weight: bold;
   color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.title};
 `

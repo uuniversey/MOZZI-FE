@@ -15,16 +15,16 @@ type ButtonProps = {
 
 const ScreenContainer = styled(View)`
   flex: 1;
-  background-color: #FFFEF2;
+  background-color: ${(props) => props.theme.palette.background};
   padding: 20px;
 `
 
 const HeaderTitle = styled(Text)`
   font-size: 28px;
-  font-weight: bold;
   text-align: center;
   margin-bottom: 20px;
   align-self: flex-start;
+  color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.title};
 `
 
@@ -32,7 +32,7 @@ const ButtonContainer = styled(View)`
   flex-direction: column;
   margin-bottom: 20px;
   padding: 16px;
-  background-color: #F9F7BB;
+  background-color: ${(props) => props.theme.palette.point};
   border-radius: 10px;
   height: 129px;
 `
@@ -41,18 +41,18 @@ const ButtonGroup = styled(View)`
   margin-top: 20px;
   flex-direction: row;
   justify-content: space-between;
-  background-color: #F9F7BB;
+  background-color: ${(props) => props.theme.palette.point};
   border-radius: 10px;
 `
 
 const StyledButton = styled(TouchableOpacity)`
-  background-color: #E4E196;
+  background-color: ${(props) => props.theme.palette.pointDark};
   border-radius: 10px;
   padding: 5px 7px;
 `
 
 const ButtonText = styled(Text)`
-  color: #000;
+  color: ${(props) => props.theme.palette.font};
   font-size: 12px;
   font-family: ${(props) => props.theme.fonts.content};
 `
@@ -65,7 +65,7 @@ const ImageText = styled(Text)<{ excess?: boolean }>`
 
 const ImageContainer = styled(View)`
   padding: 16px;
-  background-color: #F9F7BB;
+  background-color: ${(props) => props.theme.palette.point};
   border-radius: 10px;
   /* width: 350; */
   /* height: 280; */
@@ -76,7 +76,7 @@ const ImageGroup = styled(View)`
   flex-direction: row;
   justify-content: flex-start;
   flex-Wrap: wrap;
-  background-color: #F9F7BB;
+  background-color: ${(props) => props.theme.palette.point};
   border-radius: 10px;
 `
 
@@ -99,7 +99,7 @@ const EnterContainer = styled(View)`
 `
 
 const EnterButton = styled(TouchableOpacity)`
-  background-color: #F9F7BB;
+  background-color: ${(props) => props.theme.palette.point};
   border-radius: 10px;
   width: 80px;
   height: 35px;
@@ -109,6 +109,7 @@ const EnterButton = styled(TouchableOpacity)`
 const EnterButtonText = styled(Text)`
   font-size: 16px;
   text-align: center;
+  color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.content};
 `
 

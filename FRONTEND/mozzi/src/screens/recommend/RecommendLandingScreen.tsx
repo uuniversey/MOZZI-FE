@@ -8,7 +8,7 @@ import { Text } from 'react-native'
 
 const Container = styled(View)`
   flex: 1;
-  background-color: #FFFEF2;
+  background-color: ${(props) => props.theme.palette.background};
 `
 
 const InnerContainer = styled(View)`
@@ -21,12 +21,12 @@ const Description = styled(Text)`
   font-size: 24px;
   margin-top: 24px;
   text-align: center;
-  color: #000;
+  color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.content};
 `
 
 const OuterBar = styled(View)`
-  background-color: #F9F7BB;
+  background-color: ${(props) => props.theme.palette.point};
   width: 65%;
   height: 6px;
   margin-top: 40px;
@@ -35,7 +35,7 @@ const OuterBar = styled(View)`
 `
 
 const InnerBar = styled(Animated.View)`
-  background-color: #E4E196;
+  background-color: ${(props) => props.theme.palette.pointDark};
   width: 15%;
   height: 6px;
   border-radius: 10px;
