@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Keyboard, Platform, Text } from 'react-native';
+import { FlatList, Keyboard, Platform, Text } from 'react-native';
 import styled from 'styled-components/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
@@ -127,7 +127,7 @@ const FridgeDetailScreen = ({ route }) => {
       Keyboard.dismiss(); // 키보드를 닫음
       scrollViewRef.current?.scrollToEnd({ animated: true }); // 스크롤을 맨 아래로 이동
     }
-  };
+  }
 
   const handleDelete = async (foodName) => {
     await deleteFood(foodName);
