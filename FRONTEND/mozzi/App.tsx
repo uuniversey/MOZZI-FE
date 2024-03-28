@@ -69,69 +69,46 @@ const App: React.FC = () => {
   });
 
 
-  return (
-    <ThemeProvider theme={theme}> 
+return (
+    <ThemeProvider theme={theme}>
       {isLogin ? (
         <NavigationContainer>
           <Tab.Navigator
             screenOptions={({ route }) => ({
+              tabBarStyle: styles.tabBarStyle,
               tabBarHideOnKeyboard: true,
               tabBarShowLabel: false,
               headerShown: false,
-              tabBarStyle: styles.tabBarStyle,
-              tabBarIcon: ({ focused, size }) => {
-                const color = focused ? '#E4E196' : 'lightgray' // Update color based on focused state
-                let iconName
-
-                if (route.name === 'MainTab') {
-                  iconName = 'home'
-                } else if (route.name === 'FridgeTab') {
-                  iconName = 'kitchen'
-                } else if (route.name === 'DiaryTab') {
-                  iconName = 'calendar-month'
-                } else if (route.name === 'UserTab') {
-                  iconName = 'account-circle'
-                }
-
+              tabBarIcon: ({ focused, size, color }) => {
                 if (route.name === 'RecommendTab') {
                   return (
-                    <Animated.View style={{ transform: [{ rotate: spin }] }}> {/* Animated View */}
-                      <MaterialCommunityIcons name="casino" size={size} color={color} />
+                    <Animated.View style={{ transform: [{ rotate: spin }] }}>
+                      <MaterialIcons name="casino" size={size} color={focused ? theme.palette.pointDark : 'lightgray'} />
                     </Animated.View>
-                  )
-                }
-
-                // Choose the correct icon set for each tab
-                const IconComponent = route.name === 'FridgeTab' || route.name === 'DiaryTab' ? MaterialIcons : MaterialCommunityIcons;
-                
-                return <IconComponent name={iconName} size={size} color={color} />
-              },
-              tabBarButton: (props) => {
-                if (route.name === 'RecommendTab') {
-                  return (
-                    <View style={styles.fabContainer} pointerEvents="box-none">
-                      <TouchableOpacity
-                        style={styles.fabButton}
-                        onPress={() => {
-                          props.onPress()
-                          rotate() // 주사위 아이콘 회전
-                        }}
-                        activeOpacity={0.9} // 클릭시 투명해지는 효과 없앰
-                      >
-                        <MaterialCommunityIcons 
-                          name="dice-multiple" 
-                          size={40} 
-                          color={props.color} 
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  )
-                } else {
-                  return (
-                    <TouchableOpacity style={styles.regularTab} {...props} />
                   );
                 }
+
+                const iconName = {
+                  MainTab: 'home',
+                  FridgeTab: 'kitchen',
+                  DiaryTab: 'calendar-month',
+                  UserTab: 'account-circle',
+                }[route.name];
+
+                const Icon = route.name === 'FridgeTab' || route.name === 'DiaryTab' ? MaterialIcons : MaterialCommunityIcons;
+                return <Icon name={iconName} size={size} color={focused ? theme.palette.pointDark : 'lightgray'} />;
               },
+              tabBarButton: (props) => (
+                <TouchableOpacity
+                  {...props}
+                  onPress={() => {
+                    if (route.name === 'RecommendTab') {
+                      rotate();
+                    }
+                    props.onPress();
+                  }}
+                />
+              ),
             })}
           >
             <Tab.Screen name="MainTab" component={MainStack} />
@@ -147,8 +124,8 @@ const App: React.FC = () => {
         </NavigationContainer>
       )}
     </ThemeProvider>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   tabBarStyle: {
