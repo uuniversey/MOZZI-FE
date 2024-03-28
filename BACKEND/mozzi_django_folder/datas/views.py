@@ -811,9 +811,11 @@ def set_Category():
         df_foods_foods.to_pickle("df2.pkl")
 
 
-def user_ingredient_affection():
+@api_view(["PUT"])
+def user_ingredient_affection(request):
     input_ingredient_name = "두부"
-
+    food_list = request.foods
+    print(food_list)
     
 
     db = pymysql.connect(
@@ -833,6 +835,8 @@ def user_ingredient_affection():
         for food in foodList:
             print(food)
 
+        
+
 
 
 
@@ -840,7 +844,6 @@ def user_ingredient_affection():
         # 모든 리스트를 
 
 
-user_ingredient_affection()
 # recommendFoods()
 # readPkl()
 # set_Category()
