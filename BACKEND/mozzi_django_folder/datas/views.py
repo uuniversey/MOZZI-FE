@@ -814,27 +814,43 @@ def set_Category():
 @api_view(["PUT"])
 def user_ingredient_affection(request):
     input_ingredient_name = "두부"
-    food_list = request.foods
-    print(food_list)
+    print(1111111111111111)
+    # print(request.data['foods'])
+    token = request.headers['Authorization'].split(' ')[1]
+    data = base64.b64decode(token)
+   
+    data = data.decode('latin-1')
     
+    index_e = data.index('"e":') + len('"e":')  # "e": 다음 인덱스부터 시작
+    index_comma = data.index(',', index_e)  # 쉼표(,)가 나오는 인덱스 찾기
+    e_value = data[index_e:index_comma]
+    user_number = e_value[1:-1]
+    print(user_number)
+    user = User.objects.get(user_code = user_number).user_id
 
+    
+    # print(type(user))
     db = pymysql.connect(
                         host = "a304.site",
                         port = 3306,
                         user = "ssafy",
                         password = "ssafy",
                          )
-    
-    with db.cursor() as cursor:
-
-        query = f"SELECT distinct food_id, ingredient_ratio from mozzi.food_ingredient LEFT JOIN mozzi.datas_ingredient ON food_ingredient.ingredient_id = datas_ingredient.id \
-                WHERE ingredient_name = '{input_ingredient_name}'"
-        cursor.execute(query)
-        foodList = cursor.fetchall()
+    # print(user)
+    for food in request.data['foods']:
+        print(food)
+        isWin = food['value']
         
-        for food in foodList:
-            print(food)
+        with db.cursor() as cursor:
 
+            query = f"SELECT distinct food_id, ingredient_ratio from mozzi.food_ingredient LEFT JOIN mozzi.datas_ingredient ON food_ingredient.ingredient_id = datas_ingredient.id \
+                    WHERE ingredient_name = '{input_ingredient_name}'"
+            cursor.execute(query)
+            foodList = cursor.fetchall()
+        
+            # for food in foodList:
+                # print(food)
+    return JsonResponse({'ok' : 1})
         
 
 
