@@ -71,7 +71,7 @@ const useProfileStore = create((set) => ({
       set((state) => ({
         profileData: {
           ...state.profileData,
-          nickname: response.data.nickname,
+          isVegan: response.data.isVegan,
         }
       }))
     } catch (error) {

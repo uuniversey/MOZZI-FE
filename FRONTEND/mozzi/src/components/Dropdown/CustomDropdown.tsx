@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { MultiSelect, Dropdown } from 'react-native-element-dropdown'
 
 import styled from 'styled-components/native'
+
+import useDropdownStore from '../../store/DropdownStore'
 
   const SelectedStyle = styled(View)`
     flex-direction: row;
@@ -17,10 +19,17 @@ import styled from 'styled-components/native'
 const TextSelectedStyle = styled(Text)`
   font-size: 16px;
   font-family: ${(props) => props.theme.fonts.content};
+  color: ${(props) => props.theme.palette.font};
 `
 
 function CustomDropdown ({ data, placeholder, isMulti }) {
+  const { setDropdownData } = useDropdownStore()
   const [selected, setSelected] = useState([])
+
+  const handleData = (item) => {
+    setDropdownData(item.value)
+  }
+  
   // open했을때 css
   // const renderItem = item => {
   //   return (
@@ -65,15 +74,9 @@ function CustomDropdown ({ data, placeholder, isMulti }) {
           placeholder={placeholder}
           placeholderStyle={{ fontSize: 14, color: '#ccc' }}
           value={selected}
-          onChange={(item) => {
-            setSelected(item.value) // 이제 선택된 아이템의 value를 저장합니다.
-          }}
+          onChange={(item) => handleData(item)}
         />
-      
-      
-      
       }
-      
     </>
   )
 }

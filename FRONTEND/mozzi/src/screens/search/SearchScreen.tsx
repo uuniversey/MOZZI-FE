@@ -12,7 +12,7 @@ import useRecipeStore from '../../store/RecipeStore'
 
 const Container = styled(View)`
   flex: 1;
-  background-color: #FFFEF2;
+  background-color: ${(props) => props.theme.palette.background};
 `
 
 const SearchView = styled(View)`
@@ -27,7 +27,7 @@ const Hr = styled(View)`
 `
 
 const Btn = styled(TouchableOpacity)`
-  background-color: #F9F7BB;
+  background-color: ${(props) => props.theme.palette.point};
   border-radius: 10px;
   width: 80px;
   height: 35px;
@@ -40,11 +40,13 @@ const BtnText = styled(Text)`
   font-size: 16px;
   text-align: center;
   font-family: ${(props) => props.theme.fonts.content};
+  color: ${(props) => props.theme.palette.font};
 `
 
 const SelectedText = styled(Text)`
   margin: 0px 30px 0px 30px;
   font-family: ${(props) => props.theme.fonts.content};
+  color: ${(props) => props.theme.palette.font};
 `
 
 function SearchScreen () {
