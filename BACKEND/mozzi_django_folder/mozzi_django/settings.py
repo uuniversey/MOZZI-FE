@@ -35,7 +35,6 @@ TIME_ZONE = 'Asia/Seoul'
 INSTALLED_APPS = [
     'datas',
     'django_celery_beat',
-    'django_celery_results',
     'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
