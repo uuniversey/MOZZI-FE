@@ -9,14 +9,14 @@ import styled from 'styled-components/native'
 
 const Container = styled(View)`
   flex: 1;
-  background-color: #FFFEF2;
+  background-color: ${(props) => props.theme.palette.background};
   align-items: center;
 `;
 
 const HeaderText = styled(Text)`
-  font-family: 'MaruBuri-Bold';
+  color: ${(props) => props.theme.palette.font};
+  font-family: ${(props) => props.theme.fonts.title};
   font-size: 32px;
-  font-weight: bold;
   margin-top: 20px;
   margin-bottom: 20px;
   align-self: flex-start;
@@ -32,13 +32,14 @@ const Body = styled.View`
   width: 350px;
   height: 350px;
   border-radius: 20px;
-  background-color: #F9F7BB;
+  background-color: ${(props) => props.theme.palette.point};;
 `
 const FoodTitle = styled(Text)`
+  color: ${(props) => props.theme.palette.font};
+  font-family: ${(props) => props.theme.fonts.title};
   padding: 5px;
   position: absolute;
   font-size: 16px;
-  font-weight: bold;
   z-index: 1001;
   left: 5%;
   top: ${({ frameType }) => {
@@ -78,13 +79,15 @@ const FramesContainer = styled(View)`
 `;
 
 const FrameButton = styled.TouchableOpacity`
-  background-color: #E4E196;
+  background-color: ${(props) => props.theme.palette.pointDark};
   border-radius: 10px;
   padding: 10px;
   width: 100px;
 `
 
-const FrameText = styled.Text`
+const FrameText = styled(Text)`
+  color: ${(props) => props.theme.palette.main};
+  font-family: ${(props) => props.theme.fonts.title};
   text-align: center;
 `
 
@@ -98,14 +101,15 @@ const ShareButton = styled(TouchableOpacity)`
   margin-right: 16px;
   align-items: center;
   border-color: rgba(0, 0, 0, 0.2);
-  background-color: #F9F7BB;
+  background-color: ${(props) => props.theme.palette.point};;
   border-width: 2px;
   elevation: 2;
 `;
 
 const ShareButtonText = styled(Text)`
+  color: ${(props) => props.theme.palette.main};
+  font-family: ${(props) => props.theme.fonts.title};
   font-size: 16px;
-  font-weight: bold;
 `;
 
 const FrameImage = styled.Image`
