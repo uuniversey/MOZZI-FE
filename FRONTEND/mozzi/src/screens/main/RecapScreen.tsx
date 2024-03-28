@@ -9,13 +9,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 interface RecipeCardProps {
   id: number
-  title: string
-  imageSource: any
-  day: string
+  foodName: string
+  photoUrl: any
+  photoDate: string
 }
 
 const RecipeCardContainer = styled(View)`
-  background-color: #F9F7BB;
+  background-color: ${(props) => props.theme.palette.point};
   border-radius: 20px;
   padding: 16px;
   margin-top: 8px;
@@ -26,10 +26,29 @@ const RecipeCardContainer = styled(View)`
   justify-content: center;
 `
 
+const NoRecipeCardContainer = styled(View)`
+  background-color: ${(props) => props.theme.palette.point};
+  border-radius: 20px;
+  padding: 16px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  margin-left: 16px;
+  margin-right: 16px;
+  align-items: center;
+  justify-content: center;
+  height: 250px;
+`
+
+const NoRecipeText = styled(Text)`
+  font-size: 18px;
+  color: ${(props) => props.theme.palette.font};
+  font-family: ${(props) => props.theme.fonts.content};
+`
+
 const CardDay = styled(Text)`
   font-size: 16px;
-  font-weight: bold;
   align-self: flex-start;
+  color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.content};
 `
 
@@ -41,31 +60,31 @@ const CardImage = styled(Image)`
 
 const CardTitle = styled(Text)`
   font-size: 14px;
-  font-weight: bold;
   margin-top: 8px;
+  color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.title};
 `
 
-const RecipeCard = ({ title, imageSource, day }: RecipeCardProps) => {
+const RecipeCard = ({ id, foodName, photoUrl, photoDate }: RecipeCardProps) => {
   return (
     <RecipeCardContainer>
-      <CardDay>{day}</CardDay>
-      <CardImage source={imageSource} />
-      <CardTitle>{title}</CardTitle>
+      <CardDay>{photoDate}</CardDay>
+      <CardImage source={photoUrl} />
+      <CardTitle>{foodName}</CardTitle>
     </RecipeCardContainer>
   )
 }
 
 const Container = styled(View)`
   flex: 1;
-  background-color: #FFFEF2;
+  background-color: ${(props) => props.theme.palette.background};
   padding-right: 10px;
   padding-left: 10px;
 `
 
 const HeaderText = styled(Text)`
   font-size: 32px;
-  font-weight: bold;
+  color: ${(props) => props.theme.palette.font};
   margin-top: 20px;
   margin-bottom: 20px;
   align-self: flex-start;
@@ -93,7 +112,7 @@ const ActionButton = styled(TouchableOpacity)`
 const ButtonText = styled(Text)`
   margin-left: 8px;
   font-size: 16px;
-  font-weight: bold;
+  color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.content};
 `
 
@@ -182,16 +201,21 @@ function RecapScreen() {
       </Header>
       <Container>
         <HeaderText>나의 모찌 기록</HeaderText>
-        {myRecipes.map((recipe: RecipeCardProps, index) => (
-          <RecipeCard
-            key={index}
-            day={convertDay(recipe.photoDate)}
-            // day={`${recipe.day} 전 먹은 음식`}
-            title={recipe.foodName}
-            imageSource={{ uri: recipe.photoUrl }}
-          />
-        ))}
-        
+        {myRecipes?.length > 0 ? (
+              myRecipes.map((recipe: RecipeCardProps, index) => (
+                <RecipeCard
+                  key={index}
+                  photoDate={convertDay(recipe.photoDate)}
+                  foodName={recipe.foodName}
+                  photoUrl={{ uri: recipe.photoUrl }}
+                />
+              ))
+            ) : (
+              <NoRecipeCardContainer>
+                <NoRecipeText>아직 모찌 기록이 없습니다.</NoRecipeText>
+              </NoRecipeCardContainer>
+            )
+        }
         <ActionButton 
           onPress={SelectShortsImage}>
           <IconEntypo name="video" size={50} color="#000" />

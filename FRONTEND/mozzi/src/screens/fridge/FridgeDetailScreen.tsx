@@ -17,7 +17,7 @@ interface FoodItem {
 
 const Container = styled.KeyboardAvoidingView`
   flex: 1;
-  background-color: #FFFEF2;
+  background-color: ${(props) => props.theme.palette.background};
 `;
 
 const ClipImg = styled.Image`
@@ -54,14 +54,13 @@ const TitleImg = styled.Image`
 
 const MenuItem = styled(Text)`
   font-family: ${(props) => props.theme.fonts.title};
-  color: ${(props) => props.theme.palette.main};
+  color: ${(props) => props.theme.palette.font};
   display: inline;
   font-size: 20px;
 `;
 
 const InputContainer = styled.View`
-margin-top: ${({ keyboardOpen }) => (keyboardOpen ? '200px' : '30px')};
-  /* margin-top: ${({ keyboardOpen }) => (keyboardOpen ? '200px' : '30px')}; */
+  margin-top: ${({ keyboardOpen }) => (keyboardOpen ? '200px' : '30px')};
   width: 100%;
   align-items: center;
 `;
@@ -76,11 +75,9 @@ const MyFood = styled.ScrollView`
 const MyFoodText = styled(Text)`
   font-size: 20;
   font-family: ${(props) => props.theme.fonts.fridge};
-  /* color: ${(props) => props.theme.palette.main}; */
 `;
 
 const DeleteButton = styled.TouchableOpacity`
-  /* color: lightgray; */
 `;
 
 const SendButton = styled.TouchableOpacity`

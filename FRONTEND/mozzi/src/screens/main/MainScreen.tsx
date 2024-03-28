@@ -5,7 +5,7 @@ import axios from 'axios'
 import { useNavigation } from '@react-navigation/native'
 import { SearchHeader } from '../../components/Header/SearchHeader'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import useProfileStore from '../../store/ProfileStore'
+import useLoginStore from '../../store/LoginStore'
 
 interface RecipeItem {
   foodName: string
@@ -14,7 +14,7 @@ interface RecipeItem {
 
 const Container = styled(View)`
   flex: 1;
-  background-color: #FFFEF2;
+  background-color: ${(props) => props.theme.palette.background};
   align-items: center;
 `
 
@@ -25,17 +25,15 @@ const ContentContainer = styled(View)`
 `
 
 const Greeting = styled(Text)`
-  font-family: 'MaruBuri-Regular';
   font-size: 20px;
-  font-weight: bold;
-  color: #333;
+  color: ${(props) => props.theme.palette.font};
   margin-top: 16px;
   font-family: ${(props) => props.theme.fonts.title};
 `
 
 const Question = styled(Text)`
   font-size: 22px;
-  color: #333;
+  color: ${(props) => props.theme.palette.font};
   margin-bottom: 16px;
   font-family: ${(props) => props.theme.fonts.title};
 `
@@ -54,9 +52,8 @@ const Card = styled(View)`
 
 const MealQuestion = styled(Text)`
   font-size: 16px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 8px;
+  color: ${(props) => props.theme.palette.font};
+  margin-bottom: 28px;
   align-self: flex-start;
   font-family: ${(props) => props.theme.fonts.title};
 `
@@ -70,9 +67,9 @@ const StyledImage = styled(Image)`
 
 const MealName = styled(Text)`
   font-size: 16px;
-  color: #333;
+  color: ${(props) => props.theme.palette.font};
   margin-bottom: 8px;
-  font-family: ${(props) => props.theme.fonts.content};
+  font-family: ${(props) => props.theme.fonts.title};
 `
 
 const Button = styled(TouchableOpacity)`
@@ -87,9 +84,8 @@ const Button = styled(TouchableOpacity)`
 
 const ButtonText = styled(Text)`
   font-size: 24px;
-  font-weight: bold;
-  color: #333;
-  font-family: ${(props) => props.theme.fonts.content};
+  color: ${(props) => props.theme.palette.font};
+  font-family: ${(props) => props.theme.fonts.title};
 `
 
 function MainScreen() {
@@ -104,7 +100,7 @@ function MainScreen() {
   }
 
   const [recipe, setRecipe] = useState<RecipeItem | null>(null)
-  const { profileData } = useProfileStore()
+  const { userData } = useLoginStore()
   // 로그인 유저 호출
   // 최다 뷰카운트 호출
   const popularRecipe = async () => {
@@ -141,7 +137,7 @@ function MainScreen() {
   // 여기 페이지 들어올 때마다 호출할지
   // 맨 처음에 한 번만 호출할지 생각해봐야할 듯
   useEffect(() => {
-    console.log(profileData)
+    console.log(userData)
     popularRecipe()
     return () => {
     }
@@ -156,7 +152,7 @@ function MainScreen() {
       <Container>
         <ContentContainer>
           {/* <Greeting>환영해요, 아우엉님 님!</Greeting> */}
-          <Greeting>환영해요, {profileData.nickname} 님!</Greeting>
+          <Greeting>환영해요, {userData.nickname} 님!</Greeting>
           <Question>오늘은 어떤 레시피를 도전할까요?</Question>
           <TouchableOpacity
             onPress={moveRecipeDetail}>

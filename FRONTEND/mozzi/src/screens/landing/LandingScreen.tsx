@@ -24,7 +24,7 @@ const icons = [
 
 const Container = styled.View`
   flex: 1;
-  background-color: #FFFDD4;
+  background-color: ${(props) => props.theme.palette.point};
 `;
 
 const AnimatedBgImg = Animated.createAnimatedComponent(styled.Image`
@@ -51,13 +51,13 @@ const TitleContainer = styled.View`
 const SmallTitle = styled(Text)`
   font-family: ${(props) => props.theme.fonts.landing};
   font-size: 48px;
-  color: ${(props) => props.theme.palette.main};
+  color: ${(props) => props.theme.palette.font};
 `;
 
 const BigTitle = styled(Text)`
   font-family: ${(props) => props.theme.fonts.landing};
   font-size: 96px;
-  color: ${(props) => props.theme.palette.main};
+  color: ${(props) => props.theme.palette.font};
 `;
 
 const LoginContainer = styled.View`

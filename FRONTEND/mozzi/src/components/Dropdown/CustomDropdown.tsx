@@ -17,6 +17,7 @@ import styled from 'styled-components/native'
 const TextSelectedStyle = styled(Text)`
   font-size: 16px;
   font-family: ${(props) => props.theme.fonts.content};
+  color: ${(props) => props.theme.palette.font};
 `
 
 function CustomDropdown ({ data, placeholder, isMulti }) {

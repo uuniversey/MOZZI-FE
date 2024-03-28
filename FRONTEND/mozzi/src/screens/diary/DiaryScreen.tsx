@@ -1,5 +1,5 @@
 import { View, Text, Button, TouchableOpacity, Image } from 'react-native'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useLayoutEffect } from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
 import styled from 'styled-components/native'
 
@@ -20,7 +20,7 @@ interface DayNumProps {
 
 const Container = styled(View)`
   flex: 1;
-  background-color: #FFFEF2;
+  background-color: ${(props) => props.theme.palette.background};
 
 `
 
@@ -39,9 +39,9 @@ const BtnContainer = styled(View)`
 
 const Title = styled(Text)`
   font-size: 36px;
-  font-weight: bold;
   text-align: left;
   font-family: ${(props) => props.theme.fonts.title};
+  color: ${(props) => props.theme.palette.font}; 
 `
 
 const Btn = styled(TouchableOpacity)`
@@ -83,8 +83,8 @@ function DiaryScreen () {
   const navigation = useNavigation()
   const { calendarData, getCalendar } = useDiaryStore()
 
-  useEffect (() => {
-    // 컴포넌트 마운트 시 현재 달의 데이터를 불러옵니다.
+  useLayoutEffect (() => {
+    // 컴포넌트 마운트 시 현재 달의 데이터를 불러옴
     const today = new Date()
     console.log(today)
     const year = today.getFullYear().toString()
@@ -102,7 +102,7 @@ function DiaryScreen () {
     if (dayData.length > 0) {
       navigation.navigate("DiaryDetail", {
         date: date,
-        dayData: dayData[0],
+        dayData: dayData,
       })
     }
   }
@@ -144,15 +144,11 @@ function DiaryScreen () {
                 <DayNum textColor={textColor} isToday={state === 'today'}>
                   {date.day}
                 </DayNum>
-                {state !== 'disabled' && 
-                  calendarData.map((food) => {
-                    return food.photoDate === date.dateString ? 
-                    <CalendarImage
-                      key={food.id}
-                      // source={{ uri: `https://i.namu.wiki/i/0e2H0MymA2D0hthFVdH0MpUTxcVHLuAMaVv7mpWlyMHzxsFIaDkN1VRfX_nLLTlUde0t3sq97DIfteY0XrucKC7BnO4X4xtAVbC5O1TKYG0XTUXlOVMnbM7LdoBCiGkXqPT6qE1RuaaKqsrj5ojweQ.webp` }}
-                      source={{ uri: `${food.photoUrl}` }}
-                    /> : null
-                  })
+                {state !== 'disabled' && dayData[0] &&
+                  <CalendarImage
+                    key={dayData[0].id}
+                    source={{ uri: `${dayData[0].photoUrl}` }}
+                  />
                 }
               </DayStyle>
             </TouchableOpacity>

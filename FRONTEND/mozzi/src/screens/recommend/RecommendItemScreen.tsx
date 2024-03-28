@@ -58,11 +58,12 @@ const Container = styled(View)`
   flex: 1;
   align-items: center;
   padding: 20px;
-  background-color: #FFFEF2;
+  background-color: ${(props) => props.theme.palette.background};
 `
 
 const TextContainer = styled(View)`
   margin-top: 20px;
+  margin-bottom: 10px;
   width: 350px;
   justify-content: flex-start;
 `
@@ -75,8 +76,7 @@ const DateText = styled(Text)`
 
 const QuestionText = styled(Text)`
   font-size: 32px;
-  font-weight: bold;
-  margin-bottom: 20px;
+  color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.content};
 `
 
@@ -92,7 +92,7 @@ const DishNameText = styled(Text).attrs({
   ellipsizeMode: 'tail',
 })`
   font-size: 24px;
-  font-weight: bold;
+  color: ${(props) => props.theme.palette.font};
   margin-bottom: 10px;
   text-align: center;
   width: 70%;
@@ -114,14 +114,6 @@ const TimerContainer = styled(View)`
   margin-bottom: 15px;
 `
 
-const TimeText = styled(Text)`
-  font-size: 14px;
-  font-weight: bold;
-  align-self: center;
-  margin-bottom: 10px;
-  font-family: ${(props) => props.theme.fonts.content};
-`
-
 const ButtonContainer = styled(View)`
   flex-direction: column;
   width: 350px;
@@ -129,7 +121,7 @@ const ButtonContainer = styled(View)`
 
 const RecipeButton = styled(TouchableOpacity)`
   height: 60px;
-  background-color: #F9F7BB;
+  background-color: ${(props) => props.theme.palette.point};
   border-radius: 20px;
   justify-content: center;
   border-color: rgba(0, 0, 0, 0.2);
@@ -140,7 +132,7 @@ const RecipeButton = styled(TouchableOpacity)`
 
 const RetryButton = styled(TouchableOpacity)`
   height: 60px;
-  background-color: #FFFEF2;
+  background-color: ${(props) => props.theme.palette.background};
   border-radius: 20px;
   justify-content: center;
   border-color: rgba(0, 0, 0, 0.2);
@@ -149,7 +141,7 @@ const RetryButton = styled(TouchableOpacity)`
 `
 
 const ButtonText = styled(Text)`
-  font-weight: bold;
+  color: ${(props) => props.theme.palette.font};
   text-align: center;
   font-size: 16px;
   font-family: ${(props) => props.theme.fonts.content};
