@@ -74,19 +74,13 @@ function DiaryDetailScreen ({ route }) {
   console.log(dayData, '받은 데이데이터')
   const navigation = useNavigation()
 
-  // Stamp 화면으로 이동하는 함수
-  const navigateToStamp = async () => {
-
-    // Stamp 화면으로 이동하면서 URI와 다른 필요한 데이터를 전달
-    navigation.navigate('Stamp', {
-      date,
-      dayData,
-    })
-  }
   
   // 스탬프 페이지로 이동
-  const moveStamp = async () => {
-    navigateToStamp()
+  const moveStamp = (data) => {
+    navigation.navigate('Stamp', {
+      date,
+      data,
+    })
   }
 
   return (
@@ -107,7 +101,7 @@ function DiaryDetailScreen ({ route }) {
                 <DiaryInfo>
                   <FoodTitle>{data.foodName}</FoodTitle> 
                   <BtnContainer>
-                    <ShareBtn onPress={moveStamp}>
+                    <ShareBtn onPress={() => moveStamp(data)}>
                       <Icon name="ios-share" size={24} color="black" />
                     </ShareBtn>  
                   </BtnContainer>                  

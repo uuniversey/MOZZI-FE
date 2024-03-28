@@ -57,7 +57,7 @@ function EditScreen() {
       <Label>좋아하는 식재료</Label>
       <CustomDropdown
         data={allFoods}
-        placeholder="좋아하는 식재료를 입력하세요"
+        placeholder="좋아하는 식재료를 입력하세요" 
         isMulti={true}
       />
 

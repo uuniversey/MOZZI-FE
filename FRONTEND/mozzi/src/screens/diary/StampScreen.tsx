@@ -117,12 +117,12 @@ const FrameImage = styled.Image`
 `;
 
 const Stamp = ({ navigation, route }) => {
-  const { date, dayData } = route.params;
+  const { date, data } = route.params;
   const viewRef = useRef();
   const [selectedFrame, setSelectedFrame] = useState('기본');
 
   // props 받아온 정보
-  console.log('이거보여줘', date, dayData)
+  console.log('이거보여줘', date, data)
 
   // 선택 가능한 프레임 목록
   // 프레임 이미지 경로를 객체로 관리
@@ -225,9 +225,9 @@ const Stamp = ({ navigation, route }) => {
 
         <Body ref={viewRef}>
           {/* store에서 불러온 food title로 수정하면 됨 */}
-          <FoodTitle frameType={selectedFrame}>{dayData.foodName}</FoodTitle> 
+          <FoodTitle frameType={selectedFrame}>{data.foodName}</FoodTitle> 
           <FoodImage
-            source={{ uri: `${dayData.photoUrl}` }}
+            source={{ uri: `${data.photoUrl}` }}
           />
           {/* <FoodImage source={photo} /> */}
           {/* 선택된 프레임을 이미지 위에 표시 */}
