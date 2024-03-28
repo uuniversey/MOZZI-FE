@@ -63,12 +63,11 @@ function SpeechToText() {
   
   return (
     <>
-    <Text>인식된 텍스트: {text}</Text>
     <Btn>
-      <Icon name="mic" size={40} onPress={startListening}/>
+      <Icon name="mic" size={30} onPress={startListening}/>
     </Btn>
-      <Button title="듣기 시작" onPress={startListening} disabled={isListening} />
-      <Button title="듣기 중지" onPress={stopListening} disabled={!isListening} />
+      {/* <Button title="듣기 시작" onPress={startListening} disabled={isListening} />
+      <Button title="듣기 중지" onPress={stopListening} disabled={!isListening} /> */}
     </>
   )
 }
