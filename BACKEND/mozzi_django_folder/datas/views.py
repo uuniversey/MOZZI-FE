@@ -840,8 +840,15 @@ def user_ingredient_affection(request):
     for food in request.data['foods']:
         print(food)
         isWin = food['value']
+        # 모든 음식 상태 데이터베이스 가져옴
+        df = pd.read_pickle("df2.pkl")
+
+        # 해당 음식과 관련있는 모든 음싟 
+        # 유저가 총 한 횟수 가져옴
+        # 모든 음식들에 대해서 필터링
         
         with db.cursor() as cursor:
+            query = f"select "
 
             query = f"SELECT distinct food_id, ingredient_ratio from mozzi.food_ingredient LEFT JOIN mozzi.datas_ingredient ON food_ingredient.ingredient_id = datas_ingredient.id \
                     WHERE ingredient_name = '{input_ingredient_name}'"
