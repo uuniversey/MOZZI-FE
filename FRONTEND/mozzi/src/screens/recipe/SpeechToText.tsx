@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, Button } from 'react-native'
+import { View, Text, Button, TouchableOpacity } from 'react-native'
 import Voice from '@react-native-voice/voice'
 
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import styled from 'styled-components/native'
 
-const Btn = styled.TouchableOpacity`
+const Btn = styled(TouchableOpacity)`
   align-items: center;
   justify-content: center;
   width: 40px;

@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Diary {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer diaryId;
@@ -37,10 +37,10 @@ public class Diary {
     @ManyToOne
     @JoinColumn(name = "food_id")
     private Food foodId;
-    @PrePersist
-    public void prePersist() {
-        this.diaryDate = LocalDateTime.now();
-    }
+//    @PrePersist
+//    public void prePersist() {
+//        this.diaryDate = LocalDateTime.now();
+//    }
 }
 
 

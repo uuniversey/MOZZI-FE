@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, TextInput, Button } from 'react-native'
+import { View, Text, TextInput, Button, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
 import styled from 'styled-components/native'
@@ -18,52 +18,55 @@ interface UserProfileState {
   isVegan: string
 }
 
-const Container = styled.View`
+const Container = styled(View)`
   flex: 1;
   background-color: #FFFEF2;
 `
 
-const Title = styled.Text`
+const Title = styled(Text)`
   font-size: 36px;
   font-weight: bold;
   margin: 50px 0px 0px 40px;
   text-align: left;
   width: 100%;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
-const BgText = styled.Text`
+const BgText = styled(Text)`
   background-color: #F9F7BB;
   font-size: 18px;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
-const Body = styled.View`
+const Body = styled(View)`
   margin: 0px 40px 0px 40px;
 `
 
-const Label = styled.Text`
+const Label = styled(Text)`
   margin-top: 30px;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
-const StyledInput = styled.TextInput`
+const StyledInput = styled(TextInput)`
   height: 40px;
   margin: 10px 0px 10px 0px;
   border-bottom-width: 1px;
   border-bottom-color: silver;
 `
 
-const StyledView = styled.View`
+const StyledView = styled(View)`
   height: auto;
   margin: 10px 0px 10px 0px;
 `
 
-const JustifyView = styled.View`
+const JustifyView = styled(View)`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   margin-top: 20px;
 `
 
-const Btn = styled.TouchableOpacity`
+const Btn = styled(TouchableOpacity)`
   background-color: #F9F7BB;
   border-radius: 10px;
   width: 80px;
@@ -73,9 +76,10 @@ const Btn = styled.TouchableOpacity`
   margin-top: 30px;
 `
 
-const BtnText = styled.Text`
+const BtnText = styled(Text)`
   font-size: 16px;
   text-align: center;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
 function ProfileScreen () {

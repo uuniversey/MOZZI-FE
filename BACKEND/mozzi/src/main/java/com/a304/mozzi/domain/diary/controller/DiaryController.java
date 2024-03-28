@@ -83,7 +83,7 @@ public class DiaryController {
             String sourceFileName = photo.getOriginalFilename();
             String sourceFileNameExtension = FilenameUtils.getExtension(sourceFileName).toLowerCase();
             // String fileUrl = "C:\\Users\\SSAFY\\Downloads\\GOODCODE\\S2A304\\BACKEND\\public\\";
-            String fileUrl = "https://" + bucket + "/";
+            String fileUrl = "https://" + bucket +".s3.ap-northeast-2.amazonaws.com" + "/";
             String destinationFileName = RandomStringUtils.randomAlphabetic(5) + "_" + username + "_" + photoDate + "."
                     + sourceFileNameExtension;
 

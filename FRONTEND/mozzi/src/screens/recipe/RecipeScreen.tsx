@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Animated } from 'react-native'
+import { View, Text, TouchableOpacity, Animated, Image } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import styled from 'styled-components/native'
@@ -10,25 +10,27 @@ import { useNavigation } from '@react-navigation/native'
 import { GestureHandlerRootView, PanGestureHandler, State } from 'react-native-gesture-handler'
 import useRecipeStore from '../../store/RecipeStore'
 
-const Container = styled.View`
+const Container = styled(View)`
   flex: 1;
   background-color: #FFFEF2;
 `
 
-const Title = styled.Text`
+const Title = styled(Text)`
   font-size: 36px;
   font-weight: bold;
   align-self: center;
   margin: 50px 0px 10px 0px;
+  font-family: ${(props) => props.theme.fonts.title};
 `
 
-const Order = styled.Text`
+const Order = styled(Text)`
   font-size: 20px;
   align-self: center;
   margin: 0px 0px 20px 0px;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
-const Body = styled.View`
+const Body = styled(View)`
   align-self: center;
   align-items: center;
   justify-content: center;
@@ -38,19 +40,20 @@ const Body = styled.View`
   background-color: #F9F7BB;
 `
 
-const FoodImage = styled.Image`
+const FoodImage = styled(Image)`
   width: 300px;
   height: 300px;
   border-radius: 5px;
 `
 
-const Tip = styled.Text`
+const Tip = styled(Text)`
   font-size: 14px;
   align-self: center;
   margin: 20px 0px 20px 0px;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
-const Btn = styled.TouchableOpacity`
+const Btn = styled(TouchableOpacity)`
   align-self: center;
   align-items: center;
   justify-content: center;
@@ -59,7 +62,7 @@ const Btn = styled.TouchableOpacity`
   border-radius: 28px;
 `
 
-const Line = styled.View`
+const Line = styled(View)`
   border-bottom-color: #000;
   border-bottom-width: 1px;
   width: 50%;

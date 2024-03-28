@@ -19,7 +19,7 @@ const useDiaryStore = create((set) => ({
         }
       })
       set({ calendarData: response.data.foods })
-      console.log('캘린더 데이터 잘 받음', response.data)
+      console.log('캘린더 데이터 잘 받음', response.data.foods)
     } catch (error) {
       console.error('캘린더 데이터 요청 실패', error)
     }

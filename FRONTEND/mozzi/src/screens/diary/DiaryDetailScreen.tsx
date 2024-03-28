@@ -6,21 +6,23 @@ import { Header } from '../../components/Header/Header'
 
 import { useNavigation } from '@react-navigation/native'
 
-const Container = styled.View`
+const Container = styled(View)`
   flex: 1;
   background-color: #FFFEF2;
 `
 
-const Title = styled.Text`
+const Title = styled(Text)`
   font-size: 20px;
   margin: 30px 0px 30px 20px;
+  font-family: ${(props) => props.theme.fonts.title};
 `
 
-const Dot = styled.Text`
+const Dot = styled(Text)`
   color: #E4E196;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
-const Body = styled.View`
+const Body = styled(View)`
   align-self: center;
   align-items: center;
   justify-content: center;
@@ -30,19 +32,19 @@ const Body = styled.View`
   background-color: #F9F7BB;
 `
 
-const DiaryInfo = styled.View`
+const DiaryInfo = styled(View)`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   margin-bottom: 10px;
 `
 
-const BtnContainer = styled.View`
+const BtnContainer = styled(View)`
   display: flex;
   flex-direction: row;
 `
 
-const SaveBtn = styled.TouchableOpacity`
+const SaveBtn = styled(TouchableOpacity)`
   align-items: center;
   justify-content: center;
   width: 30px;
@@ -51,7 +53,7 @@ const SaveBtn = styled.TouchableOpacity`
   margin-right: 5;
 `
 
-const ShareBtn = styled.TouchableOpacity`
+const ShareBtn = styled(TouchableOpacity)`
   align-items: center;
   justify-content: center;
   width: 30px;
@@ -59,16 +61,17 @@ const ShareBtn = styled.TouchableOpacity`
   border-radius: 28px;
 `
 
-const FoodImage = styled.Image`
+const FoodImage = styled(Image)`
   width: 300px;
   height: 300px;
   border-radius: 5px;
 `
 
-const FoodTitle = styled.Text`
+const FoodTitle = styled(Text)`
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 10px;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
 function DiaryDetailScreen ({ route }) {

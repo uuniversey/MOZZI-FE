@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions } from 'react-native';
+import { Dimensions, Text } from 'react-native';
 import Svg, { Rect, Circle } from 'react-native-svg';
 import styled from 'styled-components/native';
 import { useNavigation } from '@react-navigation/native';
@@ -30,9 +30,9 @@ const Container = styled.View`
   background-color: #FFFEF2;
 `;
 
-const Title = styled.Text`
+const Title = styled(Text)`
+  font-family: ${(props) => props.theme.fonts.title};
   font-size: 36px;
-  font-weight: bold;
   margin-top: 50px;
   margin-bottom: 20px;
   text-align: left;
@@ -54,10 +54,10 @@ const ImageIcon = styled.Image`
   height: 50px;
 `;
 
-const ShelfItemText = styled.Text`
+const ShelfItemText = styled(Text)`
+  font-family: ${(props) => props.theme.fonts.title};
   font-size: 12px;
   color: #000;
-  font-weight: bold;
   margin-top: 4px;
   text-align: center;
 `;

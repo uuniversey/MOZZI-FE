@@ -4,7 +4,7 @@ import { MultiSelect, Dropdown } from 'react-native-element-dropdown'
 
 import styled from 'styled-components/native'
 
-  const SelectedStyle = styled.View`
+  const SelectedStyle = styled(View)`
     flex-direction: row;
     justify-content: center;
     align-items: center;
@@ -14,8 +14,9 @@ import styled from 'styled-components/native'
     background-color: #F9F7BB;
 `
 
-const TextSelectedStyle = styled.Text`
+const TextSelectedStyle = styled(Text)`
   font-size: 16px;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
 function CustomDropdown ({ data, placeholder, isMulti }) {

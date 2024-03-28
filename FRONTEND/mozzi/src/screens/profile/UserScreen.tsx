@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react'
-import { View, Text, TextInput, Button, ScrollView } from 'react-native'
+import { View, Text, TextInput, Button, ScrollView, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import styled from 'styled-components/native'
 
@@ -9,26 +9,27 @@ import useLoginStore from '../../store/LoginStore'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useNavigation } from '@react-navigation/native'
 
-const Container = styled.View`
+const Container = styled(View)`
   flex: 1;
   background-color: #FFFEF2;
 `
 
-const Title = styled.Text`
+const Title = styled(Text)`
   font-size: 36px;
   font-weight: bold;
   margin: 50px 0px 0px 0px;
   height: 100%;
+  font-family: ${(props) => props.theme.fonts.title};
 `
 
-const JustifyView = styled.View`
+const JustifyView = styled(View)`
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   margin-bottom: 40px;
 `
 
-const Btn = styled.TouchableOpacity`
+const Btn = styled(TouchableOpacity)`
   background-color: #F9F7BB;
   border-radius: 10px;
   width: 80px;
@@ -38,19 +39,21 @@ const Btn = styled.TouchableOpacity`
   margin-top: 30px;
 `
 
-const BtnText = styled.Text`
+const BtnText = styled(Text)`
   font-size: 16px;
   text-align: center;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
-const ListButton = styled.TouchableOpacity`
+const ListButton = styled(TouchableOpacity)`
   padding: 20px;
   border-bottom-width: 1px;
   border-color: #E0E0E0;
 `
 
-const ListBtnText = styled.Text`
+const ListBtnText = styled(Text)`
   font-size: 16px;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
 function UserScreen() {
