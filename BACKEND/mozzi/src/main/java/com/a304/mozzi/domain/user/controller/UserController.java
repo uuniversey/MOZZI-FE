@@ -265,6 +265,8 @@ public class UserController {
         UserModel user = userService.findCurrentUser();
         log.info(String.valueOf(isVeganBody.getIsVegan()));
         userService.setUserIsVegan(user, isVeganBody.getIsVegan());
+        Map<String, Boolean> result = new HashMap<>();
+        result.put("isVegan", isVeganBody.getIsVegan());
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
