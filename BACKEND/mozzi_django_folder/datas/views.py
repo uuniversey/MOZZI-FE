@@ -691,6 +691,7 @@ def recommendFoods():
                         user = "ssafy",
                         password = "ssafy",
                          )
+    
     with db.cursor() as cursor:
         query = "select food_id from mozzi.datas_foods order by food_id desc limit 1"
         cursor.execute(query)
@@ -811,13 +812,14 @@ def user_ingredient_affection():
     
     with db.cursor() as cursor:
 
-        query = "SELECT distinct food_id, ingredient_ratio from mozzi.food_ingredient LEFT JOIN mozzi.datas_ingredient ON food_ingredient.ingredient_id = datas_ingredient.id \
+        query = f"SELECT distinct food_id, ingredient_ratio from mozzi.food_ingredient LEFT JOIN mozzi.datas_ingredient ON food_ingredient.ingredient_id = datas_ingredient.id \
                 WHERE ingredient_name = '{input_ingredient_name}'"
         cursor.execute(query)
         foodList = cursor.fetchall()
         
         for food in foodList:
-            pass
+            print(food)
+
 
 
 
@@ -825,7 +827,7 @@ def user_ingredient_affection():
         # 모든 리스트를 
 
 
-
+user_ingredient_affection()
 # recommendFoods()
 # readPkl()
 # set_Category()
