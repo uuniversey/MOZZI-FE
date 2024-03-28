@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Image, TouchableOpacity, Text } from 'react-native'
+import { View, Image, TouchableOpacity, Text } from 'react-native'
 import styled from 'styled-components/native'
 import axios from 'axios'
 import { useNavigation } from '@react-navigation/native'
@@ -12,33 +12,35 @@ interface RecipeItem {
   photo: string
 }
 
-const Container = styled.View`
+const Container = styled(View)`
   flex: 1;
   background-color: #FFFEF2;
   align-items: center;
 `
 
-const ContentContainer = styled.View`
+const ContentContainer = styled(View)`
   padding-top: 40px;
   padding-left: 22px;
   padding-right: 22px;
 `
 
-const Greeting = styled.Text`
+const Greeting = styled(Text)`
   font-family: 'MaruBuri-Regular';
   font-size: 20px;
   font-weight: bold;
   color: #333;
   margin-top: 16px;
+  font-family: ${(props) => props.theme.fonts.title};
 `
 
-const Question = styled.Text`
+const Question = styled(Text)`
   font-size: 22px;
   color: #333;
   margin-bottom: 16px;
+  font-family: ${(props) => props.theme.fonts.title};
 `
 
-const Card = styled.View`
+const Card = styled(View)`
   width: 350px;
   height: 350px;
   background-color: rgba(247, 207, 207, 0.7);
@@ -50,28 +52,30 @@ const Card = styled.View`
   margin-bottom: 8px;
 `
 
-const MealQuestion = styled.Text`
+const MealQuestion = styled(Text)`
   font-size: 16px;
   font-weight: bold;
   color: #333;
   margin-bottom: 8px;
   align-self: flex-start;
+  font-family: ${(props) => props.theme.fonts.title};
 `
 
-const StyledImage = styled.Image`
+const StyledImage = styled(Image)`
   width: 200px;
   height: 200px;
   border-radius: 100px;
   margin-bottom: 8px;
 `
 
-const MealName = styled.Text`
+const MealName = styled(Text)`
   font-size: 16px;
   color: #333;
   margin-bottom: 8px;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
-const Button = styled.TouchableOpacity`
+const Button = styled(TouchableOpacity)`
   background-color: rgba(211, 236, 216, 0.7);
   border-radius: 20px;
   justify-content: center;
@@ -81,10 +85,11 @@ const Button = styled.TouchableOpacity`
   margin-top: 16px;
 `
 
-const ButtonText = styled.Text`
+const ButtonText = styled(Text)`
   font-size: 24px;
   font-weight: bold;
   color: #333;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
 function MainScreen() {

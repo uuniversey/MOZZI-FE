@@ -7,13 +7,13 @@ import { Header } from '../../components/Header/Header'
 import styled from 'styled-components/native'
 import Video from 'react-native-video'
 
-const Container = styled.View`
+const Container = styled(View)`
   flex: 1;
   background-color: #FFFEF2;
   align-items: center;
 `
 
-const HeaderText = styled.Text`
+const HeaderText = styled(Text)`
   font-size: 32px;
   font-weight: bold;
   margin-top: 50px;
@@ -21,9 +21,10 @@ const HeaderText = styled.Text`
   align-self: flex-start;
   padding-left: 28px;
   padding-right: 28px;
+  font-family: ${(props) => props.theme.fonts.title};
 `
 
-const PlayButton = styled.View`
+const PlayButton = styled(View)`
   border-radius: 20px;
   width: 350px;
   height: 350px;
@@ -40,7 +41,7 @@ const PlayButton = styled.View`
   elevation: 2;
 `
 
-const DownloadButton = styled.TouchableOpacity`
+const DownloadButton = styled(TouchableOpacity)`
   width: 85%;
   border-radius: 20px;
   padding: 16px;
@@ -55,9 +56,10 @@ const DownloadButton = styled.TouchableOpacity`
   elevation: 2;
 `
 
-const DownloadButtonText = styled.Text`
+const DownloadButtonText = styled(Text)`
   font-size: 16px;
   font-weight: bold;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
 function MakeShortsScreen () {

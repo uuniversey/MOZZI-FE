@@ -13,13 +13,13 @@ import styled from 'styled-components/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 // Styled components definitions
-const Container = styled.View`
+const Container = styled(View)`
   flex: 1;
   background-color: #FFFEF2;
   align-items: center;
 `
 
-const DateContainer = styled.View`
+const DateContainer = styled(View)`
   width: 100%;
   height: 50px;
   flex-direction: row;
@@ -29,11 +29,12 @@ const DateContainer = styled.View`
   padding-right: 20px;
 `;
 
-const DateText = styled.Text`
+const DateText = styled(Text)`
   font-weight: 600;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
-const Line = styled.View`
+const Line = styled(View)`
   border-bottom-color: #A4A4A4;
   border-bottom-width: 1px;
   width: 85%;
@@ -41,7 +42,7 @@ const Line = styled.View`
   margin-bottom: 10px;
 `
 
-const ImageContainer = styled.View`
+const ImageContainer = styled(View)`
   border-width: 1px;
   border-color: #E4E196;
   width: 350px;
@@ -51,12 +52,7 @@ const ImageContainer = styled.View`
   margin-bottom: 20px;
 `
 
-const FoodNameText = styled.Text`
-  font-weight: 600;
-  font-size: 16px;
-`
-
-const ImageInnerContainer = styled.TouchableOpacity`
+const ImageInnerContainer = styled(TouchableOpacity)`
   border-width: 1px;
   border-color: #A4A4A4;
   border-radius: 10px;
@@ -67,7 +63,7 @@ const ImageInnerContainer = styled.TouchableOpacity`
   align-items: center;
 `
 
-const ImageButton = styled.TouchableOpacity`
+const ImageButton = styled(TouchableOpacity)`
   width: 100%;
   height: 100%;
   justify-content: center;
@@ -75,11 +71,12 @@ const ImageButton = styled.TouchableOpacity`
   border-radius: 10px;
 `
 
-const ImagePlaceholderText = styled.Text`
+const ImagePlaceholderText = styled(Text)`
   font-size: 24px;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
-const RecipeButton = styled.TouchableOpacity`
+const RecipeButton = styled(TouchableOpacity)`
   background-color: #F9F7BB;
   border-color: rgba(0, 0, 0, 0.2);
   border-width: 2px;
@@ -92,20 +89,21 @@ const RecipeButton = styled.TouchableOpacity`
   elevation: 2;
 `
 
-const EnterContainer = styled.View`
+const EnterContainer = styled(View)`
   width: 85%;
   margin-top: 50px;
   flex-direction: row;
   justify-content: flex-end;
 `
 
-const ButtonText = styled.Text`
+const ButtonText = styled(Text)`
   font-size: 16px;
   text-align: center;
   margin-left: 6px;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
-const EnterButton = styled.TouchableOpacity`
+const EnterButton = styled(TouchableOpacity)`
   border-radius: 10px;
   width: 80px;
   height: 35px;
@@ -113,24 +111,15 @@ const EnterButton = styled.TouchableOpacity`
   background-color: ${props => props.disabled ? '#cccccc' : '#F9F7BB'};
 `
 
-const EnterButtonText = styled.Text`
+const EnterButtonText = styled(Text)`
   font-size: 16px;
   text-align: center;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
-const CalendarButton = styled.TouchableOpacity`
+const CalendarButton = styled(TouchableOpacity)`
   padding: 10px;
   border-radius: 20px;
-`
-
-const FoodNameContainer = styled.View`
-  width: 86%;
-  height: 40px;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  background-color: #F9F7BB;
-  margin-bottom: 10px;
 `
 
 function DiaryCreateScreen () {
@@ -243,7 +232,7 @@ function DiaryCreateScreen () {
         type: imageType,
         uri: imageUri,
         // uri: 'http://www.foodsafetykorea.go.kr/uploadimg/20141118/20141118102019_1416273619379.jpg',
-      })
+      }) 
     }
 
   const createDiary = async () => {

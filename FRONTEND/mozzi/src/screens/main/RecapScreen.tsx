@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Alert, TouchableOpacity, Image } from 'react-native'
+import { View, Text, Alert, TouchableOpacity, Image } from 'react-native'
 import styled from 'styled-components/native'
 import { useNavigation } from '@react-navigation/native'
 import IconEntypo from 'react-native-vector-icons/Entypo'
@@ -14,7 +14,7 @@ interface RecipeCardProps {
   day: string
 }
 
-const RecipeCardContainer = styled.View`
+const RecipeCardContainer = styled(View)`
   background-color: #F9F7BB;
   border-radius: 20px;
   padding: 16px;
@@ -26,22 +26,24 @@ const RecipeCardContainer = styled.View`
   justify-content: center;
 `
 
-const CardDay = styled.Text`
+const CardDay = styled(Text)`
   font-size: 16px;
   font-weight: bold;
   align-self: flex-start;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
-const CardImage = styled.Image`
+const CardImage = styled(Image)`
   width: 150px;
   height: 150px;
   border-radius: 75px;
 `
 
-const CardTitle = styled.Text`
+const CardTitle = styled(Text)`
   font-size: 14px;
   font-weight: bold;
   margin-top: 8px;
+  font-family: ${(props) => props.theme.fonts.title};
 `
 
 const RecipeCard = ({ title, imageSource, day }: RecipeCardProps) => {
@@ -54,14 +56,14 @@ const RecipeCard = ({ title, imageSource, day }: RecipeCardProps) => {
   )
 }
 
-const Container = styled.View`
+const Container = styled(View)`
   flex: 1;
   background-color: #FFFEF2;
   padding-right: 10px;
   padding-left: 10px;
 `
 
-const HeaderText = styled.Text`
+const HeaderText = styled(Text)`
   font-size: 32px;
   font-weight: bold;
   margin-top: 20px;
@@ -69,6 +71,7 @@ const HeaderText = styled.Text`
   align-self: flex-start;
   padding-left: 20px;
   padding-right: 20px;
+  font-family: ${(props) => props.theme.fonts.title};
 `
 
 const ActionButton = styled(TouchableOpacity)`
@@ -87,10 +90,11 @@ const ActionButton = styled(TouchableOpacity)`
   elevation: 2;
 `
 
-const ButtonText = styled.Text`
+const ButtonText = styled(Text)`
   margin-left: 8px;
   font-size: 16px;
   font-weight: bold;
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
 function RecapScreen() {
@@ -157,7 +161,7 @@ function RecapScreen() {
     const days = difference / (1000 * 3600 * 24);
   
     if (days < 7) {
-      return `${Math.floor(days)}일 전 먹은 음식`;
+      return `${Math.floor(days)}일 전 먹은 음식`
     } else if (days < 30) {
       return "지난 주 먹은 음식"
     } else if (days < 90) {
@@ -187,6 +191,7 @@ function RecapScreen() {
             imageSource={{ uri: recipe.photoUrl }}
           />
         ))}
+        
         <ActionButton 
           onPress={SelectShortsImage}>
           <IconEntypo name="video" size={50} color="#000" />
