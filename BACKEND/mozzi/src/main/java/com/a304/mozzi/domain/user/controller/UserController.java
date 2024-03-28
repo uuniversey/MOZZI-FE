@@ -267,7 +267,7 @@ public class UserController {
         userService.setUserIsVegan(user, isVeganBody.getIsVegan());
         Map<String, Boolean> result = new HashMap<>();
         result.put("isVegan", isVeganBody.getIsVegan());
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok().body(result);
     }
 
     @PatchMapping("/setnickname")
