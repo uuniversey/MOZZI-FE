@@ -131,7 +131,6 @@ DATABASES = {
 
 
 }
-
 connect(
     db='mozzi',
     host='a304.site',
