@@ -32,9 +32,10 @@ const theme = {
     fridge: 'MaruBuri-Bold'
   },
   palette: {
-    main: '#1c1a11',
-    point: 'F9F7BB',
-    pointDark: 'E4E196',
+    background: '#FFFEF2',
+    font: '#1c1a11',
+    point: '#F9F7BB',
+    pointDark: '#E4E196',
   }
 };
 

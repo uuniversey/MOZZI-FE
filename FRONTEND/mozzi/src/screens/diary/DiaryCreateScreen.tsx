@@ -253,7 +253,7 @@ function DiaryCreateScreen () {
         },
       })
       console.log(response.data)
-      navigation.navigate("DiaryDetail", {date: selectedDate})
+      navigation.navigate("Diary")
     } catch (error) {
       //응답 실패
       console.error(error)

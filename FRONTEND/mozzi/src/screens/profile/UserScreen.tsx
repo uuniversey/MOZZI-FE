@@ -11,49 +11,77 @@ import { useNavigation } from '@react-navigation/native'
 
 const Container = styled(View)`
   flex: 1;
-  background-color: #FFFEF2;
+  background-color: ${(props) => props.theme.palette.background};
+`
+
+const TitleContainer = styled(View)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 50px 0 50px 0;
 `
 
 const Title = styled(Text)`
   font-size: 36px;
-  font-weight: bold;
   margin: 50px 0px 0px 0px;
   height: 100%;
   font-family: ${(props) => props.theme.fonts.title};
+  color: ${(props) => props.theme.palette.font};
 `
 
 const JustifyView = styled(View)`
+  width: 350px;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
-  margin-bottom: 40px;
+  justify-content: space-between;
+  align-items: center;
 `
 
-const Btn = styled(TouchableOpacity)`
-  background-color: #F9F7BB;
-  border-radius: 10px;
-  width: 80px;
-  height: 35px;
-  justify-content: center;
-  align-self: flex-end;
-  margin-top: 30px;
+const TopBorder = styled(View)`
+  width: 350px;
+  border-bottom-width: 3px;
+  border-color: #E0E0E0;
 `
 
-const BtnText = styled(Text)`
-  font-size: 16px;
-  text-align: center;
-  font-family: ${(props) => props.theme.fonts.content};
-`
-
-const ListButton = styled(TouchableOpacity)`
-  padding: 20px;
+const Border = styled(View)`
+  width: 350px;
   border-bottom-width: 1px;
   border-color: #E0E0E0;
 `
 
-const ListBtnText = styled(Text)`
+const LogoutBtn = styled(TouchableOpacity)`
+  background-color: ${(props) => props.theme.palette.point};
+  border-radius: 10px;
+  width: 80px;
+  height: 35px;
+  justify-content: center;
+`
+
+const LogoutText = styled(Text)`
   font-size: 16px;
+  text-align: center;
   font-family: ${(props) => props.theme.fonts.content};
+  color: ${(props) => props.theme.palette.font};
+`
+
+const MenuList = styled(View)`
+  display: flex;
+  align-items: center;
+`
+
+const ListButton = styled(TouchableOpacity)`
+  width: 350px;
+  padding: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`
+
+const ListBtnText = styled(Text)`
+  font-size: 20px;
+  font-family: ${(props) => props.theme.fonts.content};
+  color: ${(props) => props.theme.palette.font};
 `
 
 function UserScreen() {
@@ -88,23 +116,32 @@ function UserScreen() {
 
   return (
     <Container>
-      <JustifyView>
-        <Title>{profileData.nickname} 님</Title>
-        <Btn onPress={handleLogout}>
-          <BtnText>로그아웃</BtnText>
-        </Btn>
-      </JustifyView>
-      <ScrollView>
+      <TitleContainer>
+        <JustifyView>
+          <Title>{profileData.nickname} 님</Title>
+          <LogoutBtn onPress={handleLogout}>
+            <LogoutText>로그아웃</LogoutText>
+          </LogoutBtn>
+        </JustifyView>
+        <TopBorder></TopBorder>
+      </TitleContainer>
+      <MenuList>
         <ListButton onPress={moveProfile}>
           <ListBtnText>내 정보 관리</ListBtnText>
+          <Icon name="keyboard-arrow-right" size={25} color="black"/>
         </ListButton>
-        <ListButton onPress={moveWithdrawal}>
-          <ListBtnText>서비스 탈퇴</ListBtnText>
-        </ListButton>
+        <Border></Border>
         <ListButton onPress={movePolicy}>
           <ListBtnText>약관 및 정책</ListBtnText>
+          <Icon name="keyboard-arrow-right" size={25} color="black"/>
         </ListButton>
-      </ScrollView>
+        <Border></Border>
+        <ListButton onPress={moveWithdrawal}>
+          <ListBtnText>서비스 탈퇴</ListBtnText>
+          <Icon name="keyboard-arrow-right" size={25} color="black"/>
+        </ListButton>
+        <Border></Border>
+      </MenuList>
     </Container>
   )
 }

@@ -14,7 +14,7 @@ interface RecipeItem {
 
 const Container = styled(View)`
   flex: 1;
-  background-color: #FFFEF2;
+  background-color: ${(props) => props.theme.palette.background};;
   align-items: center;
 `
 
@@ -25,17 +25,15 @@ const ContentContainer = styled(View)`
 `
 
 const Greeting = styled(Text)`
-  font-family: 'MaruBuri-Regular';
   font-size: 20px;
-  font-weight: bold;
-  color: #333;
+  color: ${(props) => props.theme.palette.font};
   margin-top: 16px;
   font-family: ${(props) => props.theme.fonts.title};
 `
 
 const Question = styled(Text)`
   font-size: 22px;
-  color: #333;
+  color: ${(props) => props.theme.palette.font};
   margin-bottom: 16px;
   font-family: ${(props) => props.theme.fonts.title};
 `
@@ -54,9 +52,8 @@ const Card = styled(View)`
 
 const MealQuestion = styled(Text)`
   font-size: 16px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 8px;
+  color: ${(props) => props.theme.palette.font};
+  margin-bottom: 28px;
   align-self: flex-start;
   font-family: ${(props) => props.theme.fonts.title};
 `
@@ -70,9 +67,9 @@ const StyledImage = styled(Image)`
 
 const MealName = styled(Text)`
   font-size: 16px;
-  color: #333;
+  color: ${(props) => props.theme.palette.font};
   margin-bottom: 8px;
-  font-family: ${(props) => props.theme.fonts.content};
+  font-family: ${(props) => props.theme.fonts.title};
 `
 
 const Button = styled(TouchableOpacity)`
@@ -88,8 +85,8 @@ const Button = styled(TouchableOpacity)`
 const ButtonText = styled(Text)`
   font-size: 24px;
   font-weight: bold;
-  color: #333;
-  font-family: ${(props) => props.theme.fonts.content};
+  color: ${(props) => props.theme.palette.font};
+  font-family: ${(props) => props.theme.fonts.title};
 `
 
 function MainScreen() {
