@@ -8,6 +8,7 @@ import { Header } from '../../components/Header/Header'
 
 import EditScreen from './EditScreen'
 import useProfileStore from '../../store/ProfileStore'
+import useDropdownStore from '../../store/DropdownStore'
 
 
 interface UserProfileState {
@@ -69,6 +70,7 @@ const BtnText = styled(Text)`
 function ProfileScreen () {
   const navigation = useNavigation()
   const { getProfile, profileData, editNickname, editIsVegan, editFoodInfo, form } = useProfileStore()
+  const { dropdownData } = useDropdownStore()
   const [ isEdit, setIsEdit ] = useState<boolean>(false)
   const [ foodInfo, setFoodInfo ] = useState(
   [
@@ -90,7 +92,7 @@ function ProfileScreen () {
       console.log('this is form', form)
       // 입력 값으로 바꿔야 함
       editNickname(form.nickname)
-      editIsVegan(Boolean(form.isVegan))
+      editIsVegan(Boolean(dropdownData))
       editFoodInfo(foodInfo)
     }
     setIsEdit(!isEdit)
@@ -130,7 +132,7 @@ function ProfileScreen () {
             />
             <Label>비건 여부</Label>
             <StyledInput
-              placeholder={`${form.isVegan == 0 ? '네':'아니오'}`}
+              placeholder={`${form.isVegan}`}
               editable={false}
             />
           </View>

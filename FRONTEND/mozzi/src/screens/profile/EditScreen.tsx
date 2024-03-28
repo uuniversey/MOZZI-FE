@@ -35,11 +35,6 @@ function EditScreen() {
 
   return (
     <View>
-      {allFoods.map((val) => {
-        console.log(val)
-      })}
-
-
       <Label>닉네임</Label>
       <StyledInput
         placeholder="닉네임을 입력하세요"
