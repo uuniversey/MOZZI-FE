@@ -22,7 +22,7 @@ const StyledInput = styled(TextInput)`
 `
 
 function EditScreen() {
-  const { form, setForm } = useProfileStore()
+  const { profileData, form, setForm } = useProfileStore()
   const { allFoods } = useFridgeStore()
 
   const [text, setText] = useState('')
@@ -89,7 +89,6 @@ const allergyList = [
   { label: '돼지고기', value: 'pork' },
   { label: '복숭아', value: 'peach' },
   { label: '토마토', value: 'tomato' },
-  { label: '아황산류', value: 'sulfites' },
   { label: '호두', value: 'walnut' },
   { label: '닭고기', value: 'chicken' },
   { label: '쇠고기', value: 'beef' },
