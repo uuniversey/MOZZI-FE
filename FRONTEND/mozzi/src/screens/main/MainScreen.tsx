@@ -61,8 +61,9 @@ const MealQuestion = styled(Text)`
 const StyledImage = styled(Image)`
   width: 200px;
   height: 200px;
-  border-radius: 100px;
+  border-radius: 200px;
   margin-bottom: 8px;
+  /* border: 1px solid ${(props) => props.theme.palette.pointDark}; */
 `
 
 const MealName = styled(Text)`
