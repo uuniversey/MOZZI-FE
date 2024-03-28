@@ -27,10 +27,11 @@ const shelfHeight = fridgeHeight / 5; // 선반의 높이
 const Container = styled.View`
   flex: 1;
   align-items: center;
-  background-color: #FFFEF2;
+  background-color: ${(props) => props.theme.palette.background};
 `;
 
 const Title = styled(Text)`
+  color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.title};
   font-size: 36px;
   margin-top: 50px;
@@ -57,7 +58,7 @@ const ImageIcon = styled.Image`
 const ShelfItemText = styled(Text)`
   font-family: ${(props) => props.theme.fonts.title};
   font-size: 12px;
-  color: #000;
+  color: ${(props) => props.theme.palette.font};
   margin-top: 4px;
   text-align: center;
 `;

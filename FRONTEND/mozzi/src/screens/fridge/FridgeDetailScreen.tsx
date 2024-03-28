@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Keyboard, Platform, Text } from 'react-native';
+import { FlatList, Keyboard, Platform, Text } from 'react-native';
 import styled from 'styled-components/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
@@ -17,7 +17,7 @@ interface FoodItem {
 
 const Container = styled.KeyboardAvoidingView`
   flex: 1;
-  background-color: #FFFEF2;
+  background-color: ${(props) => props.theme.palette.background};
 `;
 
 const ClipImg = styled.Image`
@@ -54,14 +54,13 @@ const TitleImg = styled.Image`
 
 const MenuItem = styled(Text)`
   font-family: ${(props) => props.theme.fonts.title};
-  color: ${(props) => props.theme.palette.main};
+  color: ${(props) => props.theme.palette.font};
   display: inline;
   font-size: 20px;
 `;
 
 const InputContainer = styled.View`
-margin-top: ${({ keyboardOpen }) => (keyboardOpen ? '200px' : '30px')};
-  /* margin-top: ${({ keyboardOpen }) => (keyboardOpen ? '200px' : '30px')}; */
+  margin-top: ${({ keyboardOpen }) => (keyboardOpen ? '200px' : '30px')};
   width: 100%;
   align-items: center;
 `;
@@ -76,11 +75,9 @@ const MyFood = styled.ScrollView`
 const MyFoodText = styled(Text)`
   font-size: 20;
   font-family: ${(props) => props.theme.fonts.fridge};
-  /* color: ${(props) => props.theme.palette.main}; */
 `;
 
 const DeleteButton = styled.TouchableOpacity`
-  /* color: lightgray; */
 `;
 
 const SendButton = styled.TouchableOpacity`
@@ -130,7 +127,7 @@ const FridgeDetailScreen = ({ route }) => {
       Keyboard.dismiss(); // 키보드를 닫음
       scrollViewRef.current?.scrollToEnd({ animated: true }); // 스크롤을 맨 아래로 이동
     }
-  };
+  }
 
   const handleDelete = async (foodName) => {
     await deleteFood(foodName);

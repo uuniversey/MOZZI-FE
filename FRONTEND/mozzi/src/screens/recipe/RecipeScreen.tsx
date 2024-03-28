@@ -12,15 +12,15 @@ import useRecipeStore from '../../store/RecipeStore'
 
 const Container = styled(View)`
   flex: 1;
-  background-color: #FFFEF2;
+  background-color: ${(props) => props.theme.palette.background};
 `
 
 const Title = styled(Text)`
   font-size: 36px;
-  font-weight: bold;
   align-self: center;
   margin: 50px 0px 10px 0px;
   font-family: ${(props) => props.theme.fonts.title};
+  color: ${(props) => props.theme.palette.font}; 
 `
 
 const Order = styled(Text)`
@@ -28,6 +28,7 @@ const Order = styled(Text)`
   align-self: center;
   margin: 0px 0px 20px 0px;
   font-family: ${(props) => props.theme.fonts.content};
+  color: ${(props) => props.theme.palette.font};
 `
 
 const Body = styled(View)`
@@ -37,7 +38,7 @@ const Body = styled(View)`
   width: 350px;
   height: 350px;
   border-radius: 20px;
-  background-color: #F9F7BB;
+  background-color: ${(props) => props.theme.palette.point};
 `
 
 const FoodImage = styled(Image)`
@@ -51,6 +52,7 @@ const Tip = styled(Text)`
   align-self: center;
   margin: 20px 0px 20px 0px;
   font-family: ${(props) => props.theme.fonts.content};
+  color: ${(props) => props.theme.palette.font};
 `
 
 const Btn = styled(TouchableOpacity)`

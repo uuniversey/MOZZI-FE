@@ -8,6 +8,7 @@ import { Header } from '../../components/Header/Header'
 
 import EditScreen from './EditScreen'
 import useProfileStore from '../../store/ProfileStore'
+import useDropdownStore from '../../store/DropdownStore'
 
 
 interface UserProfileState {
@@ -20,16 +21,16 @@ interface UserProfileState {
 
 const Container = styled(View)`
   flex: 1;
-  background-color: #FFFEF2;
+  background-color: ${(props) => props.theme.palette.background};
 `
 
 const Title = styled(Text)`
   font-size: 36px;
-  font-weight: bold;
   margin: 20px 0px 0px 40px;
   text-align: left;
   width: 100%;
   font-family: ${(props) => props.theme.fonts.title};
+  color: ${(props) => props.theme.palette.font}; 
 `
 
 const Body = styled(View)`
@@ -39,6 +40,7 @@ const Body = styled(View)`
 const Label = styled(Text)`
   margin-top: 30px;
   font-family: ${(props) => props.theme.fonts.content};
+  color: ${(props) => props.theme.palette.font};
 `
 
 const StyledInput = styled(TextInput)`
@@ -49,7 +51,7 @@ const StyledInput = styled(TextInput)`
 `
 
 const Btn = styled(TouchableOpacity)`
-  background-color: #F9F7BB;
+  background-color: ${(props) => props.theme.palette.point};
   border-radius: 10px;
   width: 80px;
   height: 35px;
@@ -62,11 +64,13 @@ const BtnText = styled(Text)`
   font-size: 16px;
   text-align: center;
   font-family: ${(props) => props.theme.fonts.content};
+  color: ${(props) => props.theme.palette.font};
 `
 
 function ProfileScreen () {
   const navigation = useNavigation()
   const { getProfile, profileData, editNickname, editIsVegan, editFoodInfo, form } = useProfileStore()
+  const { dropdownData } = useDropdownStore()
   const [ isEdit, setIsEdit ] = useState<boolean>(false)
   const [ foodInfo, setFoodInfo ] = useState(
   [
@@ -88,7 +92,7 @@ function ProfileScreen () {
       console.log('this is form', form)
       // 입력 값으로 바꿔야 함
       editNickname(form.nickname)
-      editIsVegan(Boolean(form.isVegan))
+      editIsVegan(Boolean(dropdownData))
       editFoodInfo(foodInfo)
     }
     setIsEdit(!isEdit)
@@ -128,7 +132,7 @@ function ProfileScreen () {
             />
             <Label>비건 여부</Label>
             <StyledInput
-              placeholder={`${form.isVegan == 0 ? '네':'아니오'}`}
+              placeholder={`${form.isVegan}`}
               editable={false}
             />
           </View>

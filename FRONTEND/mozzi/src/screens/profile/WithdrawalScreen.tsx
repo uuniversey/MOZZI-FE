@@ -2,6 +2,8 @@ import React, { useState, useEffect, useLayoutEffect } from 'react'
 import { View, Text, TextInput, Button, ScrollView, TouchableOpacity } from 'react-native'
 import styled from 'styled-components/native'
 
+import Icon from "react-native-vector-icons/Ionicons"
+
 import useLoginStore from '../../store/LoginStore'
 import { useNavigation } from '@react-navigation/native'
 
@@ -9,18 +11,31 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Container = styled(View)`
   flex: 1;
-  background-color: #FFFEF2;
+  background-color: ${(props) => props.theme.palette.background};
 `
 
 const Title = styled(Text)`
   font-size: 24px;
-  font-weight: bold;
   text-align: center;
   width: 100%;
-  font-family: ${(props) => props.theme.fonts.title};
+  font-family: ${(props) => props.theme.fonts.fridge};
+  color: ${(props) => props.theme.palette.font};
 `
 
-const Btn = styled(TouchableOpacity)`
+const WarningContainer = styled(View)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+const Warning = styled(Text)`
+  margin-top: 10px;
+  font-size: 16px;
+  text-align: center;
+  font-family: ${(props) => props.theme.fonts.content};
+`
+
+const YesBtn = styled(TouchableOpacity)`
   background-color: #F9F7BB;
   border-radius: 10px;
   width: 80px;
@@ -31,7 +46,7 @@ const Btn = styled(TouchableOpacity)`
 `
 
 const CancelBtn = styled(TouchableOpacity)`
-  border: 1px;
+  border: 2px;
   border-color: #F9F7BB;
   border-radius: 10px;
   width: 80px;
@@ -45,6 +60,7 @@ const BtnText = styled(Text)`
   font-size: 16px;
   text-align: center;
   font-family: ${(props) => props.theme.fonts.content};
+  color: ${(props) => props.theme.palette.font};
 `
 
 const CenterView = styled(View)`
@@ -53,10 +69,11 @@ const CenterView = styled(View)`
   justify-content: center;
 `
 
-const JustifyView = styled(View)`
+const BtnContainer = styled(View)`
   display: flex;
   flex-direction: row;
   justify-content: center;
+  gap: 15;
 `
 
 function WithdrawalScreen() {
@@ -81,14 +98,18 @@ function WithdrawalScreen() {
     <Container>
       <CenterView>
         <Title>정말 모찌를 떠나실 건가요?</Title>
-        <JustifyView>
+        <WarningContainer>
+          {/* <Icon name="warning-outline" size={16}/> */}
+          <Warning>탈퇴가 완료된 계정은 다시 복구할 수 없습니다</Warning>
+        </WarningContainer>
+        <BtnContainer>
           <CancelBtn onPress={navigation.goBack}>
             <BtnText>취소</BtnText>
           </CancelBtn>
-          <Btn onPress={handleWithdrawal}>
+          <YesBtn onPress={handleWithdrawal}>
             <BtnText>탈퇴</BtnText>
-          </Btn>
-        </JustifyView>
+          </YesBtn>
+        </BtnContainer>
       </CenterView>
     </Container>
   )

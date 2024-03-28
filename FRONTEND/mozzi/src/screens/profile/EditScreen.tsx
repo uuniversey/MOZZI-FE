@@ -11,6 +11,7 @@ import useFridgeStore from '../../store/FridgeStore'
 const Label = styled(Text)`
   margin-top: 30px;
   font-family: ${(props) => props.theme.fonts.content};
+  color: ${(props) => props.theme.palette.font};
 `
 
 const StyledInput = styled(TextInput)`
@@ -34,11 +35,6 @@ function EditScreen() {
 
   return (
     <View>
-      {allFoods.map((val) => {
-        console.log(val)
-      })}
-
-
       <Label>닉네임</Label>
       <StyledInput
         placeholder="닉네임을 입력하세요"
@@ -57,7 +53,7 @@ function EditScreen() {
       <Label>좋아하는 식재료</Label>
       <CustomDropdown
         data={allFoods}
-        placeholder="좋아하는 식재료를 입력하세요"
+        placeholder="좋아하는 식재료를 입력하세요" 
         isMulti={true}
       />
 
