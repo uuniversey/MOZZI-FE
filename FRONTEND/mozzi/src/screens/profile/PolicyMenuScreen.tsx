@@ -9,7 +9,7 @@ import { Header } from '../../components/Header/Header'
 
 const Container = styled(View)`
   flex: 1;
-  background-color: #FFFEF2;
+  background-color: ${(props) => props.theme.palette.background};
   display: flex;
   align-items: center;
 `

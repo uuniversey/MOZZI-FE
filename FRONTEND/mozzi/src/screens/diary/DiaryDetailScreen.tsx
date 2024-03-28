@@ -8,17 +8,18 @@ import { useNavigation } from '@react-navigation/native'
 
 const Container = styled(View)`
   flex: 1;
-  background-color: #FFFEF2;
+  background-color: ${(props) => props.theme.palette.background};
 `
 
 const Title = styled(Text)`
   font-size: 20px;
   margin: 30px 0px 30px 20px;
   font-family: ${(props) => props.theme.fonts.title};
+  color: ${(props) => props.theme.palette.font};
 `
 
 const Dot = styled(Text)`
-  color: #E4E196;
+  color: ${(props) => props.theme.palette.pointDark};
   font-family: ${(props) => props.theme.fonts.content};
 `
 
@@ -29,7 +30,7 @@ const Body = styled(View)`
   width: 350px;
   height: 400px;
   border-radius: 20px;
-  background-color: #F9F7BB;
+  background-color: ${(props) => props.theme.palette.point};
 `
 
 const DiaryInfo = styled(View)`
@@ -64,9 +65,9 @@ const FoodImage = styled(Image)`
 
 const FoodTitle = styled(Text)`
   font-size: 20px;
-  font-weight: bold;
   margin-bottom: 10px;
   font-family: ${(props) => props.theme.fonts.content};
+  color: ${(props) => props.theme.palette.font};
 `
 
 function DiaryDetailScreen ({ route }) {

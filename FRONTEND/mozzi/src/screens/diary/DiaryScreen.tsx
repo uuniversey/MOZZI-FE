@@ -20,7 +20,7 @@ interface DayNumProps {
 
 const Container = styled(View)`
   flex: 1;
-  background-color: #FFFEF2;
+  background-color: ${(props) => props.theme.palette.background};
 
 `
 
@@ -39,9 +39,9 @@ const BtnContainer = styled(View)`
 
 const Title = styled(Text)`
   font-size: 36px;
-  font-weight: bold;
   text-align: left;
   font-family: ${(props) => props.theme.fonts.title};
+  color: ${(props) => props.theme.palette.font}; 
 `
 
 const Btn = styled(TouchableOpacity)`

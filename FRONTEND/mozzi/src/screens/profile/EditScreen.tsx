@@ -11,6 +11,7 @@ import useFridgeStore from '../../store/FridgeStore'
 const Label = styled(Text)`
   margin-top: 30px;
   font-family: ${(props) => props.theme.fonts.content};
+  color: ${(props) => props.theme.palette.font};
 `
 
 const StyledInput = styled(TextInput)`

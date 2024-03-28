@@ -9,19 +9,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Container = styled(View)`
   flex: 1;
-  background-color: #FFFEF2;
+  background-color: ${(props) => props.theme.palette.background};
 `
 
 const Title = styled(Text)`
   font-size: 24px;
-  font-weight: bold;
   text-align: center;
   width: 100%;
   font-family: ${(props) => props.theme.fonts.title};
+  color: ${(props) => props.theme.palette.font}; 
 `
 
 const Btn = styled(TouchableOpacity)`
-  background-color: #F9F7BB;
+  background-color: ${(props) => props.theme.palette.point};
   border-radius: 10px;
   width: 80px;
   height: 35px;
@@ -32,7 +32,7 @@ const Btn = styled(TouchableOpacity)`
 
 const CancelBtn = styled(TouchableOpacity)`
   border: 1px;
-  border-color: #F9F7BB;
+  border-color: ${(props) => props.theme.palette.point};
   border-radius: 10px;
   width: 80px;
   height: 35px;
@@ -45,6 +45,7 @@ const BtnText = styled(Text)`
   font-size: 16px;
   text-align: center;
   font-family: ${(props) => props.theme.fonts.content};
+  color: ${(props) => props.theme.palette.font}; 
 `
 
 const CenterView = styled(View)`
