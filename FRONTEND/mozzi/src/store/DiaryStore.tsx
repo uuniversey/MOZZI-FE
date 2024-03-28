@@ -4,7 +4,7 @@ import axios from '../../axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const useDiaryStore = create((set) => ({
-  calendarData: '',
+  calendarData: [],
   getCalendar: async (foodYear, foodMonth) => {
     console.log('년도와 월 잘받았나?', foodYear, foodMonth)
     const token = await AsyncStorage.getItem('accessToken')
