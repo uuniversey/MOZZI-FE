@@ -64,7 +64,6 @@ const useRecipeStore = create((set) => ({
       console.error('음식 선호도 업데이트 중 오류가 발생했습니다:', error);
     }
   },
-  },
 
   getIngredient: async () => {
     const token = await AsyncStorage.getItem('accessToken')
@@ -81,7 +80,6 @@ const useRecipeStore = create((set) => ({
     } catch (error) {
       console.error('레시피 상세 데이터 얻기 실패:', error)
     }
-
   }
 
 }))
