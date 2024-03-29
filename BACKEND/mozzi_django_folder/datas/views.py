@@ -26,6 +26,8 @@ from pyvis.network import Network
 import pandas as pd
 import numpy as np
 import pymysql
+from sqlalchemy import create_engine
+
 from django.utils.http import urlsafe_base64_decode
 # 식재료 뽑기
 def get_ingredients(start, last):
@@ -826,8 +828,6 @@ def user_ingredient_affection(request):
     e_value = data[index_e:index_comma]
     user_number = e_value[1:-1]
     print(user_number)
-
-    
     # print(type(user))
     db = pymysql.connect(
                         host = "a304.site",
@@ -836,23 +836,38 @@ def user_ingredient_affection(request):
                         password = "ssafy",
                          )
     # print(user)
-    for food in request.data['foods']:
-        print(food)
-        isWin = food['value']
-        # 모든 음식 상태 데이터베이스 가져옴
-        df = pd.read_pickle("df2.pkl")
 
         # 해당 음식과 관련있는 모든 음싟 
         # 유저가 총 한 횟수 가져옴
         # 모든 음식들에 대해서 필터링
         
-        with db.cursor() as cursor:
-            query = f"select "
+    with db.cursor() as cursor:
+        query = f"select user_id from mozzi.user where user_code = {user_number}"
+        cursor.execute(query)
+        userId = cursor.fetchall()[0][0]
 
-            query = f"SELECT distinct food_id, ingredient_ratio from mozzi.food_ingredient LEFT JOIN mozzi.datas_ingredient ON food_ingredient.ingredient_id = datas_ingredient.id \
-                    WHERE ingredient_name = '{input_ingredient_name}'"
+
+        for food in request.data['foods']:
+            print(food)
+            isWin = food['value']
+            # 모든 음식 상태 데이터베이스 가져옴
+            try:
+                df = pd.read_pickle(f"{userId}-df.pkl")
+            except:
+                df = pd.read_sql(f"select * from mozzi.user_food where user_id = {userId}" ,db)
+            print(df)
+            print(food['foodName'])
+            query = f'select food_id from mozzi.datas_foods where food_name = "{food['foodName']}"'
+            cursor.execute(query)
+            food_id = cursor.fetchall()[0][0]
+
+            print(food_id)
+            query = f'select * from mozzi.foods_foods where food_id = {food_id} or other_food_id = {food_id}'
+            # query = f"SELECT distinct food_id, ingredient_ratio from mozzi.food_ingredient LEFT JOIN mozzi.datas_ingredient ON food_ingredient.ingredient_id = datas_ingredient.id \
+            #         WHERE ingredient_name = '{input_ingredient_name}'"
             cursor.execute(query)
             foodList = cursor.fetchall()
+            print(foodList)
         
             # for food in foodList:
                 # print(food)
@@ -860,12 +875,33 @@ def user_ingredient_affection(request):
         
 
 
+def savepkls():
+    db = pymysql.connect(
+                        host = "a304.site",
+                        port = 3306,
+                        user = "ssafy",
+                        password = "ssafy",
+                         )
+    df = pd.read_pickle("df2.pkl")
+    df['food_id'] = df.index + 1
+    engine = create_engine("mysql+pymysql://ssafy:ssafy@a304.site:3306/mozzi?charset=utf8mb4")
+    engine.connect()
 
+    melted_df = df.melt(id_vars ='food_id', var_name ='other_food_id', value_name = "relations")
+    melted_df['other_food_id'] = melted_df['other_food_id'].apply(lambda x: x + 1)
 
-
-        # 모든 리스트를 
+    melted_df = melted_df[melted_df["food_id"] > melted_df["other_food_id"]]
+    melted_df = melted_df[melted_df["relations"] > 0]
+    # print(melted_df)
+    melted_df.to_sql('foods_foods', con = engine, if_exists = 'replace', index = False)
+    # print(melted_df)
+    # print(df)
+    # 모든 리스트를 
 
 
 # recommendFoods()
 # readPkl()
 # set_Category()
+    
+
+# savepkls()
