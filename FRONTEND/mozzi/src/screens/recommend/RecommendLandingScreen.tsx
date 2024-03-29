@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Animated, View, Image } from 'react-native'
 import styled from 'styled-components/native'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import { Header } from '../../components/Header/Header'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Text } from 'react-native'
 
@@ -105,9 +104,6 @@ function RecommendLandingScreen() {
 
   return (
     <>
-      <Header>
-        <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
-      </Header>
       <Container>
         <InnerContainer>
         <Animated.View

@@ -28,7 +28,7 @@ const TextToSpeech = ({ text }) => {
   return (
     <>
     <Btn>
-      <Icon name="headset" size={40} onPress={speak}/>
+      <Icon name="headset" size={30} onPress={speak}/>
     </Btn>
     </>
   )
