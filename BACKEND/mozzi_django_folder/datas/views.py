@@ -436,7 +436,8 @@ def migrate_sql_to_neo4j(request):
     neo4j_user = "neo4j"
     neo4j_password = "mozzimozzi"
     neo4j_driver = GraphDatabase.driver(neo4j_uri, auth=(neo4j_user, neo4j_password))
-    def create_relation(tx, food_id, ingredient_id, ingredient_ratio, ingredient_count):
+    # Food와 Ingredient를 연결하는 관계 생성 함수
+    def create_food_ingredient_relation(tx, food_id, ingredient_id, ingredient_ratio, ingredient_count):
         tx.run("""
         MATCH (f:Food {id: $food_id})
         MATCH (i:Ingredient {id: $ingredient_id})
@@ -446,57 +447,32 @@ def migrate_sql_to_neo4j(request):
         }]->(i)
         """, food_id=food_id, ingredient_id=ingredient_id, ingredient_ratio=ingredient_ratio, ingredient_count=ingredient_count)
 
-    # MySQL 데이터 읽어오기 (food_ingredient)
-    mysql_cursor.execute("SELECT food_id, ingredient_id, ingredient_ratio, ingredient_count FROM food_ingredient")
+#   MySQL에서 user_food 데이터 읽어오기
+    mysql_cursor.execute("SELECT food_id, user_id, ingredient_ratio, ingredient_count FROM food_ingredient")
     mappings = mysql_cursor.fetchall()
 
-    # 데이터 삽입
+    # 데이터 삽입 (User와 Food를 연결하는 관계 생성)
     with neo4j_driver.session() as session:
         for mapping in mappings:
-            food_id = mapping['food_id']
-            ingredient_id = mapping['ingredient_id']
-            ingredient_ratio = mapping['ingredient_ratio']
-            ingredient_count = mapping['ingredient_count']
+            session.write_transaction(create_food_ingredient_relation, mapping['food_id'], mapping['ingredient_id'], mapping['ingredient_ratio'], mapping['ingredient_count'])
+#     def create_food_ingredient_relation(tx, food_id, ingredient_id, ingredient_ratio, ingredient_count):
+#         tx.run("""
+#         MATCH (f:Food {id: $food_id})
+#         MATCH (i:Ingredient {id: $ingredient_id})
+#         MERGE (f)-[:CONTAINS {
+#             ratio: $ingredient_ratio,
+#             count: $ingredient_count
+#         }]->(i)
+#         """, food_id=food_id, ingredient_id=ingredient_id, ingredient_ratio=ingredient_ratio, ingredient_count=ingredient_count)
 
-            session.write_transaction(create_relation, food_id, ingredient_id, ingredient_ratio, ingredient_count)
-    # MySQL 데이터 읽어오기
-    # mysql_cursor.execute("SELECT * FROM datas_ingredient")
-    # foods = mysql_cursor.fetchall()
-    # def create_food_node(tx, food_id, food_name):
-    #     tx.run("MERGE (f:Food {id: $food_id, name: $food_name})", food_id=food_id, food_name=food_name)
+#   # MySQL에서 food_ingredient 데이터 읽어오기
+#     mysql_cursor.execute("SELECT food_id, ingredient_id, ingredient_ratio, ingredient_count FROM food_ingredient")
+#     mappings = mysql_cursor.fetchall()
 
-    # # MySQL에서 데이터 읽기 (datas_foods)
-    # mysql_cursor.execute("SELECT food_id, food_name FROM datas_foods")
-    # foods = mysql_cursor.fetchall()
-
-    # # 데이터 삽입
-    # with neo4j_driver.session() as session:
-    #     for food in foods:
-    #         session.write_transaction(create_food_node, food['food_id'], food['food_name'])
-    # Neo4j에 데이터 저장
-    # def create_food_node(tx, ingredient_name, category_id):
-    #     tx.run("CREATE (f:Food {name: $ingredient_name, category_id: $category_id})", 
-    #         ingredient_name=ingredient_name, category_id=category_id)
-
-    # def create_category_node(tx, category_name, category_id):
-    #     tx.run("MERGE (c:Category {id: $category_id}) ON CREATE SET c.name = $category_name", 
-    #         category_name=category_name, category_id=category_id)
-
-    # def create_relation(tx, ingredient_name, category_id):
-    #     tx.run("MATCH (f:Food {name: $ingredient_name}), (c:Category {id: $category_id}) "
-    #            "MERGE (f)-[:BELONGS_TO]->(c)", ingredient_name=ingredient_name, category_id=category_id)
-
-    # with neo4j_driver.session() as session:
-    #     for food in foods:
-    #         category_id = food['category_id']
-    #         mysql_cursor.execute("SELECT category_name FROM datas_category WHERE id = %s", (category_id,))
-    #         category_name = mysql_cursor.fetchone()['category_name']
-
-    #         session.write_transaction(create_category_node, category_name, category_id)
-    #         session.write_transaction(create_food_node, food['ingredient_name'], category_id)
-    #         session.write_transaction(create_relation, food['ingredient_name'], category_id)
-
-    
+#     # 데이터 삽입 (Food와 Ingredient를 연결하는 관계 생성)
+#     with neo4j_driver.session() as session:
+#         for mapping in mappings:
+#             session.write_transaction(create_food_ingredient_relation, mapping['food_id'], mapping['ingredient_id'], mapping['ingredient_ratio'], mapping['ingredient_count'])
 
     # 연결 종료
     mysql_cursor.close()
@@ -514,7 +490,11 @@ def add_ingredients_to_refrigerator(request):
     foodingredients = FoodIngredient.objects.all()
     # print(request.headers['Authorization'],'adddddddddddddddd')
     token = request.headers['Authorization'].split(' ')[1]
-    data = base64.b64decode(token)
+    if len(token) != 165 :
+        token = token[:-1]
+   
+    data=urlsafe_base64_decode(token)
+    # data = base64.b64decode(token)
    
     data = data.decode('latin-1')
     
