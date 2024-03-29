@@ -25,7 +25,7 @@ const Question = styled(Text)`
 `
 
 const ChoiceContainer = styled(View)`
-  margin: 20px 0 100px 0;
+  margin: 20px 0 50px 0;
   display: flex;
   flex-direction: row;
 `
@@ -49,6 +49,10 @@ const StyledImage = styled(Image)`
   border-radius: 100px;
 `
 
+const LoadingText = styled(Text)`
+  
+`
+
 const ChoiceText = styled(Text)`
   font-size: 12px;
   color: ${(props) => props.theme.palette.font};
@@ -61,6 +65,12 @@ function WorldcupScreen() {
   const [step, setStep] = useState(1)
   const { getRecipe, recipeData } = useRecipeStore()
   const [currentChoices, setCurrentChoices] = useState([])
+
+  useEffect(() => {
+    if (recipeData.length > 0) {
+      updateChoices(recipeData);
+    }
+  }, [recipeData]);
 
   useEffect(() => {
     getRecipe()
@@ -84,29 +94,32 @@ function WorldcupScreen() {
         prevChoices.sort(() => 0.5 - Math.random())
       );
     } else {
-      navigation.navigate('Recommend') // 실제로 사용할 스크린 이름으로 변경
+      navigation.navigate('RecommendLanding') // 실제로 사용할 스크린 이름으로 변경
       setStep(1); // 스텝 초기화
     }
   };
 
   return (
     <>
-      <Header>
-        <Header.Icon iconName="chevron-back" onPress={() => navigation.goBack()} />
-      </Header>
       <Container>
-        <TextContainer>
-          <Question>어떤 음식을 선호하시나요?</Question>
-          <Text>({step}/3)</Text>          
-        </TextContainer>
-        <ChoiceContainer>
-          {currentChoices.map((choice, index) => (
-            <ChoiceButton key={index} onPress={() => handleChoice(choice)}>
-              <ChoiceText>{choice.foodName}</ChoiceText>
-              <StyledImage source={{ uri: choice.photoUrl }} style={{ width: 150, height: 150 }} />
-            </ChoiceButton>
-          ))}
-        </ChoiceContainer>
+        {recipeData.length === 0 ? ( // recipeData가 비어있을 때 "로딩 중..." 표시
+          <LoadingText>로딩 중...</LoadingText>
+        ) : (
+          <>
+            <TextContainer>
+              <Question>어떤 음식을 선호하시나요?</Question>
+              <Text>({step}/3)</Text>          
+            </TextContainer>
+            <ChoiceContainer>
+              {currentChoices.map((choice, index) => (
+                <ChoiceButton key={index} onPress={() => handleChoice(choice)}>
+                  <ChoiceText>{choice.foodName}</ChoiceText>
+                  <StyledImage source={{ uri: choice.photoUrl }} style={{ width: 150, height: 150 }} />
+                </ChoiceButton>
+              ))}
+            </ChoiceContainer>
+          </>
+        )}
       </Container>
     </>
   );

@@ -29,7 +29,17 @@ import pymysql
 from sqlalchemy import create_engine
 
 from django.utils.http import urlsafe_base64_decode
+from . import tasks
+# result = tasks.reset_food_views.delay()
+# print(result.get())
+# print('settings')
 # 식재료 뽑기
+from .tasks import reset_food_views
+
+
+# 작업 결과 확인
+
+
 def get_ingredients(start, last):
     URL = f"http://openapi.foodsafetykorea.go.kr/api/2055492edca74694aa38/COOKRCP01/json/{start}/{last}"
     response = requests.get(URL)

@@ -30,6 +30,10 @@ function CustomDropdown ({ data, placeholder, isMulti }) {
     setDropdownData(item.value)
   }
   
+  useEffect(() => {
+    console.log(selected, '선택된 애들')
+  }, [selected])
+
   // open했을때 css
   // const renderItem = item => {
   //   return (

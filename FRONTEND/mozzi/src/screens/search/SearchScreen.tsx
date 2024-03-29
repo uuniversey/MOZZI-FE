@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, Image } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import styled from 'styled-components/native'
@@ -13,6 +13,7 @@ import useRecipeStore from '../../store/RecipeStore'
 const Container = styled(View)`
   flex: 1;
   background-color: ${(props) => props.theme.palette.background};
+  align-items: center;
 `
 
 const SearchView = styled(View)`
@@ -20,10 +21,31 @@ const SearchView = styled(View)`
   height: 60%;
 `
 
-const Hr = styled(View)`
-  margin: 30px;
-  border-bottom-width: 1px;
-  border-bottom-color: rgb(128, 128, 128);
+const Card = styled(View)`
+  width: 350px;
+  height: 350px;
+  background-color: rgba(247, 207, 207, 0.7);
+  border-radius: 15px;
+  padding: 16px;
+  align-items: center;
+  /* margin-vertical: 8px; */
+  margin-top: 8px;
+  margin-bottom: 8px;
+`
+
+const StyledImage = styled(Image)`
+  width: 200px;
+  height: 200px;
+  border-radius: 200px;
+  margin-bottom: 8px;
+  /* border: 1px solid ${(props) => props.theme.palette.pointDark}; */
+`
+
+const MealName = styled(Text)`
+  font-size: 16px;
+  color: ${(props) => props.theme.palette.font};
+  margin-bottom: 8px;
+  font-family: ${(props) => props.theme.fonts.title};
 `
 
 const Btn = styled(TouchableOpacity)`
@@ -52,7 +74,7 @@ const SelectedText = styled(Text)`
 function SearchScreen () {
   
   const navigation = useNavigation()
-  const { getRecipe, recipeData, getRecipeDetail } = useRecipeStore()
+  const { getRecipe, recipeData, recipeDetailData, getRecipeDetail } = useRecipeStore()
 
   const [selectedRecipeName, setSelectedRecipeName] = useState<string>('')
 
@@ -81,12 +103,20 @@ function SearchScreen () {
       <SearchView>
         <SearchBar data={recipeData} onSelect={handleSelectRecipe}/>
       </SearchView>
+
+      {/* <Card>
+        <StyledImage
+          source={{ uri: recipeDetailData?.photo }}
+          />
+        <MealName>{recipeDetailData?.foodName}</MealName>
+      </Card> */}
+
       {selectedRecipeName ?
        <SelectedText>
-        {selectedRecipeName}의 레시피로 이동할게요
+        {selectedRecipeName}의 레시피로 이동할까요?
       </SelectedText> : ''
       }
-      <Hr />
+
       <Btn onPress={moveRecipe}>
         <BtnText>이동</BtnText>
       </Btn>

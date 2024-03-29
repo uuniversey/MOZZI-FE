@@ -27,13 +27,14 @@ SECRET_KEY = 'django-insecure-g)2howhcux-dfu^m@934()fjvvd%vezh=(-19oyhc7#&t5sb5h
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
+
 TIME_ZONE = 'Asia/Seoul'
 
 # Application definition
 
 INSTALLED_APPS = [
     'datas',
+    'django_celery_beat',
     'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -130,7 +131,6 @@ DATABASES = {
 
 
 }
-
 connect(
     db='mozzi',
     host='a304.site',
@@ -144,21 +144,32 @@ connect(
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://a304.site:6379/1',  # 여기서 '1'은 레디스 데이터베이스 번호입니다.
+        'LOCATION': 'redis://a304.site:6379/0',  # 여기서 '1'은 레디스 데이터베이스 번호입니다.
         'OPTIONS': {
+            "PASSWORD" : "ssafy",
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }
     }
 }
-CELERY_BROKER_URL = 'redis://a304.iste:6379/0'
-CELERY_RESULT_BACKEND = 'redis://a304.iste:6379/0'
 
-CELERY_BEAT_SCHEDULE = {
-    'reset_food_today_views': {
-        'task': 'your_app.tasks.reset_food_views',
-        'schedule': crontab(hour=0, minute=0),  # 매일 오전 12시 실행
-    },
-}
+# CELERY_BROKER_URL = 'redis://default:ssafy@a304.site:6379/0'
+# CELERY_RESULT_BACKEND = 'redis://default:ssafy@a304.site:6379/0'
+
+CELERY_BROKER_URL = 'redis://a304.site:6379/0'
+CELERY_RESULT_BACKEND = 'redis://a304.site:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Seoul'
+# CELERY_APP = 'mozzi_django'
+CELERY_TIMEZONE = 'Asia/Seoul'
+
+# CELERY_BEAT_SCHEDULE = {
+#     'reset_food_today_views': {
+#         'task': 'datas.tasks.reset_food_views',
+#         'schedule': crontab(hour=9, minute=5),  # 매일 오전 12시 실행
+#     },
+# }
 # 추가로, 세션, 캐시 및 기타 사용 사례에 레디스를 사용하려면 다음과 같이 설정할 수 있습니다.
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
@@ -186,7 +197,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+
 
 USE_I18N = True
 
