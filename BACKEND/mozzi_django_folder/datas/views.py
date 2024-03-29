@@ -879,17 +879,22 @@ def set_Category():
 @api_view(["PUT"])
 def user_ingredient_affection(request):
     input_ingredient_name = "두부"
-
+    print(1111111111111111111)
     # print(request.data['foods'])
     token = request.headers['Authorization'].split(' ')[1]
+    print(2222222222222222222222)
     data = base64.b64decode(token)
-   
+    print(3333333333333333333333)
     data = data.decode('latin-1')
-    
+    print(44444444444444444444)
     index_e = data.index('"e":') + len('"e":')  # "e": 다음 인덱스부터 시작
+    print(5555555555555555555555555)
     index_comma = data.index(',', index_e)  # 쉼표(,)가 나오는 인덱스 찾기
+    print(6666666666666666666666)
     e_value = data[index_e:index_comma]
+    print(7777777777777777777777777777)
     user_number = e_value[1:-1]
+    print(8888888888888888888888)
     print(user_number)
     # print(type(user))
     db = pymysql.connect(
