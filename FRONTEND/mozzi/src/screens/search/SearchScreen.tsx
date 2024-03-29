@@ -13,6 +13,7 @@ import useRecipeStore from '../../store/RecipeStore'
 const Container = styled(View)`
   flex: 1;
   background-color: ${(props) => props.theme.palette.background};
+  align-items: center;
 `
 
 const SearchView = styled(View)`
@@ -73,7 +74,7 @@ const SelectedText = styled(Text)`
 function SearchScreen () {
   
   const navigation = useNavigation()
-  const { getRecipe, recipeData, getRecipeDetail } = useRecipeStore()
+  const { getRecipe, recipeData, recipeDetailData, getRecipeDetail } = useRecipeStore()
 
   const [selectedRecipeName, setSelectedRecipeName] = useState<string>('')
 
@@ -103,15 +104,12 @@ function SearchScreen () {
         <SearchBar data={recipeData} onSelect={handleSelectRecipe}/>
       </SearchView>
 
-      <Card>
+      {/* <Card>
         <StyledImage
-          // source={require('../../assets/recommend/pizza.jpg')}
-          source={{ uri: recipe?.photo }}
+          source={{ uri: recipeDetailData?.photo }}
           />
-        {/* <MealName>피자 최고</MealName> */}
-        <MealName>{recipe?.foodName}</MealName>
-      </Card>
-
+        <MealName>{recipeDetailData?.foodName}</MealName>
+      </Card> */}
 
       {selectedRecipeName ?
        <SelectedText>

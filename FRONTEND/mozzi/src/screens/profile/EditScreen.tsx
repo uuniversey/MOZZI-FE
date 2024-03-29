@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button } from 'react-native'
 import styled from 'styled-components/native'
 
 import CustomDropdown from '../../components/Dropdown/CustomDropdown'
-import {SearchFood} from '../../components/AutoWord/SearchFood'
+import { SearchBar } from '../../components/AutoWord/SearchLike'
 
 import useProfileStore from '../../store/ProfileStore'
 import useFridgeStore from '../../store/FridgeStore'
@@ -51,18 +51,19 @@ function EditScreen() {
       />
 
       <Label>좋아하는 식재료</Label>
-      <CustomDropdown
+      <SearchLike></SearchLike>
+      {/* <CustomDropdown
         data={allFoods}
         placeholder="좋아하는 식재료를 입력하세요" 
         isMulti={true}
-      />
+      /> */}
 
       <Label>싫어하는 식재료</Label>
-            <CustomDropdown
+      {/* <CustomDropdown
         data={allFoods}
         placeholder="싫어하는 식재료를 입력하세요"
         isMulti={true}
-      />
+      /> */}
 
       <Label>비건 여부</Label>
       <CustomDropdown
