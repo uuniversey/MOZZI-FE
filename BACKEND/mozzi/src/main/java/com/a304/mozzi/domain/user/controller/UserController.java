@@ -3,18 +3,15 @@ package com.a304.mozzi.domain.user.controller;
 import com.a304.mozzi.config.jwt.JwtIssuer;
 import com.a304.mozzi.config.kakao.KakaoApi;
 import com.a304.mozzi.config.security.UserPrincipal;
-import com.a304.mozzi.domain.foods.model.Food;
 import com.a304.mozzi.domain.foods.service.FoodService;
 import com.a304.mozzi.domain.ingredients.model.IngredientsModel;
 import com.a304.mozzi.domain.ingredients.service.IngrdientsService;
 import com.a304.mozzi.domain.user.customfood.dto.UserFoodInpDto;
-import com.a304.mozzi.domain.user.customfood.model.UserFood;
-import com.a304.mozzi.domain.user.customfood.repository.UserFoodRepository;
 import com.a304.mozzi.domain.user.customfood.service.UserFoodService;
 import com.a304.mozzi.domain.user.customingredient.dto.IngredientsListDto;
 import com.a304.mozzi.domain.user.customingredient.dto.UserIngredientDto;
 import com.a304.mozzi.domain.user.customingredient.model.UserIngredientModel;
-import com.a304.mozzi.domain.user.customingredient.repository.UserIngredientRepository;
+import com.a304.mozzi.domain.user.customingredient.service.UserIngredientService;
 import com.a304.mozzi.domain.user.dto.LoginResponseDto;
 import com.a304.mozzi.domain.user.dto.UserIsVeganDto;
 import com.a304.mozzi.domain.user.dto.UserNicknameDto;
@@ -22,21 +19,16 @@ import com.a304.mozzi.domain.user.dto.UserProfileDto;
 import com.a304.mozzi.domain.user.model.UserModel;
 import com.a304.mozzi.domain.user.service.UserService;
 import com.a304.mozzi.global.dto.ResponseDto;
-
 import com.a304.mozzi.global.dto.ResponseMessageDto;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import org.apache.commons.logging.Log;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
@@ -53,8 +45,8 @@ public class UserController {
     private final KakaoApi kakaoApi;
     private final JwtIssuer jwtIssuer;
     private final FoodService foodService;
-    private  final  IngrdientsService ingredientsService;
-    private final UserIngredientRepository userIngredientRepository;
+    private final  IngrdientsService ingredientsService;
+    private final UserIngredientService userIngredientService;
     private  final UserFoodService userFoodService;
     @GetMapping("/Oauth2/KakaoLogin")
     public ResponseEntity<java.util.Map<String, String>> ClientKakaoLogin() {
@@ -242,7 +234,7 @@ public class UserController {
         try
         {
             UserModel user = userService.findCurrentUser();
-            List<UserIngredientModel> userIngredientModels = userIngredientRepository.findUserIngredientModelsByUser(user);
+            List<UserIngredientModel> userIngredientModels = userIngredientService.findUserIngredientModelsByUser(user);
             List<UserIngredientDto> userIngredientDtoList = new ArrayList<>();
             for (UserIngredientModel userIngredientModel : userIngredientModels)
             {
@@ -279,7 +271,7 @@ public class UserController {
         result.put("nickname", nickname.getNickname());
         return ResponseEntity.ok().body(result);
     }
-//
+
 //    @PostMapping("/signup/setfood")
 //    ResponseEntity<?> addFoodPreference(@RequestParam List<UserFoodInpDto> listInp) {
 //        try {
@@ -319,13 +311,11 @@ public class UserController {
     @Transactional
     ResponseEntity<?> addIsLike(@RequestBody IngredientsListDto listInp) {
         try {
-
+            long startTime =  System.currentTimeMillis();
             UserModel user = userService.findCurrentUser();
-            userIngredientRepository.deleteAllByUser(user);
+            userIngredientService.deleteAllByUser(user);
             for (UserFoodInpDto userFoodInpDto : listInp.getFoods()) {
-
                 IngredientsModel ingredientsModel =ingredientsService.findIngredientsByIngredientsName(userFoodInpDto.getFoodName());
-                log.info(userFoodInpDto.getFoodName());
 //              Food food = foodService.findFoodByFoodName(userFoodInpDto.getFoodName());
                 UserIngredientModel userIngredientModel = UserIngredientModel.builder()
                         .user(user)
@@ -337,15 +327,14 @@ public class UserController {
 //                        .user(user)
 //                        .userFoodPreference(userFoodInpDto.getValue())
 //                        .build();
-
-                userIngredientRepository.save(userIngredientModel);
+                userIngredientService.create(userIngredientModel, user);
             }
             ResponseMessageDto responseMessageDto = ResponseMessageDto.builder().message("Item Created").build();
+            log.info(String.valueOf(System.currentTimeMillis() - startTime));
             return ResponseEntity.ok().body(responseMessageDto);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-
     }
 
     @DeleteMapping("/setfood")

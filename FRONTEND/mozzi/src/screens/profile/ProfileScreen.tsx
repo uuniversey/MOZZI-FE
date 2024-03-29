@@ -112,27 +112,27 @@ function ProfileScreen () {
           <View>
             <Label>닉네임</Label>
             <StyledInput
-              placeholder={`${form.nickname}`}
+              placeholder={`${profileData.nickname}`}
               editable={false}
             />
             <Label>알레르기 정보</Label>
             <StyledInput
-              placeholder={`${form.foods}`}
+              placeholder={`${profileData.foods}`}
               editable={false}
             />
-            <Label>좋아하는 음식</Label>
+            <Label>좋아하는 식재료</Label>
             <StyledInput
-              placeholder={`${form.foods}`}
+              placeholder={`${profileData.foods}`}
               editable={false}
             />
-            <Label>싫어하는 음식</Label>
+            <Label>싫어하는 식재료</Label>
             <StyledInput
-              placeholder={`${form.foods}`}
+              placeholder={`${profileData.foods}`}
               editable={false}
             />
             <Label>비건 여부</Label>
             <StyledInput
-              placeholder={`${form.isVegan}`}
+              placeholder={`${(profileData.isVegan)? '네':'아니오'}`}
               editable={false}
             />
           </View>

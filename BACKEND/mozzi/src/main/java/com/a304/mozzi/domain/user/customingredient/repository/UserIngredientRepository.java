@@ -12,8 +12,8 @@ import java.util.List;
 @Repository
 public interface UserIngredientRepository extends JpaRepository<UserIngredientModel, Integer> {
 
-    public UserIngredientModel findUserIngredientModelByUserAndIngredients(UserModel user, IngredientsModel ingredientsModel);
+     UserIngredientModel findUserIngredientModelByUserAndIngredients(UserModel user, IngredientsModel ingredientsModel);
 
-    public List<UserIngredientModel> findUserIngredientModelsByUser(UserModel user);
-    public void deleteAllByUser(UserModel user);
+     List<UserIngredientModel> findUserIngredientModelsByUser(UserModel user);
+     void deleteAllByUser(UserModel user);
 }

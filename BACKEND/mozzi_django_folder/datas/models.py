@@ -46,7 +46,7 @@ class User(models.Model):
     user_nickname = models.CharField(max_length=20)
     user_register_date = models.DateTimeField()
     user_isvegan = models.BooleanField()
-
+    
     class Meta:
         db_table = 'user'  # MySQL 데이터베이스의 테이블 이름을 'user'로 지정
 
@@ -59,7 +59,6 @@ class FoodIngredient(models.Model):
     ingredient_id = models.ForeignKey(Ingredient, on_delete=models.CASCADE, db_column='ingredient_id')
     ingredient_ratio = models.FloatField()
     ingredient_count = models.IntegerField()
-
     class Meta:
         managed = False
         db_table = 'food_ingredient'

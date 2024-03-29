@@ -17,7 +17,7 @@ from celery.schedules import crontab
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+ALLOWED_HOSTS = ['a304.site', '127.0.0.1', 'localhost']
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -101,7 +101,6 @@ ALLOWED_HOSTS = ['a304.site','127.0.0.1','localhost']
 #     db='my_mongodb_database',  # 여기에는 사용할 MongoDB 데이터베이스 이름을 넣으세요.
 #     host='mongodb://localhost:27017/',  # MongoDB 호스트 주소입니다. 포트 번호 27017을 사용합니다.
 #     alias='default',  # 이 부분은 Django에서 사용할 alias를 설정하는 부분입니다.
-
 # )
 ### 서버용
 DATABASES = {
