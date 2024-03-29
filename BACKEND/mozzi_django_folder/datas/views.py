@@ -25,9 +25,13 @@ from py2neo import Graph
 from pyvis.network import Network
 import pandas as pd
 import numpy as np
+from io import StringIO, BytesIO
 import pymysql
+from django.conf import settings
+import boto3
+from botocore.config import Config
 
-
+import math
 
 from django.utils.http import urlsafe_base64_decode
 from . import tasks
@@ -910,68 +914,72 @@ def user_ingredient_affection(request):
         cursor.execute(query)
         userId = cursor.fetchall()[0][0]
 
+        filewewant = f"{userId}-df.csv"
+        try:
+            obj =  takeFilesFromS3(filewewant)
+            print('h3')
+            df = pd.read_csv(BytesIO(obj["Body"].read()))
+        except:
+            print("에러발생")
+            df = pd.read_sql(f"select user_food_preference from mozzi.user_food where user_id = {userId}" ,db)
 
         for food in request.data['foods']:
-            print(food)
             isWin = food['value']
             # 모든 음식 상태 데이터베이스 가져옴
-            try:
-                df = pd.read_pickle(f"{userId}-df.pkl")
-            except:
-                df = pd.read_sql(f"select * from mozzi.user_food where user_id = {userId}" ,db)
-            print(df)
-            print(food['foodName'])
+
             foodName = food['foodName']
             query = f'select food_id from mozzi.datas_foods where food_name = "{foodName}"'
             cursor.execute(query)
             food_id = cursor.fetchall()[0][0]
             
-            query = f'update mozzi.user_food set total = total + 1 where food_id = "{food_id} and user_id = {userId}"'
-            # food_id = cursor.fetchall()[0][0]
+            query = f'update mozzi.user_food set total = total + 1 where food_id = {food_id} and user_id = {userId}'
+            cursor.execute(query)
+            db.commit()
+
+
             print(food_id)
+            query = f'select worldcup from mozzi.user where user_id = {userId}'
+            cursor.execute(query)
+            N = math.log10(cursor.fetchall()[0][0]) * isWin
+
             query = f'select * from mozzi.foods_foods where food_id = {food_id} or other_food_id = {food_id}'
             # query = f"SELECT distinct food_id, ingredient_ratio from mozzi.food_ingredient LEFT JOIN mozzi.datas_ingredient ON food_ingredient.ingredient_id = datas_ingredient.id \
             #         WHERE ingredient_name = '{input_ingredient_name}'"
 
-
             cursor.execute(query)
             foodList = cursor.fetchall()
-            print(foodList)
 
-        
-            # for food in foodList:
-                # print(food)
+
+
+            # print(foodList)
+            for fooddd in foodList:
+                # print(fooddd)
+                synchronize = fooddd[2]
+                affectedFoodNumber = fooddd[0] + fooddd[1] - food_id
+                df.iloc[affectedFoodNumber - 1] = df.iloc[affectedFoodNumber - 1] + 1 / N * synchronize
+            
+
+            saveFilesToS3(df, filewewant)
+            print(df.sort_values)
+
     return JsonResponse({'ok' : 1})
-        
+ 
+
+def takeFilesFromS3(filename):
+    s3_client = boto3.client(
+        's3',
+        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+        region_name=settings.AWS_S3_REGION_NAME,
+        # endpoint_url=f"https://{settings.AWS_STORAGE_BUCKET_NAME}.s3.ap-northeast-2.amazonaws.com",
+    )
+    obj = s3_client.get_object(Bucket = settings.AWS_STORAGE_BUCKET_NAME, Key = filename)
+    return obj
 
 
-def savepkls():
-    db = pymysql.connect(
-                        host = "a304.site",
-                        port = 3306,
-                        user = "ssafy",
-                        password = "ssafy",
-                         )
-    df = pd.read_pickle("df2.pkl")
-    df['food_id'] = df.index + 1
-    engine = create_engine("mysql+pymysql://ssafy:ssafy@a304.site:3306/mozzi?charset=utf8mb4")
-    engine.connect()
-
-    melted_df = df.melt(id_vars ='food_id', var_name ='other_food_id', value_name = "relations")
-    melted_df['other_food_id'] = melted_df['other_food_id'].apply(lambda x: x + 1)
-
-    melted_df = melted_df[melted_df["food_id"] > melted_df["other_food_id"]]
-    melted_df = melted_df[melted_df["relations"] > 0]
-    # print(melted_df)
-    melted_df.to_sql('foods_foods', con = engine, if_exists = 'replace', index = False)
-    # print(melted_df)
-    # print(df)
-    # 모든 리스트를 
-
-
-# recommendFoods()
-# readPkl()
-# set_Category()
-    
-
-# savepkls()
+def saveFilesToS3(df, filewewant):
+    s3 = boto3.resource('s3')
+    csv_buffer = StringIO()
+    df.to_csv(csv_buffer, encoding = 'utf-8', index=False)
+    s3.Object(settings.AWS_STORAGE_BUCKET_NAME, filewewant).put(Body = csv_buffer.getvalue())
+    return
