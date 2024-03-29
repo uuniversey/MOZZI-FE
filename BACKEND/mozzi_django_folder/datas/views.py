@@ -26,7 +26,7 @@ from pyvis.network import Network
 import pandas as pd
 import numpy as np
 import pymysql
-from sqlalchemy import create_engine
+
 
 from django.utils.http import urlsafe_base64_decode
 from . import tasks
