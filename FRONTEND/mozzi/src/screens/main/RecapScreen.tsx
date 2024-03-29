@@ -18,10 +18,8 @@ const RecipeCardContainer = styled(View)`
   background-color: ${(props) => props.theme.palette.point};
   border-radius: 20px;
   padding: 16px;
-  margin-top: 8px;
-  margin-bottom: 8px;
-  margin-left: 16px;
-  margin-right: 16px;
+  margin-bottom: 16px;
+  /* margin: 8px 16px 8px 16px; */
   align-items: center;
   justify-content: center;
 `
@@ -30,10 +28,7 @@ const NoRecipeCardContainer = styled(View)`
   background-color: ${(props) => props.theme.palette.point};
   border-radius: 20px;
   padding: 16px;
-  margin-top: 8px;
-  margin-bottom: 8px;
-  margin-left: 16px;
-  margin-right: 16px;
+  margin-bottom: 16px;
   align-items: center;
   justify-content: center;
   height: 250px;
@@ -55,7 +50,7 @@ const CardDay = styled(Text)`
 const CardImage = styled(Image)`
   width: 150px;
   height: 150px;
-  border-radius: 75px;
+  border-radius: 150px;
 `
 
 const CardTitle = styled(Text)`
@@ -78,18 +73,14 @@ const RecipeCard = ({ id, foodName, photoUrl, photoDate }: RecipeCardProps) => {
 const Container = styled(View)`
   flex: 1;
   background-color: ${(props) => props.theme.palette.background};
-  padding-right: 10px;
-  padding-left: 10px;
+  padding: 8px 16px 8px 16px;
 `
 
 const HeaderText = styled(Text)`
   font-size: 32px;
   color: ${(props) => props.theme.palette.font};
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin: 0 0 20px 10px;
   align-self: flex-start;
-  padding-left: 20px;
-  padding-right: 20px;
   font-family: ${(props) => props.theme.fonts.title};
 `
 
@@ -97,10 +88,7 @@ const ActionButton = styled(TouchableOpacity)`
   flex-direction: column;
   border-radius: 20px;
   padding: 16px;
-  margin-top: 8px;
-  margin-bottom: 8px;
-  margin-left: 16px;
-  margin-right: 16px;
+  /* margin: 8px 16px 8px 16px; */
   align-items: center;
   justify-content: center;
   border-color: rgba(0, 0, 0, 0.2);
@@ -167,11 +155,6 @@ function RecapScreen() {
   const goBack = () => {
     navigation.goBack()
   }
-
-  // const myRecipes = [
-  //   { title: '양념장 전', day: '2024-03-16', imageSource: require('../../assets/recommend/pizza.jpg') },
-  //   { title: '한 접시 풀잎', day: '2024-02-21', imageSource: require('../../assets/recommend/chicken.jpg') },
-  // ]
 
   const convertDay = (day: string): string => {
     const today = new Date();
