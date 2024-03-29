@@ -53,8 +53,6 @@ const useRecipeStore = create((set) => ({
         },
       });
 
-      console.log(response.data)
-
       // 요청 성공 여부를 확인하고 적절한 액션을 취합니다.
       if (response.status === 200) {
         console.log('음식 선호도가 성공적으로 업데이트 되었습니다.');

@@ -17,6 +17,7 @@ const Container = styled(View)`
   flex: 1;
   background-color: ${(props) => props.theme.palette.background};
   align-items: center;
+  padding: 16px;
 `
 
 const DateContainer = styled(View)`
@@ -25,8 +26,6 @@ const DateContainer = styled(View)`
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  padding-left: 20px;
-  padding-right: 20px;
 `;
 
 const DateText = styled(Text)`
@@ -38,16 +37,16 @@ const DateText = styled(Text)`
 const Line = styled(View)`
   border-bottom-color: #A4A4A4;
   border-bottom-width: 1px;
-  width: 85%;
+  width: 100%;
   align-self: center;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 `
 
 const ImageContainer = styled(View)`
-  border-width: 1px;
+  border: 1px solid #A4A4A4;
   background-color: ${(props) => props.theme.palette.background};
-  width: 350px;
-  height: 350px;
+  width: 100%;
+  aspect-ratio: 1;
   justify-content: center;
   align-items: center;
   margin-bottom: 20px;
@@ -58,8 +57,8 @@ const ImageInnerContainer = styled(TouchableOpacity)`
   border-color: #A4A4A4;
   border-radius: 10px;
   border-style: dotted;
-  width: 320px;
-  height: 320px;
+  width: 90%;
+  height: 90%;
   justify-content: center;
   align-items: center;
 `
@@ -87,12 +86,12 @@ const RecipeButton = styled(TouchableOpacity)`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  width: 350px;
+  width: 100%;
   elevation: 2;
 `
 
 const EnterContainer = styled(View)`
-  width: 85%;
+  width: 100%;
   margin-top: 50px;
   flex-direction: row;
   justify-content: flex-end;

@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native'
 import { Header } from '../../components/Header/Header'
 import useRecipeStore from '../../store/RecipeStore'
 import { Dice } from '../../components/Loading/Dice'
+import { ProgressBar } from '../../components/Loading/ProgressBar'
 
 const Container = styled(View)`
   flex: 1;
@@ -26,17 +27,16 @@ const Question = styled(Text)`
 `
 
 const ChoiceContainer = styled(View)`
-  margin: 20px 0 50px 0;
+  margin: 20px 0 0 0;
   display: flex;
-  flex-direction: row;
+  /* flex-direction: row; */
 `
 
 const ChoiceButton = styled(TouchableOpacity)`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 170px;
-  height: 220px;
+  width: 300px;
   margin: 10px;
   padding: 10px;
   background-color: ${(props) => props.theme.palette.point};
@@ -70,7 +70,6 @@ function WorldcupScreen() {
   const [step, setStep] = useState(1)
   const { getRecipe, recipeData, updatePreferences } = useRecipeStore()
   const [currentChoices, setCurrentChoices] = useState([])
-  const [preferences, setPreferences ] = useState([0, 0])
 
   useEffect(() => {
     if (recipeData.length > 0) {
@@ -92,7 +91,10 @@ function WorldcupScreen() {
   };
 
   const handleChoice = async (selectedChoice) => {
-    updateChoices(recipeData)
+    // if (step === 1) {
+    //   updateChoices(recipeData);
+    // }
+    // updateChoices(recipeData)
     // 현재 선택지 중에서 사용자가 선택하지 않은 음식을 찾습니다.
     const nonSelectedChoice = currentChoices.find(choice => choice.foodName !== selectedChoice.foodName);
 
@@ -124,6 +126,7 @@ function WorldcupScreen() {
       <>
         <Dice />
         <LoadingText>로딩 중...</LoadingText>
+        <ProgressBar />
       </>
         
       ) : (
