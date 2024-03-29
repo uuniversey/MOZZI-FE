@@ -8,6 +8,7 @@ import { Header } from '../../components/Header/Header'
 
 import EditScreen from './EditScreen'
 import useProfileStore from '../../store/ProfileStore'
+import useDropdownStore from '../../store/DropdownStore'
 
 
 interface UserProfileState {
@@ -69,6 +70,7 @@ const BtnText = styled(Text)`
 function ProfileScreen () {
   const navigation = useNavigation()
   const { getProfile, profileData, editNickname, editIsVegan, editFoodInfo, form } = useProfileStore()
+  const { dropdownData } = useDropdownStore()
   const [ isEdit, setIsEdit ] = useState<boolean>(false)
   const [ foodInfo, setFoodInfo ] = useState(
   [
@@ -90,7 +92,7 @@ function ProfileScreen () {
       console.log('this is form', form)
       // 입력 값으로 바꿔야 함
       editNickname(form.nickname)
-      editIsVegan(Boolean(form.isVegan))
+      editIsVegan(Boolean(dropdownData))
       editFoodInfo(foodInfo)
     }
     setIsEdit(!isEdit)
@@ -110,27 +112,27 @@ function ProfileScreen () {
           <View>
             <Label>닉네임</Label>
             <StyledInput
-              placeholder={`${form.nickname}`}
+              placeholder={`${profileData.nickname}`}
               editable={false}
             />
             <Label>알레르기 정보</Label>
             <StyledInput
-              placeholder={`${form.foods}`}
+              placeholder={`${profileData.foods}`}
               editable={false}
             />
-            <Label>좋아하는 음식</Label>
+            <Label>좋아하는 식재료</Label>
             <StyledInput
-              placeholder={`${form.foods}`}
+              placeholder={`${profileData.foods}`}
               editable={false}
             />
-            <Label>싫어하는 음식</Label>
+            <Label>싫어하는 식재료</Label>
             <StyledInput
-              placeholder={`${form.foods}`}
+              placeholder={`${profileData.foods}`}
               editable={false}
             />
             <Label>비건 여부</Label>
             <StyledInput
-              placeholder={`${form.isVegan == 0 ? '네':'아니오'}`}
+              placeholder={`${(profileData.isVegan)? '네':'아니오'}`}
               editable={false}
             />
           </View>

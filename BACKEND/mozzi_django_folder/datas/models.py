@@ -59,7 +59,6 @@ class FoodIngredient(models.Model):
     ingredient_id = models.ForeignKey(Ingredient, on_delete=models.CASCADE, db_column='ingredient_id')
     ingredient_ratio = models.FloatField()
     ingredient_count = models.IntegerField()
-
     class Meta:
         managed = False
         db_table = 'food_ingredient'

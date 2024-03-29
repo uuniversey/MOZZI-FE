@@ -25,6 +25,16 @@ const useProfileStore = create((set) => ({
         }
       })
       set({ profileData: response.data })
+      set((state) => ({
+        form: { // profileData를 사용하여 form 초기값 설정
+          ...state.form,
+          nickname: response.data.nickname,
+          allergyInfo: response.data.allergyInfo,
+          favoriteFood: response.data.favoriteFood,
+          dislikedFood: response.data.dislikedFood,
+          isVegan: response.data.isVegan
+        }
+      }))
       console.log('프로필 데이터 잘 받음111111111111', response.data)
     } catch (error) {
       console.error('프로필 데이터 요청 실패', error)
@@ -71,7 +81,7 @@ const useProfileStore = create((set) => ({
       set((state) => ({
         profileData: {
           ...state.profileData,
-          nickname: response.data.nickname,
+          isVegan: response.data.isVegan,
         }
       }))
     } catch (error) {

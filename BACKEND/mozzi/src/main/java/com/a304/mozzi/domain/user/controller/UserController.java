@@ -257,7 +257,9 @@ public class UserController {
         UserModel user = userService.findCurrentUser();
         log.info(String.valueOf(isVeganBody.getIsVegan()));
         userService.setUserIsVegan(user, isVeganBody.getIsVegan());
-        return ResponseEntity.ok(HttpStatus.OK);
+        Map<String, Boolean> result = new HashMap<>();
+        result.put("isVegan", isVeganBody.getIsVegan());
+        return ResponseEntity.ok().body(result);
     }
 
     @PatchMapping("/setnickname")
@@ -333,7 +335,6 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-
     }
 
     @DeleteMapping("/setfood")

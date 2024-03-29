@@ -3,8 +3,8 @@ import { View, Text, TextInput, Button, ScrollView, TouchableOpacity } from 'rea
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import styled from 'styled-components/native'
 
-import useProfileStore from '../../store/ProfileStore'
 import useLoginStore from '../../store/LoginStore'
+import useProfileStore from '../../store/ProfileStore'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useNavigation } from '@react-navigation/native'
@@ -85,8 +85,9 @@ const ListBtnText = styled(Text)`
 `
 
 function UserScreen() {
-  const { setIsLogin } = useLoginStore()
+  const { userData, setIsLogin } = useLoginStore()
   const { profileData } = useProfileStore()
+
   const navigation = useNavigation()
 
   const handleLogout = async (navigation) => {
@@ -118,7 +119,7 @@ function UserScreen() {
     <Container>
       <TitleContainer>
         <JustifyView>
-          <Title>{profileData.nickname} 님</Title>
+          <Title>{profileData?.nickname? (profileData.nickname) : (userData.nickname)} 님</Title>
           <LogoutBtn onPress={handleLogout}>
             <LogoutText>로그아웃</LogoutText>
           </LogoutBtn>

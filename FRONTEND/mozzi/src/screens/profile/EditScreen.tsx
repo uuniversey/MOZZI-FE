@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button } from 'react-native'
 import styled from 'styled-components/native'
 
 import CustomDropdown from '../../components/Dropdown/CustomDropdown'
-import {SearchFood} from '../../components/AutoWord/SearchFood'
+import { SearchBar } from '../../components/AutoWord/SearchLike'
 
 import useProfileStore from '../../store/ProfileStore'
 import useFridgeStore from '../../store/FridgeStore'
@@ -22,7 +22,7 @@ const StyledInput = styled(TextInput)`
 `
 
 function EditScreen() {
-  const { form, setForm } = useProfileStore()
+  const { profileData, form, setForm } = useProfileStore()
   const { allFoods } = useFridgeStore()
 
   const [text, setText] = useState('')
@@ -35,11 +35,6 @@ function EditScreen() {
 
   return (
     <View>
-      {allFoods.map((val) => {
-        console.log(val)
-      })}
-
-
       <Label>닉네임</Label>
       <StyledInput
         placeholder="닉네임을 입력하세요"
@@ -56,18 +51,19 @@ function EditScreen() {
       />
 
       <Label>좋아하는 식재료</Label>
-      <CustomDropdown
+      <SearchLike></SearchLike>
+      {/* <CustomDropdown
         data={allFoods}
         placeholder="좋아하는 식재료를 입력하세요" 
         isMulti={true}
-      />
+      /> */}
 
       <Label>싫어하는 식재료</Label>
-            <CustomDropdown
+      {/* <CustomDropdown
         data={allFoods}
         placeholder="싫어하는 식재료를 입력하세요"
         isMulti={true}
-      />
+      /> */}
 
       <Label>비건 여부</Label>
       <CustomDropdown
@@ -94,7 +90,6 @@ const allergyList = [
   { label: '돼지고기', value: 'pork' },
   { label: '복숭아', value: 'peach' },
   { label: '토마토', value: 'tomato' },
-  { label: '아황산류', value: 'sulfites' },
   { label: '호두', value: 'walnut' },
   { label: '닭고기', value: 'chicken' },
   { label: '쇠고기', value: 'beef' },

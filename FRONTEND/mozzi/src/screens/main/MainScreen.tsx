@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native'
 import { SearchHeader } from '../../components/Header/SearchHeader'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import useLoginStore from '../../store/LoginStore'
+import useProfileStore from '../../store/ProfileStore'
 
 interface RecipeItem {
   foodName: string
@@ -61,8 +62,9 @@ const MealQuestion = styled(Text)`
 const StyledImage = styled(Image)`
   width: 200px;
   height: 200px;
-  border-radius: 100px;
+  border-radius: 200px;
   margin-bottom: 8px;
+  /* border: 1px solid ${(props) => props.theme.palette.pointDark}; */
 `
 
 const MealName = styled(Text)`
@@ -101,6 +103,7 @@ function MainScreen() {
 
   const [recipe, setRecipe] = useState<RecipeItem | null>(null)
   const { userData } = useLoginStore()
+  const { profileData } = useProfileStore()
   // 로그인 유저 호출
   // 최다 뷰카운트 호출
   const popularRecipe = async () => {
@@ -152,7 +155,11 @@ function MainScreen() {
       <Container>
         <ContentContainer>
           {/* <Greeting>환영해요, 아우엉님 님!</Greeting> */}
-          <Greeting>환영해요, {userData.nickname} 님!</Greeting>
+          {profileData?.nickname? (
+            <Greeting>환영해요, {profileData.nickname} 님!</Greeting>
+          ) : (
+            <Greeting>환영해요, {userData.nickname} 님!</Greeting>
+          )}
           <Question>오늘은 어떤 레시피를 도전할까요?</Question>
           <TouchableOpacity
             onPress={moveRecipeDetail}>
