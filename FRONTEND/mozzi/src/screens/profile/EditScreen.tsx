@@ -51,7 +51,7 @@ function EditScreen() {
       />
 
       <Label>좋아하는 식재료</Label>
-      <SearchLike></SearchLike>
+      {/* <SearchLike></SearchLike> */}
       {/* <CustomDropdown
         data={allFoods}
         placeholder="좋아하는 식재료를 입력하세요" 
