@@ -74,9 +74,9 @@ function ProfileScreen () {
   const [ isEdit, setIsEdit ] = useState<boolean>(false)
   const [ foodInfo, setFoodInfo ] = useState(
   [
-    { foodName : "당근",
+    { foodName : "파마산치즈",
       "value" : 1},
-    { foodName : "토마토",
+    { foodName : "고추",
       "value" : 0},
     { foodName : "우유",
       "value" : 2},
@@ -89,8 +89,6 @@ function ProfileScreen () {
  
   const handleIsEdit = () => {
     if (isEdit) {
-      console.log('this is form', form)
-      // 입력 값으로 바꿔야 함
       editNickname(form.nickname)
       editIsVegan(Boolean(dropdownData))
       editFoodInfo(foodInfo)

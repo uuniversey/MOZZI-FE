@@ -78,7 +78,6 @@ function SearchScreen () {
 
   const [selectedRecipeName, setSelectedRecipeName] = useState<string>('')
 
-
   const handleSelectRecipe = (recipeName: string) => {
     setSelectedRecipeName(recipeName)
   }

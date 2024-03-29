@@ -4,22 +4,6 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import Autocomplete from 'react-native-autocomplete-input'
 import styled from 'styled-components/native'
 
-interface FoodItem {
-  photoUrl: string
-  foodName: string
-}
-
-interface SearchBarProps {
-  data: FoodItem[]
-  onSelect: (recipeName: string) => void
-}
-
-const StyledImage = styled.Image`
-  width: 35px;
-  height: 35px;
-  border-radius: 100px;
-  margin-right: 5px;
-`
 
 const StyledView = styled.View`
   width: 100%;
@@ -30,78 +14,68 @@ const StyledView = styled.View`
   margin-top: 5px;
 `
 
-export const SearchBar = ({ data, onSelect }: SearchBarProps) => {
+export const SearchBar = ({ data, onSelect }) => {
 
-  const [searchQuery, setSearchQuery] = useState<string>('')
-  const [filteredData, setFilteredData] = useState<FoodItem[]>([])
-  const [recipeName, setRecipeName] = useState<string>('')
+  const [ tmpData, setTmpData ] = useState([])
+  const [ searchQuery, setSearchQuery ] = useState('')
+  const [ filteredData, setFilteredData ] = useState([])
+  const [ recipeName, setRecipeName ] = useState('')
 
   // 자동 완성 데이터 필터링
-  const handleAutoComplete = (text: string) => {
+  const handleAutoComplete = (text) => {
     setSearchQuery(text)
-    const filtered = data.filter(item => item.foodName.includes(text))
+    const filtered = data.filter(item => item.includes(text))
     setFilteredData(filtered)
     console.log('----', filtered)
   }
 
+  const handleSelect = (item) => {
+    setTmpData(prev => [...prev, item])
+    setRecipeName(item)
+    handleAutoComplete(item)
+    setSearchQuery(item)
+    setFilteredData([])
+  }
+
   useEffect(() => {
-    if (searchQuery) {
-      const selectedItem = filteredData.find(item => item.foodName === searchQuery);
-      if (selectedItem) {
-        onSelect(selectedItem.foodName)
-      }
-    }
-  }, [searchQuery, filteredData, onSelect])
+    console.log('템프데이터', tmpData)
+    onSelect(tmpData)
+  }, [tmpData])
 
   return (
-    <>
-     <View style={styles.searchSection}>
-        <Icon name="search" size={20} color="#000" style={styles.searchIcon} />
-          <View style={styles.InputSection}>
-            <Autocomplete
-              data={filteredData}
-              defaultValue={searchQuery}
-              onChangeText={handleAutoComplete}
-              inputContainerStyle={styles.input}
-              flatListProps={{
-                renderItem: ({ item }: { item: FoodItem }) => (
-                  <TouchableOpacity
-                    style={styles.listButton}
-                    onPress={() => {
-                      setSearchQuery(item.foodName)
-                      setRecipeName(item.foodName)
-                      onSelect(item.foodName)
-                      handleAutoComplete(item.foodName)
-                    }}>
-                    <StyledView>
-                      <StyledImage
-                      // source={require('../../assets/recommend/pizza.jpg')}
-                      source={{ uri: item.photoUrl }}
-                      />
-                      <Text>{item.foodName}</Text>
-                    </StyledView>
-                  </TouchableOpacity>
-                ),
-                scrollEnabled: true,
-                style: { ...styles.list, ...styles.shadow },
-              }}
-            />
-            {filteredData.length === 0 && searchQuery.length > 0 && (
-              <View style={styles.emptySearchResults}>
-                <Text>검색 결과가 없습니다.</Text>
-              </View>
-            )}
-        </View>
+    <View style={styles.searchSection}>
+      <View style={styles.InputSection}>
+        <Autocomplete
+          data={filteredData}
+          onChangeText={handleAutoComplete}
+          inputContainerStyle={styles.input}
+          flatListProps={{
+            renderItem: ({ item }: { item: FoodItem }) => (
+              <TouchableOpacity
+                style={styles.listButton}
+                onPress={() => {handleSelect(item)}}>
+                <StyledView>
+                  <Text>{item}</Text>
+                </StyledView>
+              </TouchableOpacity>
+            ),
+            scrollEnabled: true,
+            style: { ...styles.list, ...styles.shadow },
+          }}
+        />
+          {filteredData.length === 0 && searchQuery.length > 0 && recipeName !== searchQuery && (
+            <View style={styles.emptySearchResults}>
+              <Text>검색 결과가 없습니다.</Text>
+            </View>
+          )}
       </View>
-    </>
+    </View>
   )
 }
 
-
-
 const styles = StyleSheet.create({
   searchSection: {
-    marginTop: 30,
+    marginTop: 10,
     width: 350,
     height: 50,
     flexDirection: 'row',
@@ -118,17 +92,6 @@ const styles = StyleSheet.create({
     top: 4,
     left: 35,
     width: 327,
-    // marginTop: 30,
-    // width: 350,
-    // height: 55,
-    // flexDirection: 'row',
-    // alignItems: 'center',
-    // backgroundColor: '#fff',
-    // borderWidth: 1,
-    // borderColor: '#E4E196',
-    // borderRadius: 8,
-    // paddingLeft: 10,
-    // marginBottom: 15,
   },
   searchIcon: {
     marginRight: 10,
@@ -141,7 +104,7 @@ const styles = StyleSheet.create({
     borderColor: 'transparent',
   },
   list: {
-    // position: 'absolute',
+    position: 'absolute',
     top: -2,
     left: -6,
     right: 0,
@@ -149,7 +112,7 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     borderColor: 'transparent',
     maxHeight: 220,
-    zIndex: 1,
+    zIndex: 25,
   },
   listButton: {
     flexDirection: 'row',

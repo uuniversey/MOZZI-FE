@@ -11,7 +11,7 @@ interface FoodItem {
 }
 
 const SearchSection = styled(View)`
-  width: 350px;
+  width: 100%;
   height: 50px;
   flex-direction: row;
   align-items: center;
@@ -25,14 +25,11 @@ const SearchSection = styled(View)`
 
 const InputForm = styled(View)`
   position: absolute;
-  /* top: 6; */
   top: 4;
-  /* top: 50; */
   left: 20;
 ` 
 
 const StyledAutocomplete = styled(Autocomplete)`
-  /* flex: 1; */
   z-index: 1001;
   width: 300px;
   background-color: rgba(255,255,255, 0.5);
@@ -41,7 +38,7 @@ const StyledAutocomplete = styled(Autocomplete)`
 
 const ListButton = styled(TouchableOpacity)`
   flex-direction: row;
-  padding: 5px 0 5px 0;
+  padding: 10px;
 `
 
 

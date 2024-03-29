@@ -20,35 +20,33 @@ const Container = styled(View)`
 `
 
 const ContentContainer = styled(View)`
+  width: 100%;
+  padding: 16px;
   padding-top: 40px;
-  padding-left: 22px;
-  padding-right: 22px;
 `
 
 const Greeting = styled(Text)`
   font-size: 20px;
   color: ${(props) => props.theme.palette.font};
   margin-top: 16px;
+  margin-left: 8px;
   font-family: ${(props) => props.theme.fonts.title};
 `
 
 const Question = styled(Text)`
   font-size: 22px;
+  margin-left: 8px;
   color: ${(props) => props.theme.palette.font};
   margin-bottom: 16px;
   font-family: ${(props) => props.theme.fonts.title};
 `
 
 const Card = styled(View)`
-  width: 350px;
-  height: 350px;
+  width: 100%;
   background-color: rgba(247, 207, 207, 0.7);
   border-radius: 15px;
   padding: 16px;
   align-items: center;
-  /* margin-vertical: 8px; */
-  margin-top: 8px;
-  margin-bottom: 8px;
 `
 
 const MealQuestion = styled(Text)`
@@ -64,7 +62,6 @@ const StyledImage = styled(Image)`
   height: 200px;
   border-radius: 200px;
   margin-bottom: 8px;
-  /* border: 1px solid ${(props) => props.theme.palette.pointDark}; */
 `
 
 const MealName = styled(Text)`
@@ -76,11 +73,10 @@ const MealName = styled(Text)`
 
 const Button = styled(TouchableOpacity)`
   background-color: rgba(211, 236, 216, 0.7);
-  border-radius: 20px;
+  border-radius: 15px;
   justify-content: center;
   align-items: center;
   height: 100px;
-  width: 350px;
   margin-top: 16px;
 `
 

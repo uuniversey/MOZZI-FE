@@ -27,8 +27,8 @@ const Body = styled(View)`
   align-self: center;
   align-items: center;
   justify-content: center;
-  width: 350px;
-  height: 400px;
+  width: 100%;
+  padding: 20px;
   border-radius: 20px;
   background-color: ${(props) => props.theme.palette.point};
 `
@@ -58,8 +58,8 @@ const ShareBtn = styled(TouchableOpacity)`
 `
 
 const FoodImage = styled(Image)`
-  width: 300px;
-  height: 300px;
+  width: 100%;
+  aspect-ratio: 1;
   border-radius: 5px;
 `
 
@@ -68,6 +68,12 @@ const FoodTitle = styled(Text)`
   margin-bottom: 10px;
   font-family: ${(props) => props.theme.fonts.content};
   color: ${(props) => props.theme.palette.font};
+`
+
+const ItemContainer = styled(ScrollView)`
+  display: flex;
+  width: 100%;
+  padding: 0 16px 0 16px;
 `
 
 function DiaryDetailScreen ({ route }) {
@@ -94,7 +100,7 @@ function DiaryDetailScreen ({ route }) {
         <Title> <Dot> ● </Dot> {date.year}년 {date.month}월 {date.day}일 요리 일기</Title>
       </View>
 
-      <ScrollView>
+      <ItemContainer>
         {dayData.map((data) => (
           <CardView key={data.id}>
             <Body>
@@ -114,9 +120,8 @@ function DiaryDetailScreen ({ route }) {
             </Body>
           </CardView>
           ))
-        }
-        
-      </ScrollView>
+        }       
+      </ItemContainer>
     </Container>
   )
 }

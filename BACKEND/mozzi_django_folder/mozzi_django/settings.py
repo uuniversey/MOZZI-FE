@@ -34,7 +34,7 @@ TIME_ZONE = 'Asia/Seoul'
 
 INSTALLED_APPS = [
     'datas',
-    'django_celery_beat',
+    # 'django_celery_beat',
     'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -78,9 +78,7 @@ WSGI_APPLICATION = 'mozzi_django.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-ALLOWED_HOSTS = ['a304.site','127.0.0.1']
-
+ALLOWED_HOSTS = ['a304.site','127.0.0.1','localhost']
 ### 로컬용
 # DATABASES = {
 #     'default': {
@@ -141,28 +139,27 @@ connect(
     authentication_mechanism='SCRAM-SHA-1'
 )
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://a304.site:6379/0',  # 여기서 '1'은 레디스 데이터베이스 번호입니다.
-        'OPTIONS': {
-            "PASSWORD" : "ssafy",
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        }
-    }
-}
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django_redis.cache.RedisCache',
+#         'LOCATION': 'redis://a304.site:6379/0',  # 여기서 '1'은 레디스 데이터베이스 번호입니다.
+#         'OPTIONS': {
+#             "PASSWORD" : "ssafy",
+#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+#         }
+#     }
+# }
 
 # CELERY_BROKER_URL = 'redis://default:ssafy@a304.site:6379/0'
 # CELERY_RESULT_BACKEND = 'redis://default:ssafy@a304.site:6379/0'
 
-CELERY_BROKER_URL = 'redis://a304.site:6379/0'
-CELERY_RESULT_BACKEND = 'redis://a304.site:6379/0'
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'Asia/Seoul'
+# CELERY_BROKER_URL = 'redis://a304.site:6379/0'
+# CELERY_RESULT_BACKEND = 'redis://a304.site:6379/0'
+# CELERY_ACCEPT_CONTENT = ['json']
+# CELERY_TASK_SERIALIZER = 'json'
+# CELERY_RESULT_SERIALIZER = 'json'
+# CELERY_TIMEZONE = 'Asia/Seoul'
 # CELERY_APP = 'mozzi_django'
-CELERY_TIMEZONE = 'Asia/Seoul'
 
 # CELERY_BEAT_SCHEDULE = {
 #     'reset_food_today_views': {

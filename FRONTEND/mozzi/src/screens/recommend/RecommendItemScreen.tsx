@@ -57,14 +57,14 @@ const RecommendItemScreen = ({
 const Container = styled(View)`
   flex: 1;
   align-items: center;
-  padding: 20px;
+  padding: 16px;
   background-color: ${(props) => props.theme.palette.background};
 `
 
 const TextContainer = styled(View)`
-  margin-top: 20px;
+  margin-top: 10px;
   margin-bottom: 10px;
-  width: 350px;
+  width: 100%;
   justify-content: flex-start;
 `
 
