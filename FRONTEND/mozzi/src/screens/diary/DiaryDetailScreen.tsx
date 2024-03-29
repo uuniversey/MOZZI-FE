@@ -28,7 +28,6 @@ const Body = styled(View)`
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 100%;
   padding: 20px;
   border-radius: 20px;
   background-color: ${(props) => props.theme.palette.point};
@@ -69,6 +68,12 @@ const FoodTitle = styled(Text)`
   margin-bottom: 10px;
   font-family: ${(props) => props.theme.fonts.content};
   color: ${(props) => props.theme.palette.font};
+`
+
+const ItemContainer = styled(ScrollView)`
+  display: flex;
+  width: 100%;
+  padding: 0 16px 0 16px;
 `
 
 function DiaryDetailScreen ({ route }) {
@@ -115,8 +120,7 @@ function DiaryDetailScreen ({ route }) {
             </Body>
           </CardView>
           ))
-        }
-        
+        }       
       </ItemContainer>
     </Container>
   )

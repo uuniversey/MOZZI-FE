@@ -38,7 +38,7 @@ const ChoiceButton = styled(TouchableOpacity)`
   justify-content: center;
   width: 300px;
   margin: 10px;
-  padding: 10px;
+  padding: 20px 10px 20px 10px;
   background-color: ${(props) => props.theme.palette.point};
   border-radius: 10px;
 `;

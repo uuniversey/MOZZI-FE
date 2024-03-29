@@ -39,13 +39,13 @@ const JustifyView = styled(View)`
 `
 
 const TopBorder = styled(View)`
-  width: 350px;
-  border-bottom-width: 3px;
-  border-color: #E0E0E0;
+  width: 100%;
+  border-bottom-width: 2px;
+  border-color: ${(props) => props.theme.palette.font};
 `
 
 const Border = styled(View)`
-  width: 350px;
+  width: 90%;
   border-bottom-width: 1px;
   border-color: #E0E0E0;
 `
@@ -141,7 +141,7 @@ function UserScreen() {
           <ListBtnText>서비스 탈퇴</ListBtnText>
           <Icon name="keyboard-arrow-right" size={25} color="black"/>
         </ListButton>
-        <Border></Border>
+        <Border />
       </MenuList>
     </Container>
   )

@@ -293,7 +293,7 @@ function DiaryCreateScreen () {
             {imageUri ? (
               <Image
                 source={{ uri: imageUri }}
-                style={{ width: '100%', height: '100%' }} 
+                style={{ width: '105%', height: '105%' }} 
               />
             ) : (
               
