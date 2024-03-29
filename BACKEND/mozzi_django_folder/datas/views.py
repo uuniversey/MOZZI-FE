@@ -26,7 +26,7 @@ from pyvis.network import Network
 import pandas as pd
 import numpy as np
 import pymysql
-from sqlalchemy import create_engine
+
 
 from django.utils.http import urlsafe_base64_decode
 # 식재료 뽑기
@@ -860,48 +860,22 @@ def user_ingredient_affection(request):
             query = f'select food_id from mozzi.datas_foods where food_name = "{food['foodName']}"'
             cursor.execute(query)
             food_id = cursor.fetchall()[0][0]
-
+            
+            query = f'update mozzi.user_food set total = total + 1 where food_id = "{food_id} and user_id = {userId}"'
+            # food_id = cursor.fetchall()[0][0]
             print(food_id)
             query = f'select * from mozzi.foods_foods where food_id = {food_id} or other_food_id = {food_id}'
             # query = f"SELECT distinct food_id, ingredient_ratio from mozzi.food_ingredient LEFT JOIN mozzi.datas_ingredient ON food_ingredient.ingredient_id = datas_ingredient.id \
             #         WHERE ingredient_name = '{input_ingredient_name}'"
+
+
             cursor.execute(query)
             foodList = cursor.fetchall()
             print(foodList)
+
         
             # for food in foodList:
                 # print(food)
     return JsonResponse({'ok' : 1})
         
 
-
-def savepkls():
-    db = pymysql.connect(
-                        host = "a304.site",
-                        port = 3306,
-                        user = "ssafy",
-                        password = "ssafy",
-                         )
-    df = pd.read_pickle("df2.pkl")
-    df['food_id'] = df.index + 1
-    engine = create_engine("mysql+pymysql://ssafy:ssafy@a304.site:3306/mozzi?charset=utf8mb4")
-    engine.connect()
-
-    melted_df = df.melt(id_vars ='food_id', var_name ='other_food_id', value_name = "relations")
-    melted_df['other_food_id'] = melted_df['other_food_id'].apply(lambda x: x + 1)
-
-    melted_df = melted_df[melted_df["food_id"] > melted_df["other_food_id"]]
-    melted_df = melted_df[melted_df["relations"] > 0]
-    # print(melted_df)
-    melted_df.to_sql('foods_foods', con = engine, if_exists = 'replace', index = False)
-    # print(melted_df)
-    # print(df)
-    # 모든 리스트를 
-
-
-# recommendFoods()
-# readPkl()
-# set_Category()
-    
-
-# savepkls()
