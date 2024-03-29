@@ -5,6 +5,7 @@ import styled from 'styled-components/native'
 
 import useLoginStore from '../../store/LoginStore'
 import useProfileStore from '../../store/ProfileStore'
+import useRecipeStore from '../../store/RecipeStore'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useNavigation } from '@react-navigation/native'
@@ -87,8 +88,13 @@ const ListBtnText = styled(Text)`
 function UserScreen() {
   const { userData, setIsLogin } = useLoginStore()
   const { profileData } = useProfileStore()
+  const { getIngredient } = useRecipeStore()
 
   const navigation = useNavigation()
+
+  useLayoutEffect (() => {
+    getIngredient()
+  }, [])
 
   const handleLogout = async (navigation) => {
     await AsyncStorage.removeItem('accessToken')

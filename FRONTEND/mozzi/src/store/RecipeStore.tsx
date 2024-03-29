@@ -6,6 +6,7 @@ const useRecipeStore = create((set) => ({
   
   recipeData: [],
   recipeDetailData: [],
+  ingredientData: [],
 
   getRecipe: async () => {
     try {
@@ -33,6 +34,24 @@ const useRecipeStore = create((set) => ({
     } catch (error) {
       console.error('레시피 상세 데이터 얻기 실패:', error)
     }
+  },
+
+  getIngredient: async () => {
+    const token = await AsyncStorage.getItem('accessToken')
+    try {
+      const response = await axios.get('recommend/datas/get_ingredient_list/',
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+        }
+      )
+      set({ ingredientData: response.data.data.ingredients })
+      console.log( response.data.data ,'재료 데이터 얻기 성공')
+    } catch (error) {
+      console.error('레시피 상세 데이터 얻기 실패:', error)
+    }
+
   }
 
 }))

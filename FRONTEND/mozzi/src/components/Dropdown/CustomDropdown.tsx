@@ -23,7 +23,7 @@ const TextSelectedStyle = styled(Text)`
 `
 
 function CustomDropdown ({ data, placeholder, isMulti }) {
-  const { setDropdownData } = useDropdownStore()
+  const { dropdownData, setDropdownData } = useDropdownStore()
   const [selected, setSelected] = useState([])
 
   const handleData = (item) => {
@@ -31,8 +31,8 @@ function CustomDropdown ({ data, placeholder, isMulti }) {
   }
   
   useEffect(() => {
-    console.log(selected, '선택된 애들')
-  }, [selected])
+    console.log(dropdownData, '선택된 애들')
+  }, [dropdownData])
 
   // open했을때 css
   // const renderItem = item => {
@@ -55,6 +55,7 @@ function CustomDropdown ({ data, placeholder, isMulti }) {
           placeholderStyle={{fontSize:14, color:'#ccc'}}
           value={selected}
           onChange={item => {
+            setDropdownData(item)
             setSelected(item)
           }}
 

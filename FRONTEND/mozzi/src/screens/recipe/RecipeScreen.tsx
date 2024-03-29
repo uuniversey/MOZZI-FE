@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Animated, Image } from 'react-native'
+import { View, Text, TouchableOpacity, Animated, Image, Easing } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import styled from 'styled-components/native'
@@ -69,6 +69,15 @@ const Tip = styled(Text)`
   color: ${(props) => props.theme.palette.font};
 `
 
+const EndingText = styled(Text)`
+  padding: 0 50px 0 50px;
+  font-size: 14px;
+  align-self: center;
+  margin: 20px 0px 20px 0px;
+  font-family: ${(props) => props.theme.fonts.content};
+  color: ${(props) => props.theme.palette.font};
+`
+
 const Btn = styled(TouchableOpacity)`
   align-self: center;
   align-items: center;
@@ -94,7 +103,8 @@ function RecipeScreen () {
   const [ idx, setIdx ] = useState(1)
   const [ strIdx, setStrIdx ] = useState('01')
   const [ isLast, setIsLast ] = useState(false)
-
+  const [ isOpen, setIsOpen ] = useState(false)
+  const [tipHeight, setTipHeight] = useState(new Animated.Value(0))
   const [translateY, setTranslateY] = useState(new Animated.Value(0))
   const [lastTranslateY, setLastTranslateY] = useState(0) // 마지막 translationY 값을 저장할 상태
 
@@ -135,7 +145,25 @@ function RecipeScreen () {
     }
   }
 
-  // !!!!참고!!!! 렌더링 문제 해결 솔루션 - 뎁스를 하나 더 들어가서 한다.
+  // "다음" 명령 처리
+  const handleNext = () => {
+    const nextIdx = (parseInt(strIdx) + 1).toString().padStart(2, '0')
+    if (recipeDetailData[`MANUAL${nextIdx}`]) {
+      setIdx(prevIdx => prevIdx + 1)
+      setStrIdx(nextIdx)
+    }
+  }
+
+  // "이전" 명령 처리
+  const handlePrev = () => {
+    const prevIdx = (parseInt(strIdx) - 1).toString().padStart(2, '0')
+    if (prevIdx !== '00') {
+      setIdx(prevIdx => prevIdx - 1)
+      setStrIdx(prevIdx)
+    }
+  }
+
+  /// 렌더링 문제 해결 솔루션 - 뎁스를 하나 더 들어가서 한다.
   const moveOrder = () => {
     setIdx(prevIdx => {
       const nextIdx = prevIdx + 1
@@ -145,6 +173,7 @@ function RecipeScreen () {
     })
   }
   
+  // 끝에 도착하면 화살표 없애기
   useEffect(() => {
     const nextIdx = (parseInt(strIdx)+1).toString().padStart(2, '0')
     if (recipeDetailData[`MANUAL${nextIdx}`] === "" || nextIdx == '21')
@@ -155,15 +184,26 @@ function RecipeScreen () {
     }
   }, [strIdx])
   
+  const handleIsOpen = () => {
+    setIsOpen(!isOpen)
+  }
+
+  // isOpen 상태가 변경될 때마다 애니메이션 실행
+  useEffect(() => {
+    Animated.timing(tipHeight, {
+      toValue: isOpen ? 150 : 0, // isOpen이 true면 높이를 150으로, false면 0으로 변경
+      duration: 500, // 애니메이션 지속 시간
+      useNativeDriver: false, // 높이 변경은 네이티브 드라이버를 사용하지 않음
+      easing: Easing.inOut(Easing.ease), // 시작과 끝에서 부드럽게
+    }).start()
+  }, [isOpen, tipHeight])
+
   return (
     <Container>
       <Header>
         <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
       </Header>
-      {/* <IconContainer>
-        <SpeechToText />
-        <TextToSpeech text={recipeDetailData[`MANUAL${strIdx}`]} />        
-      </IconContainer> */}
+
       <GestureHandlerRootView>
         <PanGestureHandler
           onGestureEvent={onGestureEvent}
@@ -175,7 +215,7 @@ function RecipeScreen () {
             
             <Content>
             <IconContainer>
-              <SpeechToText />
+              <SpeechToText onNext={handleNext} onPrev={handlePrev} />
               <TextToSpeech text={recipeDetailData[`MANUAL${strIdx}`]} />        
             </IconContainer>
               <Title>{recipeDetailData.RCP_NM}</Title>
@@ -186,12 +226,21 @@ function RecipeScreen () {
                   source={{ uri: recipeDetailData[`MANUAL_IMG${strIdx}`] }}
                 />
               </Body>
-              <Tip>TIP: {recipeDetailData.RCP_NA_TIP}</Tip>
-              {isLast ? 
-                '' :
+              {isOpen ? (
+                  <Animated.View style={{height: tipHeight}}>
+                    <Tip onPress={handleIsOpen}>TIP: {recipeDetailData.RCP_NA_TIP}</Tip>
+                  </Animated.View>
+                ) : (
+                  <Tip onPress={handleIsOpen}>TIP</Tip>
+                )
+              }
+              {isLast ? ( 
+                <EndingText>레시피의 마지막 순서입니다.</EndingText> 
+                ) : (
                 <Btn onPress={moveOrder}>
                   <Icon name="keyboard-double-arrow-down" size={50} color="silver" />
-                </Btn> 
+                </Btn>
+                ) 
               }
             </Content>
           
