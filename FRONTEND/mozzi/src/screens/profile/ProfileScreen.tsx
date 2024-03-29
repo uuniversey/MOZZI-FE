@@ -120,12 +120,12 @@ function ProfileScreen () {
               placeholder={`${profileData.foods}`}
               editable={false}
             />
-            <Label>좋아하는 음식</Label>
+            <Label>좋아하는 식재료</Label>
             <StyledInput
               placeholder={`${profileData.foods}`}
               editable={false}
             />
-            <Label>싫어하는 음식</Label>
+            <Label>싫어하는 식재료</Label>
             <StyledInput
               placeholder={`${profileData.foods}`}
               editable={false}
