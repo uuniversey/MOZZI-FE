@@ -109,7 +109,27 @@ def save_food_recipe_mongo(request):
 
     return JsonResponse({'message':'okay'})
 
+def update_food_pic(request):
+    start = 1
+    last = 1001
+    URL = f"http://openapi.foodsafetykorea.go.kr/api/2055492edca74694aa38/COOKRCP01/json/{start}/{last}"
+    response = requests.get(URL)
+    data = response.json()
 
+    for item in data['COOKRCP01']['row']:
+        new_food_pic = item.get('ATT_FILE_NO_MAIN')
+        if not new_food_pic:
+            continue
+
+        # 기존에 해당 'ATT_FILE_NO_MK' 값을 가진 데이터를 찾아 업데이트
+        existing_food = Foods.objects.filter(food_pic=item.get('ATT_FILE_NO_MK')).first()
+
+        if existing_food:
+            # 해당 'ATT_FILE_NO_MK' 값을 가진 데이터의 'food_pic' 필드 업데이트
+            existing_food.food_pic = new_food_pic
+            existing_food.save()
+  
+    return JsonResponse({'message': 'okay'})
 def save_food(request):
     start = 1
     last = 1001
@@ -136,7 +156,8 @@ def save_food(request):
         mongo_index += 1
 
         # 응답에서 'food_pic' 필드에 대한 값이 없을 경우를 확인합니다.
-        food_pic = item.get('ATT_FILE_NO_MK')
+        # food_pic = item.get('ATT_FILE_NO_MK')
+        food_pic = item.get('ATT_FILE_NO_MAIN')
         if not food_pic:
             # 'food_pic' 필드가 비어 있는 경우를 처리합니다.
             # 이 부분에 대해 원하는 동작을 수행하거나 오류를 처리할 수 있습니다.
@@ -287,7 +308,8 @@ def get_recipe_list(request):
     return JsonResponse({'foods': data})
 
 def get_ingredient_list(request):
-    
+    foods = Foods.objects.all()
+    print(len(foods))
     ingredients = Ingredient.objects.all()
     ingredient_names = [ingredient.ingredient_name for ingredient in ingredients]
     return JsonResponse({'data': {'ingredients': ingredient_names}},json_dumps_params={'ensure_ascii': False})
@@ -397,7 +419,6 @@ def save_ingredients_category(request):
 #     for mongo in mongo_foods:
 #         file.write(mongo.food_recipe['RCP_PARTS_DTLS'] + '\n\n')
 
-
 def migrate_sql_to_neo4j(request):
     # MySQL 연결 설정
     mysql_connection = mysql.connector.connect(
@@ -413,35 +434,67 @@ def migrate_sql_to_neo4j(request):
     neo4j_user = "neo4j"
     neo4j_password = "mozzimozzi"
     neo4j_driver = GraphDatabase.driver(neo4j_uri, auth=(neo4j_user, neo4j_password))
+    def create_relation(tx, food_id, ingredient_id, ingredient_ratio, ingredient_count):
+        tx.run("""
+        MATCH (f:Food {id: $food_id})
+        MATCH (i:Ingredient {id: $ingredient_id})
+        MERGE (f)-[:CONTAINS {
+            ratio: $ingredient_ratio,
+            count: $ingredient_count
+        }]->(i)
+        """, food_id=food_id, ingredient_id=ingredient_id, ingredient_ratio=ingredient_ratio, ingredient_count=ingredient_count)
 
-    # MySQL 데이터 읽어오기
-    mysql_cursor.execute("SELECT * FROM datas_ingredient")
-    foods = mysql_cursor.fetchall()
+    # MySQL 데이터 읽어오기 (food_ingredient)
+    mysql_cursor.execute("SELECT food_id, ingredient_id, ingredient_ratio, ingredient_count FROM food_ingredient")
+    mappings = mysql_cursor.fetchall()
 
-    # Neo4j에 데이터 저장
-    def create_food_node(tx, ingredient_name, category_id):
-        tx.run("CREATE (f:Food {name: $ingredient_name, category_id: $category_id})", 
-            ingredient_name=ingredient_name, category_id=category_id)
-
-    def create_category_node(tx, category_name, category_id):
-        tx.run("MERGE (c:Category {id: $category_id}) ON CREATE SET c.name = $category_name", 
-            category_name=category_name, category_id=category_id)
-
-    def create_relation(tx, ingredient_name, category_id):
-        tx.run("MATCH (f:Food {name: $ingredient_name}), (c:Category {id: $category_id}) "
-               "MERGE (f)-[:BELONGS_TO]->(c)", ingredient_name=ingredient_name, category_id=category_id)
-
+    # 데이터 삽입
     with neo4j_driver.session() as session:
-        for food in foods:
-            category_id = food['category_id']
-            mysql_cursor.execute("SELECT category_name FROM datas_category WHERE id = %s", (category_id,))
-            category_name = mysql_cursor.fetchone()['category_name']
+        for mapping in mappings:
+            food_id = mapping['food_id']
+            ingredient_id = mapping['ingredient_id']
+            ingredient_ratio = mapping['ingredient_ratio']
+            ingredient_count = mapping['ingredient_count']
 
-            session.write_transaction(create_category_node, category_name, category_id)
-            session.write_transaction(create_food_node, food['ingredient_name'], category_id)
-            session.write_transaction(create_relation, food['ingredient_name'], category_id)
+            session.write_transaction(create_relation, food_id, ingredient_id, ingredient_ratio, ingredient_count)
+    # MySQL 데이터 읽어오기
+    # mysql_cursor.execute("SELECT * FROM datas_ingredient")
+    # foods = mysql_cursor.fetchall()
+    # def create_food_node(tx, food_id, food_name):
+    #     tx.run("MERGE (f:Food {id: $food_id, name: $food_name})", food_id=food_id, food_name=food_name)
 
-    print("Data migrated successfully.")
+    # # MySQL에서 데이터 읽기 (datas_foods)
+    # mysql_cursor.execute("SELECT food_id, food_name FROM datas_foods")
+    # foods = mysql_cursor.fetchall()
+
+    # # 데이터 삽입
+    # with neo4j_driver.session() as session:
+    #     for food in foods:
+    #         session.write_transaction(create_food_node, food['food_id'], food['food_name'])
+    # Neo4j에 데이터 저장
+    # def create_food_node(tx, ingredient_name, category_id):
+    #     tx.run("CREATE (f:Food {name: $ingredient_name, category_id: $category_id})", 
+    #         ingredient_name=ingredient_name, category_id=category_id)
+
+    # def create_category_node(tx, category_name, category_id):
+    #     tx.run("MERGE (c:Category {id: $category_id}) ON CREATE SET c.name = $category_name", 
+    #         category_name=category_name, category_id=category_id)
+
+    # def create_relation(tx, ingredient_name, category_id):
+    #     tx.run("MATCH (f:Food {name: $ingredient_name}), (c:Category {id: $category_id}) "
+    #            "MERGE (f)-[:BELONGS_TO]->(c)", ingredient_name=ingredient_name, category_id=category_id)
+
+    # with neo4j_driver.session() as session:
+    #     for food in foods:
+    #         category_id = food['category_id']
+    #         mysql_cursor.execute("SELECT category_name FROM datas_category WHERE id = %s", (category_id,))
+    #         category_name = mysql_cursor.fetchone()['category_name']
+
+    #         session.write_transaction(create_category_node, category_name, category_id)
+    #         session.write_transaction(create_food_node, food['ingredient_name'], category_id)
+    #         session.write_transaction(create_relation, food['ingredient_name'], category_id)
+
+    
 
     # 연결 종료
     mysql_cursor.close()
