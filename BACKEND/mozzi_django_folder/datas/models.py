@@ -46,7 +46,7 @@ class User(models.Model):
     user_nickname = models.CharField(max_length=20)
     user_register_date = models.DateTimeField()
     user_isvegan = models.BooleanField()
-    worldcup = models.IntegerField(default = 2)
+    
     class Meta:
         db_table = 'user'  # MySQL 데이터베이스의 테이블 이름을 'user'로 지정
 

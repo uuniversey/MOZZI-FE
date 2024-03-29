@@ -16,6 +16,7 @@ urlpatterns = [
     path('save_ingredients_category/',views.save_ingredients_category),
     path('migrate_sql_to_neo4j/',views.migrate_sql_to_neo4j),
     path('add_ingredients_to_refrigerator/',views.add_ingredients_to_refrigerator),
+    path('worldcup/',views.user_ingredient_affection),
     # path('save_ingredient_ratio/',views.save_ingredient_ratio),
     # path('neo4j_visualization/',views.neo4j_visualization),
 ]

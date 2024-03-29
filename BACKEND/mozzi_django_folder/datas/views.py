@@ -23,8 +23,12 @@ from neo4j import GraphDatabase
 import neo4jupyter
 from py2neo import Graph
 from pyvis.network import Network
-from django.utils.http import urlsafe_base64_decode
+import pandas as pd
+import numpy as np
+import pymysql
+from sqlalchemy import create_engine
 
+from django.utils.http import urlsafe_base64_decode
 # 식재료 뽑기
 def get_ingredients(start, last):
     URL = f"http://openapi.foodsafetykorea.go.kr/api/2055492edca74694aa38/COOKRCP01/json/{start}/{last}"
@@ -38,10 +42,7 @@ def get_ingredients(start, last):
             # 정규표현식을 사용하여 숫자와 숫자 뒤에 붙은 문자열을 제거
             ingredient_name = re.sub(r'\d+(\S+)', '', ingredient)
             ingredient_name = ingredient_name.strip()  # 좌우 공백 제거
-            # print(ingredient_name)
-           
-     
-        
+            # print(ingredient_name)   
 
 def migrate_food_recipe_from_mongo_to_mysql(request):
     # MongoDB에서 데이터 가져오기
@@ -449,36 +450,16 @@ def add_ingredients_to_refrigerator(request):
 
     foodingredients = FoodIngredient.objects.all()
     # print(request.headers['Authorization'],'adddddddddddddddd')
-    try:
-        token = request.headers['Authorization'].split(' ')[1]
-    except KeyError:
-        return JsonResponse({"error": "Authorization header is missing"}, status=401)
-    header, payload, signature = token.split('.')
-    decoded_payload = base64.b64decode(payload + "==").decode('utf-8')
-    padding_needed = 4 - (len(payload) % 4)
-    if padding_needed > 0 and padding_needed != 4:
-        payload += '=' * padding_needed
-    # print("Padded Token:", token)
-    # print("Padded Token Length:", len(token))
-    # print(22222222222222222222)
-    # print(token,len(token))
-    # print(3333333333333333333333333)
-    # data = base64.b64decode(token[:166])
-    data = base64.b64decode(payload).decode('utf-8')
-    # print(111111)
-    # print(data,'data')
-    # data = data.decode('latin-1')
-    # print(data,'latin')
-    try:
-        index_e = data.index('"e":') + len('"e":')
-        index_comma = data.index(',', index_e)
-        e_value = data[index_e:index_comma]
-        user_number = e_value[1:-1]
-        user_id = int(user_number)
-    except ValueError:
-            return JsonResponse({"error": "Invalid user id."}, status=401)
-
-    print(user_number,321)
+    token = request.headers['Authorization'].split(' ')[1]
+    data = base64.b64decode(token)
+   
+    data = data.decode('latin-1')
+    
+    index_e = data.index('"e":') + len('"e":')  # "e": 다음 인덱스부터 시작
+    index_comma = data.index(',', index_e)  # 쉼표(,)가 나오는 인덱스 찾기
+    e_value = data[index_e:index_comma]
+    user_number = e_value[1:-1]
+    
     # 결과 출력
     user_id =0
     
@@ -716,3 +697,211 @@ def add_ingredients_to_refrigerator(request):
 
 #     # HTML 파일 경로 반환
 #     return HttpResponse(html_file_path)
+
+
+def recommendFoods():
+    db = pymysql.connect(
+                        host = "localhost",
+                        port = 3306,
+                        user = "ssafy",
+                        password = "ssafy",
+                         )
+    
+    with db.cursor() as cursor:
+        query = "select food_id from mozzi.datas_foods order by food_id desc limit 1"
+        cursor.execute(query)
+        maxFoodsIndex = cursor.fetchall()[0][0]
+        print(maxFoodsIndex) 
+
+        # query = "select count(*) as total_rows from mozzi.datas_ingredient"
+        query = "select ingredient_id from mozzi.datas_ingredient order by ingredient_id desc limit 1"
+        cursor.execute(query)
+        maxIngredientsIndex = cursor.fetchall()[0][0]
+        print(maxIngredientsIndex)
+        df = pd.DataFrame(np.zeros((maxFoodsIndex, maxIngredientsIndex)))
+        
+        query = "select food_id, ingredient_id, ingredient_ratio from mozzi.food_ingredient"
+        cursor.execute(query)
+        parameterList = cursor.fetchall()
+        for parameter in parameterList:
+            # df[parameter[0]][parameter[1]] = parameter[2] / 100
+            df.iloc[parameter[0] - 1, parameter[1] - 1] = parameter[2] / 100
+    
+        # print(df)
+        # print(df.T)
+        # print(df.dot(df.T))
+
+        # print(df.loc[858])
+        df_foods = pd.DataFrame(np.zeros((maxFoodsIndex, maxFoodsIndex)))
+
+        for foodId1 in range(maxFoodsIndex):
+            print(foodId1)
+            for foodId2 in range(foodId1, maxFoodsIndex):
+                np1 = df.loc[[foodId1], :].to_numpy()
+                np2 = df.loc[[foodId2], :].T.to_numpy()
+                # print(np.linalg.norm(np2))
+                # print(np1, np2)
+                # print(np.dot(np1, np2) , "\n---------------------------------------------------------------------------\n")
+                # print(np.linalg.norm(np1))
+                # print(np.dot(np1, np2)/(np.linalg.norm(np1) * np.linalg.norm(np2)))
+                # print(np.linalg.norm(np1), np.linalg.norm(np2) )
+                if (np.linalg.norm(np2) == 0 or np.linalg.norm(np1) == 0): continue
+                result = np.dot(np1, np2)/(np.linalg.norm(np1) * np.linalg.norm(np2))
+                df_foods.iloc[foodId1, foodId2] = result 
+                df_foods.iloc[foodId2, foodId1] = result 
+
+                # print(result)
+                # break
+            # break
+        print(df_foods)
+        df_foods.to_pickle("df.pkl")
+
+        
+def readPkl():
+
+    print(pd.read_pickle("df.pkl"))
+    df = pd.read_pickle("df2.pkl")
+
+    print(df)    
+    print(df.sort_values(by=[0]))
+    # print(pd.read_sql( "select * from mozzi.datas_foods" ,db))
+    
+def set_Category():
+    df = pd.read_pickle("df.pkl")
+    db = pymysql.connect(
+                        host = "a304.site",
+                        port = 3306,
+                        user = "ssafy",
+                        password = "ssafy",
+                         )
+    
+    with db.cursor() as cursor:
+
+        query = "select food_id from mozzi.datas_foods order by food_id desc limit 1"
+        cursor.execute(query)
+        maxFoodsIndex = cursor.fetchall()[0][0]
+        df_foods_categories = pd.DataFrame(np.zeros((maxFoodsIndex, 19)))
+
+        query = "SELECT  food_ingredient.food_id, datas_ingredient.category_id, SUM(food_ingredient.ingredient_ratio),  COUNT(*)  FROM mozzi.food_ingredient LEFT JOIN mozzi.datas_ingredient ON food_ingredient.ingredient_id = datas_ingredient.id GROUP BY food_ingredient.food_id, datas_ingredient.category_id"
+        cursor.execute(query)
+        parameter_categories = cursor.fetchall()
+
+        for parameter_category in parameter_categories:
+            df_foods_categories.iloc[parameter_category[0] - 1, parameter_category[1] - 1] = parameter_category[2]
+
+        df_foods_foods = pd.read_pickle("df.pkl")
+
+        for foodId1 in range(maxFoodsIndex):
+            print(foodId1)
+            for foodId2 in range(foodId1 + 1, maxFoodsIndex):
+                np1 = df_foods_categories.loc[[foodId1], :].to_numpy()
+                np2 = df_foods_categories.loc[[foodId2], :].T.to_numpy()
+                # print(np.linalg.norm(np2))
+                # print(np1, np2)
+                # print(np.dot(np1, np2) , "\n---------------------------------------------------------------------------\n")
+                # print(np.linalg.norm(np1))
+                # print(np.dot(np1, np2)/(np.linalg.norm(np1) * np.linalg.norm(np2)))
+                # print(np.linalg.norm(np1), np.linalg.norm(np2))
+                if (np.linalg.norm(np2) == 0 or np.linalg.norm(np1) == 0): continue
+                result = np.dot(np1, np2)/(np.linalg.norm(np1) * np.linalg.norm(np2))
+                df_foods_foods.iloc[foodId1, foodId2] += result 
+                df_foods_foods.iloc[foodId1, foodId2] /= 2
+                df_foods_foods.iloc[foodId2, foodId1] += result
+                df_foods_foods.iloc[foodId2, foodId1] /= 2
+                
+                # print(df_foods_foods.iloc[foodId1, foodId2]) 
+        df_foods_foods.to_pickle("df2.pkl")
+
+
+@api_view(["PUT"])
+def user_ingredient_affection(request):
+    input_ingredient_name = "두부"
+
+    # print(request.data['foods'])
+    token = request.headers['Authorization'].split(' ')[1]
+    data = base64.b64decode(token)
+   
+    data = data.decode('latin-1')
+    
+    index_e = data.index('"e":') + len('"e":')  # "e": 다음 인덱스부터 시작
+    index_comma = data.index(',', index_e)  # 쉼표(,)가 나오는 인덱스 찾기
+    e_value = data[index_e:index_comma]
+    user_number = e_value[1:-1]
+    print(user_number)
+    # print(type(user))
+    db = pymysql.connect(
+                        host = "a304.site",
+                        port = 3306,
+                        user = "ssafy",
+                        password = "ssafy",
+                         )
+    # print(user)
+
+        # 해당 음식과 관련있는 모든 음싟 
+        # 유저가 총 한 횟수 가져옴
+        # 모든 음식들에 대해서 필터링
+        
+    with db.cursor() as cursor:
+        query = f"select user_id from mozzi.user where user_code = {user_number}"
+        cursor.execute(query)
+        userId = cursor.fetchall()[0][0]
+
+
+        for food in request.data['foods']:
+            print(food)
+            isWin = food['value']
+            # 모든 음식 상태 데이터베이스 가져옴
+            try:
+                df = pd.read_pickle(f"{userId}-df.pkl")
+            except:
+                df = pd.read_sql(f"select * from mozzi.user_food where user_id = {userId}" ,db)
+            print(df)
+            print(food['foodName'])
+            query = f'select food_id from mozzi.datas_foods where food_name = "{food['foodName']}"'
+            cursor.execute(query)
+            food_id = cursor.fetchall()[0][0]
+
+            print(food_id)
+            query = f'select * from mozzi.foods_foods where food_id = {food_id} or other_food_id = {food_id}'
+            # query = f"SELECT distinct food_id, ingredient_ratio from mozzi.food_ingredient LEFT JOIN mozzi.datas_ingredient ON food_ingredient.ingredient_id = datas_ingredient.id \
+            #         WHERE ingredient_name = '{input_ingredient_name}'"
+            cursor.execute(query)
+            foodList = cursor.fetchall()
+            print(foodList)
+        
+            # for food in foodList:
+                # print(food)
+    return JsonResponse({'ok' : 1})
+        
+
+
+def savepkls():
+    db = pymysql.connect(
+                        host = "a304.site",
+                        port = 3306,
+                        user = "ssafy",
+                        password = "ssafy",
+                         )
+    df = pd.read_pickle("df2.pkl")
+    df['food_id'] = df.index + 1
+    engine = create_engine("mysql+pymysql://ssafy:ssafy@a304.site:3306/mozzi?charset=utf8mb4")
+    engine.connect()
+
+    melted_df = df.melt(id_vars ='food_id', var_name ='other_food_id', value_name = "relations")
+    melted_df['other_food_id'] = melted_df['other_food_id'].apply(lambda x: x + 1)
+
+    melted_df = melted_df[melted_df["food_id"] > melted_df["other_food_id"]]
+    melted_df = melted_df[melted_df["relations"] > 0]
+    # print(melted_df)
+    melted_df.to_sql('foods_foods', con = engine, if_exists = 'replace', index = False)
+    # print(melted_df)
+    # print(df)
+    # 모든 리스트를 
+
+
+# recommendFoods()
+# readPkl()
+# set_Category()
+    
+
+# savepkls()
