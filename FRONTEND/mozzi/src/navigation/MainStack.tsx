@@ -1,5 +1,5 @@
 import React from 'react'
-import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 
 import MainScreen from '../screens/main/MainScreen'
 import RecapScreen from '../screens/main/RecapScreen'
@@ -18,15 +18,16 @@ export type TypecreateNativeStackNavigatorParams = {
   SelectShortsImage: undefined
 }
 
-const Stack = createNativeStackNavigator<TypecreateNativeStackNavigatorParams>()
+const Stack = createStackNavigator<TypecreateNativeStackNavigatorParams>()
 
 
 function MainStack() {
   return (
     <Stack.Navigator
-      screenOptions={({ route }) => ({
+      screenOptions={{
         headerShown: false,
-      })}
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+      }}
     >
       <Stack.Screen name="Main" component={MainScreen} />
       <Stack.Screen name="Recap" component={RecapScreen} />

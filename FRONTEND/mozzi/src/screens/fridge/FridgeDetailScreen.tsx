@@ -132,7 +132,7 @@ const FridgeDetailScreen = ({ route }) => {
       scrollViewRef.current?.scrollToEnd({ animated: true }) // 스크롤을 맨 아래로 이동
     } else {
       // 식재료가 목록에 없을 경우 경고 메시지 표시
-      Alert.alert("알림", "모찌가 알지 못하는 식재료예요! 정확한 식재료 이름을 입력해 주세요!");
+      Alert.alert("알림", "모찌가 알지 못하는 식재료예요!\n정확한 식재료 이름을 입력해 주세요.");
     }
   };
 

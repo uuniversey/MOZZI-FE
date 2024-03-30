@@ -1,20 +1,21 @@
 import React from 'react'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 
 import RecommendScreen from '../screens/recommend/RecommendScreen'
 import RecipeScreen from '../screens/recipe/RecipeScreen'
 import RecommendLandingScreen from '../screens/recommend/RecommendLandingScreen'
 import WorldcupScreen from '../screens/recommend/WorldcupScreen'
 
-const Stack = createNativeStackNavigator()
+const Stack = createStackNavigator()
 
 function RecommendStack() {
   return (
     <Stack.Navigator
-      screenOptions={({ route }) => ({
+      screenOptions={{
         headerShown: false,
-      })}
-    > 
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+      }}
+    >
       <Stack.Screen name="Worldcup" component={WorldcupScreen} />
       <Stack.Screen name="Recommend" component={RecommendScreen} />
       <Stack.Screen name="Recipe" component={RecipeScreen} />
