@@ -17,7 +17,7 @@ const Container = styled(View)`
 const HeaderText = styled(Text)`
   color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.title};
-  font-size: 32px;
+  font-size: 28px;
   margin-bottom: 20px;
   align-self: flex-start;
 `

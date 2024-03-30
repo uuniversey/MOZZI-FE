@@ -20,7 +20,7 @@ const TitleContainer = styled(View)`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 50px 16px 50px 16px;
+  margin: 20px 16px 20px 16px;
 `
 
 const Title = styled(Text)`

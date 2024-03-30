@@ -193,7 +193,7 @@ function SelectShortsImageScreen () {
       images.push(
         <TouchableOpacity key={i} onPress={() => toggleImageSelection(i)}>
           <SelectableImage
-            source={require('../../assets/recommend/pizza.jpg')}
+            source={require('../../assets/illustration/pizza.jpg')}
             isSelected={isImageSelected && imageCount <= 10}
           />
         </TouchableOpacity>

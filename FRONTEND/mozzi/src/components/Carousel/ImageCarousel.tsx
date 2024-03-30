@@ -160,23 +160,23 @@ interface MyCarouselProps {
 export default class MyCarousel extends Component<MyCarouselProps, MyCarouselState> {
   data = [
   {
-    thumbnail: require('../../assets/recommend/pizza.jpg'),
+    thumbnail: require('../../assets/illustration/pizza.jpg'),
     title: 'pizza',
   },
   {
-    thumbnail: require('../../assets/recommend/pizza.jpg'),
+    thumbnail: require('../../assets/illustration/pizza.jpg'),
     title: 'pizza',
   },
   {
-    thumbnail: require('../../assets/recommend/pizza.jpg'),
+    thumbnail: require('../../assets/illustration/pizza.jpg'),
     title: 'pizza',
   },
   {
-    thumbnail: require('../../assets/recommend/pizza.jpg'),
+    thumbnail: require('../../assets/illustration/pizza.jpg'),
     title: 'pizza',
   },
   {
-    thumbnail: require('../../assets/recommend/pizza.jpg'),
+    thumbnail: require('../../assets/illustration/pizza.jpg'),
     title: 'pizza',
   },
   ]  

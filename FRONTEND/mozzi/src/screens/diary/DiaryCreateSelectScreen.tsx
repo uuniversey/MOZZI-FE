@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components/native'
-import { TouchableOpacity } from 'react-native'
+import { TouchableOpacity, Text } from 'react-native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { useNavigation } from '@react-navigation/native'
 
@@ -63,29 +63,30 @@ const Container = styled.View`
   flex: 1;
   align-items: center;
   background-color: ${(props) => props.theme.palette.background};
-  padding: 0 16px 0 16px;
+  padding: 10px 16px 0 16px;
 `
 
 const EnterContainer = styled.View`
   width: 100%;
-  margin-top: 70px;
   flex-direction: row;
   justify-content: flex-end;
 `
 
 const ConfirmButton = styled(TouchableOpacity)`
+  margin-top: 70px;
   background-color: ${(props) => props.theme.palette.point};
   border-radius: 10px;
-  padding: 10px;
+  padding: 5px;
   width: 70px;
   align-items: center;
   justify-content: flex-end;
   z-index: -10;
 `
 
-const ButtonText = styled.Text`
-  color: #000;
-  font-weight: bold;
+const ButtonText = styled(Text)`
+  font-family: ${(props) => props.theme.fonts.content};
+  color: ${(props) => props.theme.palette.font};
+  font-size: 16px;
 `
 
 export default DiaryCreateSelectScreen
