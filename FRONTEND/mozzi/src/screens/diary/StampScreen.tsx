@@ -33,7 +33,6 @@ const Body = styled.View`
   background-color: ${(props) => props.theme.palette.point};;
 `
 const FoodTitle = styled(Text)`
-  color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.title};
   padding: 5px;
   position: absolute;
@@ -62,6 +61,35 @@ const FoodTitle = styled(Text)`
   }};
 `;
 
+const Day = styled(Text)`
+  font-family: ${(props) => props.theme.fonts.content};
+  padding: 5px;
+  position: absolute;
+  font-size: 12px;
+  z-index: 1001;
+  left: 5%;
+  top: ${({ frameType }) => {
+    switch (frameType) {
+      case '화이트':
+        return '12%';
+      case '스페셜':
+        return '87%';
+      default:
+        return '12%';
+    }
+  }};
+  color: ${({ frameType }) => {
+    switch (frameType) {
+      case '화이트':
+        return 'white';
+      case '스페셜':
+        return 'black';
+      default:
+        return 'black';
+    }
+  }};
+`
+
 const FoodImage = styled.Image`
   width: 100%;
   aspect-ratio: 1;
@@ -83,7 +111,7 @@ const FrameButton = styled.TouchableOpacity`
 `
 
 const FrameText = styled(Text)`
-  color: ${(props) => props.theme.palette.main};
+  color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.title};
   text-align: center;
 `
@@ -97,13 +125,13 @@ const ShareButton = styled(TouchableOpacity)`
   align-items: center;
   border-color: rgba(0, 0, 0, 0.2);
   background-color: ${(props) => props.theme.palette.point};;
-  border-width: 2px;
-  elevation: 2;
+  border-width: 1px;
+  elevation: 1;
 `;
 
 const ShareButtonText = styled(Text)`
-  color: ${(props) => props.theme.palette.main};
-  font-family: ${(props) => props.theme.fonts.title};
+  color: ${(props) => props.theme.palette.font};
+  font-family: ${(props) => props.theme.fonts.content};
   font-size: 16px;
 `;
 
@@ -133,6 +161,7 @@ const Stamp = ({ navigation, route }) => {
 
   // 권한 확인
   const hasStoragePermission = async () => {
+    // console.log(Data)
     if (Platform.OS === 'android') {
       const hasPermission = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
         
@@ -225,6 +254,7 @@ const Stamp = ({ navigation, route }) => {
         <Body ref={viewRef}>
           {/* store에서 불러온 food title로 수정하면 됨 */}
           <FoodTitle frameType={selectedFrame}>{data.foodName}</FoodTitle> 
+          <Day frameType={selectedFrame}>{data.photoDate}</Day>
           <FoodImage
             source={{ uri: `${data.photoUrl}` }}
           />

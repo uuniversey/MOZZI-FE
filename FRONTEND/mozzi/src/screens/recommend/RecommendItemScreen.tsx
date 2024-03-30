@@ -127,7 +127,7 @@ const RecipeButton = styled(TouchableOpacity)`
   border-radius: 20px;
   justify-content: center;
   border-color: rgba(0, 0, 0, 0.2);
-  border-width: 2px;
+  border-width: 1px;
   elevation: 1;
   margin-bottom: 15px;
 `
@@ -138,7 +138,7 @@ const RetryButton = styled(TouchableOpacity)`
   border-radius: 20px;
   justify-content: center;
   border-color: rgba(0, 0, 0, 0.2);
-  border-width: 2px;
+  border-width: 1px;
   elevation: 1;
 `
 
