@@ -11,17 +11,15 @@ const Container = styled(View)`
   flex: 1;
   background-color: ${(props) => props.theme.palette.background};
   align-items: center;
+  padding: 0 16px 0 16px;
 `;
 
 const HeaderText = styled(Text)`
   color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.title};
   font-size: 32px;
-  margin-top: 20px;
   margin-bottom: 20px;
   align-self: flex-start;
-  padding-left: 28px;
-  padding-right: 28px;
 `
 
 const Body = styled.View`
@@ -29,8 +27,8 @@ const Body = styled.View`
   align-self: center;
   align-items: center;
   justify-content: center;
-  width: 350px;
-  height: 350px;
+  width: 100%;
+  /* aspect-ratio: 1; */
   border-radius: 20px;
   background-color: ${(props) => props.theme.palette.point};;
 `
@@ -65,17 +63,16 @@ const FoodTitle = styled(Text)`
 `;
 
 const FoodImage = styled.Image`
-  width: 350px;
-  height: 350px;
+  width: 100%;
+  aspect-ratio: 1;
 `
 
 const FramesContainer = styled(View)`
-  width: 350px;
+  width: 100%;
   flex-direction: row;
   justify-content: space-around;
-  padding: 10px;
-  margin-top: 10px;
-  margin-bottom: 30px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 `;
 
 const FrameButton = styled.TouchableOpacity`
@@ -92,13 +89,11 @@ const FrameText = styled(Text)`
 `
 
 const ShareButton = styled(TouchableOpacity)`
-  width: 85%;
+  width: 100%;
   border-radius: 20px;
   padding: 16px;
   margin-top: 8px;
   margin-bottom: 8px;
-  margin-left: 16px;
-  margin-right: 16px;
   align-items: center;
   border-color: rgba(0, 0, 0, 0.2);
   background-color: ${(props) => props.theme.palette.point};;

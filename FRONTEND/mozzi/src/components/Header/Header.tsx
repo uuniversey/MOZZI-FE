@@ -21,7 +21,7 @@ const HeaderContainer = styled.View<{ width: number }>`
   width: ${({ width }) => width}px;
   height: 40px;
   margin-top: 20px;
-  margin-left: 22px;
+  margin-left: 12px;
   background-color: #FFFEF2;
 `
 

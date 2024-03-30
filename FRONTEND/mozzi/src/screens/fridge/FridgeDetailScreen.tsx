@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FlatList, Keyboard, Platform, Text } from 'react-native';
+import { ScrollView, Keyboard, Platform, Text } from 'react-native';
 import styled from 'styled-components/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
@@ -61,7 +61,7 @@ const MenuItem = styled(Text)`
 `;
 
 const InputContainer = styled.View`
-  margin-top: ${({ keyboardOpen }) => (keyboardOpen ? '200px' : '30px')};
+  margin-top: ${({ keyboardOpen }) => (keyboardOpen ? '200px' : '20px')};
   width: 100%;
   align-items: center;
   padding: 0 16px 0 16px;
