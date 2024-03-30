@@ -47,6 +47,8 @@ export const SearchFood: React.FC<{ setQuery: (query: string) => void }> = ({ se
   const allFoods = useFridgeStore((state) => state.allFoods);
   const getAllFoods = useFridgeStore((state) => state.getAllFoods);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
+  // 선택된 항목을 저장할 상태
+  const [selectedItem, setSelectedItem] = useState<FoodItem | null>(null);
 
   useEffect(() => {
     // 키보드 상태 추적
@@ -64,6 +66,7 @@ export const SearchFood: React.FC<{ setQuery: (query: string) => void }> = ({ se
       keyboardDidHideListener.remove();
     };
   }, []);
+
 
   useEffect(() => {
     // `query`가 변경될 때마다 `setQuery`를 호출
@@ -86,11 +89,6 @@ export const SearchFood: React.FC<{ setQuery: (query: string) => void }> = ({ se
     if (text === '') {
       setFilteredData([]);
     } else {
-      // // 문자열 배열에서 검색어가 포함된 항목만 필터링
-      // const filtered = allFoods.filter((food) =>
-      //   food.toLowerCase().includes(text.toLowerCase())
-      // );
-      // setFilteredData(filtered);
       const filtered = allFoods.filter((food) =>
       food && food.toLowerCase().includes(text.toLowerCase())
       );
