@@ -881,16 +881,73 @@ def set_Category():
         df_foods_foods.to_pickle("df2.pkl")
 
 
+
+@api_view(["GET"])
+def user_recommendation(request):
+    # 0. 요청한 사용자를 특정한다.
+    token = request.headers['Authorization'].split(' ')[1]
+    data = base64.b64decode(token)
+    data = data.decode('latin-1')
+    index_e = data.index('"e":') + len('"e":')  # "e": 다음 인덱스부터 시작
+    index_comma = data.index(',', index_e)  # 쉼표(,)가 나오는 인덱스 찾기
+    e_value = data[index_e:index_comma]
+    user_number = e_value[1:-1]
+    # 사용자 user_code 가 나올 것
+    
+    
+    # 1. 저장되어 있을 파일을 읽는다
+    db = pymysql.connect(
+                    host = "a304.site",
+                    port = 3306,
+                    user = "ssafy",
+                    password = "ssafy",
+                     )
+    with db.cursor() as cursor:
+        query = f"select user_id from mozzi.user where user_code = {user_number}"
+        cursor.execute(query)
+        userId = cursor.fetchall()[0][0]
+
+        filewewant = f"{userId}-df.csv"
+        try:
+            obj =  takeFilesFromS3(filewewant)
+            df = pd.read_csv(BytesIO(obj["Body"].read()))
+        except:
+            print("에러발생")
+            df = pd.read_sql(f"select user_food_preference from mozzi.user_food where user_id = {userId}" ,db)
+        
+        
+        # 냉장고에 있는 모든 재료들을 가져온다.
+        query = f'select * fron refri_ingredient where user_id = {userId}'
+        cursor.execute(query)
+        refri_ingredients_list = cursor.fetchall()
+    
+        # 모든 재료들에 대해서 모든 음식들과의 연관에 대해 + 해준다.
+        for refri_ingredient in refri_ingredients_list:
+            ingredient = refri_ingredient[1]
+            query = f'select food_id, ingredient_ratio from food_ingredient where ingredient_id = {ingredient}'
+            cursor.execute(query)
+            foods_list = cursor.fetchall()
+            for food in foods_list:
+                food_id, parameter = food
+                df.iloc[food_id] += parameter / 1000
+        df.sort_values()
+        
+        
+
+
+
+
+    
+    # -1 저장된 파일을 삭제한다.
+    
+    return
+
 @api_view(["PUT"])
 def user_ingredient_affection(request):
-    input_ingredient_name = "두부"
-
     # print(request.data['foods'])
     token = request.headers['Authorization'].split(' ')[1]
     data = base64.b64decode(token)
-   
     data = data.decode('latin-1')
-    
     index_e = data.index('"e":') + len('"e":')  # "e": 다음 인덱스부터 시작
     index_comma = data.index(',', index_e)  # 쉼표(,)가 나오는 인덱스 찾기
     e_value = data[index_e:index_comma]
@@ -905,7 +962,7 @@ def user_ingredient_affection(request):
                          )
     # print(user)
 
-        # 해당 음식과 관련있는 모든 음싟 
+        # 해당 음식과 관련있는 모든 음식
         # 유저가 총 한 횟수 가져옴
         # 모든 음식들에 대해서 필터링
         
@@ -948,9 +1005,6 @@ def user_ingredient_affection(request):
 
             cursor.execute(query)
             foodList = cursor.fetchall()
-
-
-
             # print(foodList)
             for fooddd in foodList:
                 # print(fooddd)
@@ -982,4 +1036,9 @@ def saveFilesToS3(df, filewewant):
     csv_buffer = StringIO()
     df.to_csv(csv_buffer, encoding = 'utf-8', index=False)
     s3.Object(settings.AWS_STORAGE_BUCKET_NAME, filewewant).put(Body = csv_buffer.getvalue())
+    return
+
+def removeFilesFromS3(filename):
+    s3 = boto3.resource('s3')
+    s3.Object(settings.AWS_STORAGE_BUCKET_NAME, filename).delete()
     return
