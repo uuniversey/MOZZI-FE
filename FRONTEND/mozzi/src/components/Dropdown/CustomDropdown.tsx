@@ -5,15 +5,16 @@ import { MultiSelect, Dropdown } from 'react-native-element-dropdown'
 import styled from 'styled-components/native'
 
 import useDropdownStore from '../../store/DropdownStore'
+import useProfileStore from '../../store/ProfileStore'
 
-  const SelectedStyle = styled(View)`
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    margin-top: 8px;
-    margin-right: 12px;
-    border-radius: 14px;
-    background-color: #F9F7BB;
+const SelectedStyle = styled(View)`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 8px;
+  margin-right: 12px;
+  border-radius: 14px;
+  background-color: #F9F7BB;
 `
 
 const TextSelectedStyle = styled(Text)`
@@ -23,11 +24,16 @@ const TextSelectedStyle = styled(Text)`
 `
 
 function CustomDropdown ({ data, placeholder, isMulti }) {
-  const { dropdownData, setDropdownData } = useDropdownStore()
-  const [selected, setSelected] = useState([])
+  const { dropdownData, setDropdownData, isVeganData, setIsVeganData } = useDropdownStore()
+  const { profileData } = useProfileStore()
+  const [selected, setSelected] = useState(
+    profileData.foods
+      .filter(food => food.isLike === 2)
+      .map(food => food.ingredientName)
+    )
 
   const handleData = (item) => {
-    setDropdownData(item.value)
+    setIsVeganData(item.value)
   }
   
   useEffect(() => {
@@ -42,6 +48,7 @@ function CustomDropdown ({ data, placeholder, isMulti }) {
   //     </View>
   //   )
   // }
+
 
   return (
     <>
@@ -78,7 +85,6 @@ function CustomDropdown ({ data, placeholder, isMulti }) {
           valueField="value"
           placeholder={placeholder}
           placeholderStyle={{ fontSize: 14, color: '#ccc' }}
-          value={selected}
           onChange={(item) => handleData(item)}
         />
       }

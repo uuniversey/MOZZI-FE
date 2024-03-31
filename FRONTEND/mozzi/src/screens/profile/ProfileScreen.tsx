@@ -10,15 +10,6 @@ import EditScreen from './EditScreen'
 import useProfileStore from '../../store/ProfileStore'
 import useDropdownStore from '../../store/DropdownStore'
 
-
-interface UserProfileState {
-  nickname: string
-  allergyInfo: string
-  favoriteFood: string
-  dislikedFood: string
-  isVegan: string
-}
-
 const Container = styled(View)`
   flex: 1;
   background-color: ${(props) => props.theme.palette.background};
@@ -69,19 +60,9 @@ const BtnText = styled(Text)`
 
 function ProfileScreen () {
   const navigation = useNavigation()
-  const { getProfile, profileData, editNickname, editIsVegan, editFoodInfo, form } = useProfileStore()
-  const { dropdownData } = useDropdownStore()
+  const { getProfile, profileData, foodInfo, editNickname, editIsVegan, editFoodInfo, form } = useProfileStore()
+  const { dropdownData, isVeganData } = useDropdownStore()
   const [ isEdit, setIsEdit ] = useState<boolean>(false)
-  const [ foodInfo, setFoodInfo ] = useState(
-  [
-    { foodName : "파마산치즈",
-      "value" : 1},
-    { foodName : "고추",
-      "value" : 0},
-    { foodName : "우유",
-      "value" : 2},
-  ]
-)
 
   useLayoutEffect (() => {
     getProfile()
@@ -90,7 +71,7 @@ function ProfileScreen () {
   const handleIsEdit = () => {
     if (isEdit) {
       editNickname(form.nickname)
-      editIsVegan(Boolean(dropdownData))
+      editIsVegan(Boolean(isVeganData))
       editFoodInfo(foodInfo)
     }
     setIsEdit(!isEdit)
@@ -115,17 +96,38 @@ function ProfileScreen () {
             />
             <Label>알레르기 정보</Label>
             <StyledInput
-              placeholder={`${profileData.foods}`}
+              placeholder={
+                profileData.foods && profileData.foods.length > 0
+                  ? profileData.foods
+                      .filter(food => food.isLike === 2)
+                      .map(food => food.ingredientName)
+                      .join(', ')
+                  : "보유하고 있는 알레르기 정보를 선택해 주세요"
+              }
               editable={false}
             />
             <Label>좋아하는 식재료</Label>
             <StyledInput
-              placeholder={`${profileData.foods}`}
+              placeholder={
+                profileData.foods && profileData.foods.length > 0
+                  ? profileData.foods
+                      .filter(food => food.isLike === 1)
+                      .map(food => food.ingredientName)
+                      .join(', ')
+                  : "좋아하는 식재료를 찾아보세요."
+              }
               editable={false}
             />
             <Label>싫어하는 식재료</Label>
             <StyledInput
-              placeholder={`${profileData.foods}`}
+              placeholder={
+                profileData.foods && profileData.foods.length > 0
+                  ? profileData.foods
+                      .filter(food => food.isLike === 0)
+                      .map(food => food.ingredientName)
+                      .join(', ')
+                  : "싫어하는 식재료를 찾아보세요."
+              }
               editable={false}
             />
             <Label>비건 여부</Label>

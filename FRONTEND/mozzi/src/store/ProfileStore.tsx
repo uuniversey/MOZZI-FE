@@ -3,13 +3,16 @@ import axios from '../../axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const useProfileStore = create((set) => ({
-  profileData: '',
+  profileData: [],
+  foodInfo: [],
+  setFoodInfo: (foodInfo) => {
+    set({ foodInfo })
+  },
+
   form: {
     nickname: '',
-    allergyInfo: '',
-    favoriteFood: '',
-    dislikedFood: '',
-    isVegan: ''
+    Info: [],
+    isVegan: '',
   },
   setForm: (newForm) => {
     set({ form: newForm })
@@ -29,9 +32,6 @@ const useProfileStore = create((set) => ({
         form: { // profileData를 사용하여 form 초기값 설정
           ...state.form,
           nickname: response.data.nickname,
-          allergyInfo: response.data.allergyInfo,
-          favoriteFood: response.data.favoriteFood,
-          dislikedFood: response.data.dislikedFood,
           isVegan: response.data.isVegan
         }
       }))
