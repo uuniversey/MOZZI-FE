@@ -99,7 +99,7 @@ function ProfileScreen () {
   return (
     <Container>
       <Header>
-        <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
+        <Header.Icon iconName="arrow-back" onPress={navigation.goBack} />
       </Header>
 
       <Title>내 정보</Title>

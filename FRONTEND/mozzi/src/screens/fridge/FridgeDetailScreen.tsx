@@ -144,7 +144,7 @@ const FridgeDetailScreen = ({ route }) => {
   return (
     <Container behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Header>
-        <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
+        <Header.Icon iconName="arrow-back" onPress={navigation.goBack} />
       </Header>
 
       {!keyboardOpen && ( // 키보드가 열려있지 않을 때만 노트와 그 내용을 렌더링

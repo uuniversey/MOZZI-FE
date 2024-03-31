@@ -180,7 +180,7 @@ function RecapScreen() {
   return (
     <>
       <Header>
-        <Header.Icon iconName="chevron-back" onPress={goBack} />
+        <Header.Icon iconName="arrow-back" onPress={goBack} />
       </Header>
       <Container>
         <HeaderText>나의 모찌 기록</HeaderText>
