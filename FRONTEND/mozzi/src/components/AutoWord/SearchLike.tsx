@@ -55,9 +55,11 @@ const TextSelectedStyle = styled(Text)`
 export const SearchBar = ({ data, onSelect, flag }) => {
   const { profileData } = useProfileStore()
   const [ tmpData, setTmpData ] = useState(
-    profileData.foods
+    profileData.foods && profileData.foods.length > 0
+    ? profileData.foods
       .filter(food => food.isLike === flag)
       .map(food => food.ingredientName)
+      : []
     )
   const [ searchQuery, setSearchQuery ] = useState('')
   const [ filteredData, setFilteredData ] = useState([])

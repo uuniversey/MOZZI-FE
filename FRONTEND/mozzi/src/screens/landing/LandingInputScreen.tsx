@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react'
-import { View, Text, TextInput, TouchableOpacity } from 'react-native'
+import { View, ScrollView, Text, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native'
 import styled from 'styled-components/native'
 
 import CustomDropdown from '../../components/Dropdown/CustomDropdown'
@@ -12,7 +12,7 @@ import useLoginStore from '../../store/LoginStore'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const Container = styled(View)`
+const Container = styled(ScrollView)`
   flex: 1;
   background-color: ${(props) => props.theme.palette.background};
 `
@@ -134,47 +134,49 @@ function InputScreen () {
   return (
     <Container>
       <Title>회원 정보 입력</Title>
-      <Body>
-        <Label>닉네임</Label>
-        <StyledInput
-          placeholder="닉네임을 입력하세요"
-          value={form.nickname}
-          onChangeText={handleNicknameChange}
-          placeholderTextColor="#ccc"
-        />
+      <KeyboardAvoidingView>
+        <Body>
+          <Label>닉네임</Label>
+          <StyledInput
+            placeholder="닉네임을 입력하세요"
+            value={form.nickname}
+            onChangeText={handleNicknameChange}
+            placeholderTextColor="#ccc"
+          />
 
-        <BgText>모찌가 레시피를 잘 추천할 수 있도록 아래의 추가 정보를 입력해 주세요!</BgText>
-        
-        <Label>알레르기 정보</Label>
-        <CustomDropdown
-          data={allergyList}
-          placeholder="보유하고 있는 알레르기 정보를 선택해 주세요"
-          isMulti={true}
-        />
+          <BgText>모찌가 레시피를 잘 추천할 수 있도록 아래의 추가 정보를 입력해 주세요!</BgText>
+          
+          <Label>알레르기 정보</Label>
+          <CustomDropdown
+            data={allergyList}
+            placeholder="보유하고 있는 알레르기 정보를 선택해 주세요"
+            isMulti={true}
+          />
 
-        <Label>좋아하는 식재료</Label>
-        <SearchBar data={ingredientData} onSelect={handleLikeData} flag={1}/>
+          <Label>좋아하는 식재료</Label>
+          <SearchBar data={ingredientData} onSelect={handleLikeData} flag={1}/>
 
-        <Label>싫어하는 식재료</Label>
-        <SearchBar data={ingredientData} onSelect={handleUnlikeData} flag={0}/>
+          <Label>싫어하는 식재료</Label>
+          <SearchBar data={ingredientData} onSelect={handleUnlikeData} flag={0}/>
 
-        <Label>비건 여부</Label>
-        <CustomDropdown
-          data={isYes}
-          placeholder="비건 여부를 알려주세요"
-          isMulti={false}
-        />
+          <Label>비건 여부</Label>
+          <CustomDropdown
+            data={isYes}
+            placeholder="비건 여부를 알려주세요"
+            isMulti={false}
+          />
 
-        <JustifyView>
-          <Btn onPress={goMain}>
-            <BtnText>스킵</BtnText>
-          </Btn>
+          <JustifyView>
+            <Btn onPress={goMain}>
+              <BtnText>스킵</BtnText>
+            </Btn>
 
-          <Btn onPress={completeInput}>
-            <BtnText>완료</BtnText>
-          </Btn>
-        </JustifyView>
-      </Body>
+            <Btn onPress={completeInput}>
+              <BtnText>완료</BtnText>
+            </Btn>
+          </JustifyView>
+        </Body>
+      </KeyboardAvoidingView>
     </Container>
   )
 }

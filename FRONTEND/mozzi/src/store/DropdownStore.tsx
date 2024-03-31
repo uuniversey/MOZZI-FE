@@ -13,6 +13,9 @@ const useDropdownStore = create((set) => ({
   setIsVeganData: (data) => {
     set({ isVeganData: data })
   },
+
+  // 탈퇴 시 로직
+  dropdownReset: () => set({ dropdownData: [], }),
 }))
 
 export default useDropdownStore

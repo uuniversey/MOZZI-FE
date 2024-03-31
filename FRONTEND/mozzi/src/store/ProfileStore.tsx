@@ -12,7 +12,7 @@ const useProfileStore = create((set) => ({
   form: {
     nickname: '',
     Info: [],
-    isVegan: '',
+    isVegan: false,
   },
   setForm: (newForm) => {
     set({ form: newForm })
@@ -108,6 +108,17 @@ const useProfileStore = create((set) => ({
     }
   },
 
+  // 탈퇴 시 로직
+  profileReset: () => set({
+    profileData: [],
+    foodInfo: [],
+    form: {
+      nickname: '',
+      Info: [],
+      isVegan: false,
+    }
+  }),
+  
 }))
 
 export default useProfileStore

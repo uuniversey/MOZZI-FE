@@ -27,9 +27,11 @@ function CustomDropdown ({ data, placeholder, isMulti }) {
   const { dropdownData, setDropdownData, isVeganData, setIsVeganData } = useDropdownStore()
   const { profileData } = useProfileStore()
   const [selected, setSelected] = useState(
-    profileData.foods
+    profileData.foods && profileData.foods.length > 0
+    ? profileData.foods
       .filter(food => food.isLike === 2)
       .map(food => food.ingredientName)
+      : []
     )
 
   const handleData = (item) => {

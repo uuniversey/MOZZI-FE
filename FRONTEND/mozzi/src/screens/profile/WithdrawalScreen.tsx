@@ -5,6 +5,8 @@ import styled from 'styled-components/native'
 import Icon from "react-native-vector-icons/Ionicons"
 
 import useLoginStore from '../../store/LoginStore'
+import useProfileStore from '../../store/ProfileStore'
+import useDropdownStore from '../../store/DropdownStore'
 import { useNavigation } from '@react-navigation/native'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -79,7 +81,9 @@ const BtnContainer = styled(View)`
 function WithdrawalScreen() {
   const navigation = useNavigation()
   const { setIsLogin, userWithdrawal } = useLoginStore()
-
+  const { profileReset } = useProfileStore()
+  const { dropdownReset } = useDropdownStore()
+  
   const handleWithdrawal = async (navigation) => {
     userWithdrawal()
 
@@ -87,6 +91,9 @@ function WithdrawalScreen() {
     await AsyncStorage.removeItem('refreshToken')
 
     setIsLogin(false)
+
+    profileReset()
+    dropdownReset()
 
     navigation.reset({
       index: 0,
