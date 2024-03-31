@@ -13,7 +13,7 @@ const Container = styled(View)`
 
 const Title = styled(Text)`
   font-size: 20px;
-  margin: 30px 0px 30px 20px;
+  margin: 10px 0px 20px 20px;
   font-family: ${(props) => props.theme.fonts.title};
   color: ${(props) => props.theme.palette.font};
 `
@@ -97,7 +97,9 @@ function DiaryDetailScreen ({ route }) {
       </Header>
 
       <View>
-        <Title> <Dot> ● </Dot> {date.year}년 {date.month}월 {date.day}일 요리 일기</Title>
+        <Title> 
+            <Dot>● </Dot> {date.year}년 {date.month}월 {date.day}일 요리 일기
+        </Title>
       </View>
 
       <ItemContainer>

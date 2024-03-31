@@ -1,5 +1,5 @@
 import React from 'react'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 
 import UserScreen from '../screens/profile/UserScreen'
 import ProfileScreen from '../screens/profile/ProfileScreen'
@@ -10,14 +10,15 @@ import TermsOfUseScreen from '../screens/profile/TermsOfUseScreen'
 import PolicyMenuScreen from '../screens/profile/PolicyMenuScreen'
 
 
-const Stack = createNativeStackNavigator()
+const Stack = createStackNavigator()
 
 function UserStack() {
   return (
     <Stack.Navigator
-      screenOptions={({ route }) => ({
+      screenOptions={{
         headerShown: false,
-      })}
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+      }}
     >
       <Stack.Screen name="User" component={UserScreen} />
       <Stack.Screen name="Profile" component={ProfileScreen} />

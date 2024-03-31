@@ -27,7 +27,7 @@ const JustifyView = styled(View)`
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin: 50px 0px 20px 40px;
+  padding-left: 32px;
 `
 
 const BtnContainer = styled(View)`
@@ -39,9 +39,11 @@ const Title = styled(Text)`
   text-align: left;
   font-family: ${(props) => props.theme.fonts.title};
   color: ${(props) => props.theme.palette.font}; 
+  margin: 40px 0 20px 0;
 `
 
 const Btn = styled(TouchableOpacity)`
+  margin: 40px 0 20px 0;
   align-items: center;
   justify-content: center;
   width: 30px;

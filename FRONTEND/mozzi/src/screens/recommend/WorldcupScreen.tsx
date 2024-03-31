@@ -20,7 +20,7 @@ const TextContainer = styled(View)`
 `
 const Question = styled(Text)`
   font-size: 24px;
-  margin: 24px 0 12px 0;
+  margin: 20px 0 10px 0;
   text-align: center;
   color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.title};

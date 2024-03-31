@@ -25,7 +25,7 @@ const InnerBar = styled(Animated.View)`
 
 // 이미지 경로는 올바른지 확인하세요.
 const diceImages = [
-  require('../../assets/recommend/dice2.png'),
+  require('../../assets/illustration/dice3.png'),
 ];
 
 // Loading 컴포넌트의 props 타입을 정의합니다.

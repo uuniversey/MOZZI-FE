@@ -14,16 +14,16 @@ const Container = styled(View)`
   flex: 1;
   background-color: ${(props) => props.theme.palette.background};
   align-items: center;
+  padding: 10px 16px 0 16px;
 `
 
 const SearchView = styled(View)`
-  margin: 30px;
-  height: 60%;
+  width: 100%;
 `
 
 const Card = styled(View)`
-  width: 350px;
-  height: 350px;
+  width: 100%;
+  height: 100%;
   background-color: rgba(247, 207, 207, 0.7);
   border-radius: 15px;
   padding: 16px;
@@ -49,26 +49,26 @@ const MealName = styled(Text)`
 `
 
 const Btn = styled(TouchableOpacity)`
+  margin-top: 70px;
   background-color: ${(props) => props.theme.palette.point};
   border-radius: 10px;
-  width: 80px;
-  height: 35px;
-  justify-content: center;
+  width: 70px;
+  padding: 5px;
+  align-items: center;
   align-self: flex-end;
-  margin: 30px;
+  z-index: -10;
 `
 
 const BtnText = styled(Text)`
   font-size: 16px;
-  text-align: center;
   font-family: ${(props) => props.theme.fonts.content};
   color: ${(props) => props.theme.palette.font};
 `
 
 const SelectedText = styled(Text)`
-  margin: 0px 30px 0px 30px;
   font-family: ${(props) => props.theme.fonts.content};
   color: ${(props) => props.theme.palette.font};
+  z-index: -10;
 `
 
 function SearchScreen () {
@@ -94,32 +94,34 @@ function SearchScreen () {
   }, [])
   
   return (
-    <Container>
+    <>
       <Header>
         <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
       </Header>
+      <Container>
 
-      <SearchView>
-        <SearchBar data={recipeData} onSelect={handleSelectRecipe}/>
-      </SearchView>
+        <SearchView>
+          <SearchBar data={recipeData} onSelect={handleSelectRecipe}/>
+        </SearchView>
 
-      {/* <Card>
-        <StyledImage
-          source={{ uri: recipeDetailData?.photo }}
-          />
-        <MealName>{recipeDetailData?.foodName}</MealName>
-      </Card> */}
+        {/* <Card>
+          <StyledImage
+            source={{ uri: recipeDetailData?.photo }}
+            />
+          <MealName>{recipeDetailData?.foodName}</MealName>
+        </Card> */}
 
-      {selectedRecipeName ?
-       <SelectedText>
-        {selectedRecipeName}의 레시피로 이동할까요?
-      </SelectedText> : ''
-      }
+        {selectedRecipeName ?
+        <SelectedText>
+          {selectedRecipeName}의 레시피로 이동할까요?
+        </SelectedText> : ''
+        }
 
-      <Btn onPress={moveRecipe}>
-        <BtnText>이동</BtnText>
-      </Btn>
-    </Container>
+        <Btn onPress={moveRecipe}>
+          <BtnText>이동</BtnText>
+        </Btn>
+      </Container>
+    </>
   )
 }
 

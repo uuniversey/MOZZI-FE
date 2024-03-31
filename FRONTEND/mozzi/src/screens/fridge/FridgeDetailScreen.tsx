@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FlatList, Keyboard, Platform, Text } from 'react-native';
+import { ScrollView, Keyboard, Platform, Text, Alert } from 'react-native';
 import styled from 'styled-components/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
@@ -61,7 +61,7 @@ const MenuItem = styled(Text)`
 `;
 
 const InputContainer = styled.View`
-  margin-top: ${({ keyboardOpen }) => (keyboardOpen ? '200px' : '30px')};
+  margin-top: ${({ keyboardOpen }) => (keyboardOpen ? '200px' : '20px')};
   width: 100%;
   align-items: center;
   padding: 0 16px 0 16px;
@@ -122,13 +122,19 @@ const FridgeDetailScreen = ({ route }) => {
   }, [getMyFoods, route.params]);
 
   const handleSend = () => {
-    if (text) {
-      addFridge(text, storedPos); // Zustand 스토어 업데이트 및 DB 업데이트
-      setText(null); // 텍스트 입력 필드 초기화
-      Keyboard.dismiss(); // 키보드를 닫음
-      scrollViewRef.current?.scrollToEnd({ animated: true }); // 스크롤을 맨 아래로 이동
+    // allFoods 내에서 text 문자열이 존재하는지 확인
+    const isIngredientInList = allFoods.includes(text);
+  
+    if (text && isIngredientInList) {
+      addFridge(text, storedPos) // Zustand 스토어 업데이트 및 DB 업데이트
+      setText('') // 텍스트 입력 필드 초기화
+      Keyboard.dismiss() // 키보드를 닫음
+      scrollViewRef.current?.scrollToEnd({ animated: true }) // 스크롤을 맨 아래로 이동
+    } else {
+      // 식재료가 목록에 없을 경우 경고 메시지 표시
+      Alert.alert("알림", "모찌가 알지 못하는 식재료예요!\n정확한 식재료 이름을 입력해 주세요.");
     }
-  }
+  };
 
   const handleDelete = async (foodName) => {
     await deleteFood(foodName);
