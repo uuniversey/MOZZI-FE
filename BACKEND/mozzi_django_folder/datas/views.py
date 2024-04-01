@@ -197,8 +197,15 @@ def get_random_food(request):
     foods = Foods.objects.all()
     all_food_names = [food.food_name for food in foods]
     all_food_pics = [food.food_pic for food in foods]
-    random_food_names = random.sample(all_food_names, 6)
-    random_food_pics = random.sample(all_food_pics, 6)
+    randomIdx = range(len(foods))
+    randIdxList =  random.sample(randomIdx, 6)
+        
+    random_food_names = []
+    random_food_pics = []
+    for i in randIdxList:
+        random_food_names.append(all_food_names[i])
+        random_food_pics.append(all_food_pics[i])
+
 
     data = {
         'foods':[{
