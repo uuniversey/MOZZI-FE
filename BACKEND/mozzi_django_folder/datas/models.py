@@ -40,18 +40,30 @@ class Ingredient(models.Model):
         return self.ingredient_name
     
 
+# class User(models.Model):
+#     user_id = models.AutoField(primary_key=True)
+#     user_code = models.CharField(max_length=20)
+#     user_nickname = models.CharField(max_length=20)
+#     user_register_date = models.DateTimeField()
+#     user_isvegan = models.BooleanField()
+    
+#     class Meta:
+#         db_table = 'user'  # MySQL 데이터베이스의 테이블 이름을 'user'로 지정
+
+#     def __str__(self):
+#         return self.user_code  # 객체를 출력할 때 사용할 문자열 반환
+    
 class User(models.Model):
     user_id = models.AutoField(primary_key=True)
-    user_code = models.CharField(max_length=20)
-    user_nickname = models.CharField(max_length=20)
-    user_register_date = models.DateTimeField()
-    user_isvegan = models.BooleanField()
-    
-    class Meta:
-        db_table = 'user'  # MySQL 데이터베이스의 테이블 이름을 'user'로 지정
+    user_isvegan = models.IntegerField(blank=True, null=True)
+    user_register_date = models.DateTimeField(blank=True, null=True)
+    user_code = models.CharField(max_length=255, blank=True, null=True)
+    user_nickname = models.CharField(max_length=255, blank=True, null=True)
+    worldcup = models.IntegerField(blank=True, null=True)
 
-    def __str__(self):
-        return self.user_code  # 객체를 출력할 때 사용할 문자열 반환
+    class Meta:
+        managed = False
+        db_table = 'user'
     
 class FoodIngredient(models.Model):
     food_ingredient_id = models.AutoField(primary_key=True)
@@ -62,3 +74,45 @@ class FoodIngredient(models.Model):
     class Meta:
         managed = False
         db_table = 'food_ingredient'
+
+# class FoodsFoods(models.Model):
+#     food_id = models.BigIntegerField(blank=True, null=True)
+#     other_food_id = models.BigIntegerField(blank=True, null=True)
+#     relations = models.FloatField(blank=True, null=True)
+
+#     class Meta:
+#         managed = False
+#         db_table = 'foods_foods'
+class RefriIngredients(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
+    expiration_date = models.DateTimeField(blank=True, null=True)
+    stored_pos = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'refri_ingredients'
+        unique_together = (('user', 'ingredient'),)
+
+
+
+class UserFood(models.Model):
+    user_food_id = models.AutoField(primary_key=True)
+    food = models.ForeignKey(Foods, models.DO_NOTHING, blank=True, null=True)
+    user = models.ForeignKey(User, models.DO_NOTHING, blank=True, null=True)
+    user_food_preference = models.FloatField(blank=True, null=True)
+    total = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'user_food'
+
+class UserIngredients(models.Model):
+    user_ingredients_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, models.DO_NOTHING, blank=True, null=True)
+    ingredient = models.ForeignKey(Ingredient, models.DO_NOTHING, blank=True, null=True)
+    is_like = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'user_ingredients'

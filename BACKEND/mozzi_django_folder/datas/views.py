@@ -43,6 +43,91 @@ from .tasks import reset_food_views
 
 
 # 작업 결과 확인
+from django.db import models
+from neo4j import GraphDatabase
+
+# Neo4j 서비스 클래스
+# class Neo4jService(object):
+#     def __init__(self, uri, user, password):
+#         self._driver = GraphDatabase.driver(uri, auth=(user, password))
+
+#     def close(self):
+#         self._driver.close()
+
+#     def create_node(self, label, properties):
+#         with self._driver.session() as session:
+#             session.write_transaction(self._create_node, label, properties)
+
+#     @staticmethod
+#     def _create_node(tx, label, properties):
+#         query = f"CREATE (n:{label} $properties) RETURN n"
+#         return tx.run(query, properties=properties)
+
+# # Neo4j 서비스 초기화
+# uri = "bolt://localhost:7687"
+# user = "neo4j"
+# password = "mozzimozzi"
+# service = Neo4jService(uri, user, password)
+
+# # FoodsFoods 데이터 조회 및 Neo4j에 삽입
+# # foods_foods = FoodsFoods.objects.all()
+# # for item in foods_foods:
+# #     properties = {
+# #         "food_id": item.food_id,
+# #         "other_food_id": item.other_food_id,
+# #         "relations": item.relations
+# #     }
+# #     service.create_node("FoodsFoods", properties)
+
+# # RefriIngredients 데이터 조회 및 Neo4j에 삽입
+# refri_ingredients = RefriIngredients.objects.all()
+# for item in refri_ingredients:
+#     properties = {
+#         "user_id": item.user_id,
+#         "ingredient_id": item.ingredient_id,
+#         "expiration_date": str(item.expiration_date),
+#         "stored_pos": item.stored_pos
+#     }
+#     service.create_node("RefriIngredients", properties)
+
+# # User 데이터 조회 및 Neo4j에 삽입
+# users = User.objects.all()
+# for item in users:
+#     properties = {
+#         "user_id": item.user_id,
+#         "user_isvegan": item.user_isvegan,
+#         "user_register_date": str(item.user_register_date),
+#         "user_code": item.user_code,
+#         "user_nickname": item.user_nickname,
+#         "worldcup": item.worldcup
+#     }
+#     service.create_node("User", properties)
+
+# # UserFood 데이터 조회 및 Neo4j에 삽입
+# user_foods = UserFood.objects.all()
+# for item in user_foods:
+#     properties = {
+#         "user_food_id": item.user_food_id,
+#         "food_id": item.food_id,
+#         "user_id": item.user_id,
+#         "user_food_preference": item.user_food_preference,
+#         "total": item.total
+#     }
+#     service.create_node("UserFood", properties)
+
+# # UserIngredients 데이터 조회 및 Neo4j에 삽입
+# user_ingredients = UserIngredients.objects.all()
+# for item in user_ingredients:
+#     properties = {
+#         "user_ingredients_id": item.user_ingredients_id,
+#         "user_id": item.user_id,
+#         "ingredient_id": item.ingredient_id,
+#         "is_like": item.is_like
+#     }
+#     service.create_node("UserIngredients", properties)
+
+# # 서비스 종료
+# service.close()
 
 
 def get_ingredients(start, last):
@@ -197,8 +282,15 @@ def get_random_food(request):
     foods = Foods.objects.all()
     all_food_names = [food.food_name for food in foods]
     all_food_pics = [food.food_pic for food in foods]
-    random_food_names = random.sample(all_food_names, 6)
-    random_food_pics = random.sample(all_food_pics, 6)
+    randomIdx = range(len(foods))
+    randIdxList =  random.sample(randomIdx, 6)
+        
+    random_food_names = []
+    random_food_pics = []
+    for i in randIdxList:
+        random_food_names.append(all_food_names[i])
+        random_food_pics.append(all_food_pics[i])
+
 
     data = {
         'foods':[{
@@ -531,7 +623,7 @@ def add_ingredients_to_refrigerator(request):
         
         ingredient_ids = []
         for food_name in foods:
-            print(food_name)
+            # print(food_name)
             ingredient_id = Ingredient.objects.filter(ingredient_name=food_name['foodName']).values_list('id', flat=True).first()
             pos = food_name['storedPos']
             ingredient_ids.append((ingredient_id, pos))
@@ -541,7 +633,7 @@ def add_ingredients_to_refrigerator(request):
                 # 이미 존재하는지 확인
                 cursor.execute("SELECT COUNT(*) as count FROM refri_ingredients WHERE user_id = %s AND ingredient_id = %s", [user_id, ingredient_id[0]]) 
                 row_count = cursor.fetchone()[0]
-                print(row_count)
+                # print(row_count)
                 
                 # 중복 삽입 방지
 
@@ -783,7 +875,7 @@ def recommendFoods():
         df_foods = pd.DataFrame(np.zeros((maxFoodsIndex, maxFoodsIndex)))
 
         for foodId1 in range(maxFoodsIndex):
-            print(foodId1)
+            # print(foodId1)
             for foodId2 in range(foodId1, maxFoodsIndex):
                 np1 = df.loc[[foodId1], :].to_numpy()
                 np2 = df.loc[[foodId2], :].T.to_numpy()
@@ -924,21 +1016,32 @@ def user_recommendation(request):
 
 @api_view(["PUT"])
 def user_ingredient_affection(request):
-    input_ingredient_name = "두부"
 
     # print(request.data['foods'])
     token = request.headers['Authorization'].split(' ')[1]
-    data = base64.b64decode(token)
-   
+    if len(token) != 165 :
+        token = token[:-1]
+
+    data=urlsafe_base64_decode(token)
+    print(data,'token')
     data = data.decode('latin-1')
-    
+    print(33333333)
+    print(type(data))
+    # print(data)
+    print(2222222222222)
     index_e = data.index('"e":') + len('"e":')  # "e": 다음 인덱스부터 시작
- 
+    print(index_e)
     index_comma = data.index(',', index_e)  # 쉼표(,)가 나오는 인덱스 찾기
 
     e_value = data[index_e:index_comma]
 
     user_number = e_value[1:-1]
+    print(user_number)
+
+   
+    # data = base64.b64decode(token)
+   
+    
 
     print(user_number)
     # print(type(user))
