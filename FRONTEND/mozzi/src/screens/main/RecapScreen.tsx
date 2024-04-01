@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, Alert, TouchableOpacity, Image } from 'react-native'
+import { View, Text, Alert, TouchableOpacity, Image, ScrollView } from 'react-native'
 import styled from 'styled-components/native'
 import { useNavigation } from '@react-navigation/native'
 import IconEntypo from 'react-native-vector-icons/Entypo'
@@ -43,8 +43,9 @@ const NoRecipeText = styled(Text)`
 const CardDay = styled(Text)`
   font-size: 16px;
   align-self: flex-start;
+  margin-bottom: 10px;
   color: ${(props) => props.theme.palette.font};
-  font-family: ${(props) => props.theme.fonts.content};
+  font-family: ${(props) => props.theme.fonts.title};
 `
 
 const CardImage = styled(Image)`
@@ -54,10 +55,10 @@ const CardImage = styled(Image)`
 `
 
 const CardTitle = styled(Text)`
-  font-size: 14px;
+  font-size: 16px;
   margin-top: 8px;
   color: ${(props) => props.theme.palette.font};
-  font-family: ${(props) => props.theme.fonts.title};
+  font-family: ${(props) => props.theme.fonts.content};
 `
 
 const RecipeCard = ({ id, foodName, photoUrl, photoDate }: RecipeCardProps) => {
@@ -70,16 +71,16 @@ const RecipeCard = ({ id, foodName, photoUrl, photoDate }: RecipeCardProps) => {
   )
 }
 
-const Container = styled(View)`
+const Container = styled(ScrollView)`
   flex: 1;
   background-color: ${(props) => props.theme.palette.background};
-  padding: 8px 16px 8px 16px;
+  padding: 0px 16px 20px 16px;
 `
 
 const HeaderText = styled(Text)`
   font-size: 32px;
   color: ${(props) => props.theme.palette.font};
-  margin: 0 0 20px 10px;
+  margin-bottom: 20px;
   align-self: flex-start;
   font-family: ${(props) => props.theme.fonts.title};
 `
@@ -87,18 +88,17 @@ const HeaderText = styled(Text)`
 const ActionButton = styled(TouchableOpacity)`
   flex-direction: column;
   border-radius: 20px;
+  margin-bottom: 20px;
   padding: 16px;
-  /* margin: 8px 16px 8px 16px; */
   align-items: center;
   justify-content: center;
   border-color: rgba(0, 0, 0, 0.2);
   background-color: #FFFEF2;
   border-width: 2px;
-  elevation: 2;
+  elevation: 1;
 `
 
 const ButtonText = styled(Text)`
-  margin-left: 8px;
   font-size: 16px;
   color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.content};
@@ -180,7 +180,7 @@ function RecapScreen() {
   return (
     <>
       <Header>
-        <Header.Icon iconName="chevron-back" onPress={goBack} />
+        <Header.Icon iconName="arrow-back" onPress={goBack} />
       </Header>
       <Container>
         <HeaderText>나의 모찌 기록</HeaderText>

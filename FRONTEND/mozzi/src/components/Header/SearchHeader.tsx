@@ -23,7 +23,7 @@ const HeaderContainer = styled.View<{ width: number }>`
   align-items: flex-end;
   height: 40px;
   margin-top: 20px;
-  padding-right: 22px;
+  padding-right: 16px;
   background-color: #FFFEF2;
 `
 

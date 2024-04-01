@@ -16,13 +16,14 @@ const Btn = styled(TouchableOpacity)`
 const TextToSpeech = ({ text }) => {
   
   // 이거 하면 갱신될때마다 자동으로 읽어줌
-  // useEffect(() => {
-  //   Tts.speak(text);
-  // }, [text])
+  useEffect(() => {
+    Tts.speak(text)
+  }, [text])
 
   const speak = () => {
     Tts.setDefaultLanguage('ko-KR')
     Tts.speak(text)
+    console.log('읽는다 레시피')
   }
   
   return (

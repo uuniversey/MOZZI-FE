@@ -5,7 +5,7 @@ import styled from 'styled-components/native'
 
 import useLoginStore from '../../store/LoginStore'
 import useProfileStore from '../../store/ProfileStore'
-import useRecipeStore from '../../store/RecipeStore'
+import useFridgeStore from '../../store/FridgeStore'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useNavigation } from '@react-navigation/native'
@@ -20,7 +20,7 @@ const TitleContainer = styled(View)`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 50px 16px 50px 16px;
+  margin: 20px 16px 20px 16px;
 `
 
 const Title = styled(Text)`
@@ -88,12 +88,12 @@ const ListBtnText = styled(Text)`
 function UserScreen() {
   const { userData, setIsLogin } = useLoginStore()
   const { profileData } = useProfileStore()
-  const { getIngredient } = useRecipeStore()
+  const { getAllFoods } = useFridgeStore()
 
   const navigation = useNavigation()
 
   useLayoutEffect (() => {
-    getIngredient()
+    getAllFoods()
   }, [])
 
   const handleLogout = async (navigation) => {

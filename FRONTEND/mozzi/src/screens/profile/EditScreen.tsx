@@ -6,8 +6,8 @@ import CustomDropdown from '../../components/Dropdown/CustomDropdown'
 import { SearchBar } from '../../components/AutoWord/SearchLike'
 
 import useProfileStore from '../../store/ProfileStore'
-import useRecipeStore from '../../store/RecipeStore'
 import useDropdownStore from '../../store/DropdownStore'
+import useFridgeStore from '../../store/FridgeStore'
 
 const Label = styled(Text)`
   margin-top: 30px;
@@ -23,8 +23,8 @@ const StyledInput = styled(TextInput)`
 `
 
 function EditScreen() {
-  const { profileData, form, setForm } = useProfileStore()
-  const { ingredientData, getIngredient } = useRecipeStore()
+  const { form, setForm, setFoodInfo } = useProfileStore()
+  const { allFoods } = useFridgeStore()
   const { dropdownData } = useDropdownStore()
 
   const [ likeData, setLikeData ] = useState([])
@@ -40,7 +40,8 @@ function EditScreen() {
       ...formatData(dropdownData, 2),
     ]
 
-    console.log(formattedData, '내가 원하던 데이터 드디어 완성')
+    console.log( '알러지/호불호 식재료 데이터 완성', formattedData)
+    setFoodInfo(formattedData)
 
   }, [unlikeData, likeData, dropdownData])
 
@@ -56,20 +57,6 @@ function EditScreen() {
   }
 
   const handleNicknameChange = (nickname: string) => setForm({ ...form, nickname })
-  // const handleAllergyInfoChange = (allergyInfo: string) => setForm({ ...form, allergyInfo })
-  // const handleFavoriteFoodChange = (favoriteFood: string) => setForm({ ...form, favoriteFood })
-  // const handleDislikedFoodChange = (dislikedFood: string) => setForm({ ...form, dislikedFood })
-  // const handleIsVeganChange = (isVegan: string) => setForm({ ...form, isVegan })
-
-  // [
-  //   { foodName : "당근",
-  //     "value" : 1},
-  //   { foodName : "토마토",
-  //     "value" : 0},
-  //   { foodName : "우유",
-  //     "value" : 2},
-  // ]
-
 
   return (
     <View>
@@ -89,10 +76,10 @@ function EditScreen() {
       />
 
       <Label>좋아하는 식재료</Label>
-      <SearchBar data={ingredientData} onSelect={handleLikeData}/>
+      <SearchBar data={allFoods} onSelect={handleLikeData} flag={1}/>
 
       <Label>싫어하는 식재료</Label>
-      <SearchBar data={ingredientData} onSelect={handleUnlikeData}/>
+      <SearchBar data={allFoods} onSelect={handleUnlikeData} flag={0}/>
 
       <Label>비건 여부</Label>
       <CustomDropdown

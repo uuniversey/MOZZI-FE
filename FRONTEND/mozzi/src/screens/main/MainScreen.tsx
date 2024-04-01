@@ -7,6 +7,7 @@ import { SearchHeader } from '../../components/Header/SearchHeader'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import useLoginStore from '../../store/LoginStore'
 import useProfileStore from '../../store/ProfileStore'
+import FloatingBalloon from '../../components/Animation/FloatingBallon'
 
 interface RecipeItem {
   foodName: string
@@ -86,6 +87,10 @@ const ButtonText = styled(Text)`
   font-family: ${(props) => props.theme.fonts.title};
 `
 
+const Ballon = styled(FloatingBalloon)`
+  z-index: 1001;
+`
+
 function MainScreen() {
   const navigation = useNavigation()
 
@@ -149,6 +154,7 @@ function MainScreen() {
         <SearchHeader.Icon iconName="search" onPress={moveSearch} />
       </SearchHeader>
       <Container>
+        
         <ContentContainer>
           {/* <Greeting>환영해요, 아우엉님 님!</Greeting> */}
           {profileData?.nickname? (
@@ -162,10 +168,8 @@ function MainScreen() {
             <Card>
               <MealQuestion>오늘 모찌에서 {"\n"}가장 많이 사랑받은 레시피는?</MealQuestion>
               <StyledImage
-                // source={require('../../assets/recommend/pizza.jpg')}
                 source={{ uri: recipe?.photo }}
                 />
-              {/* <MealName>피자 최고</MealName> */}
               <MealName>{recipe?.foodName}</MealName>
             </Card>
           </TouchableOpacity>
@@ -173,6 +177,7 @@ function MainScreen() {
             <ButtonText>나의 모찌 기록</ButtonText>
           </Button>
         </ContentContainer>
+        <Ballon source={require('../../assets/illustration/ballon.png')} duration={10000} startDelay={1000} />
       </Container>
     </>
   )

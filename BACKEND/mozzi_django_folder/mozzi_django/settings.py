@@ -13,9 +13,31 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from mongoengine import connect
 from celery.schedules import crontab
+import environ
+import os
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+
+# Set the project base directory
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Take environment variables from .env file
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+
+AWS_ACCESS_KEY_ID=os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY=os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME=os.environ.get('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_REGION_NAME=os.environ.get('AWS_S3_REGION_NAME')
+AWS_S3_ADDRESSING_STYLE=os.environ.get('AWS_S3_ADDRESSING_STYLE')
+ 
 
 ALLOWED_HOSTS = ['a304.site', '127.0.0.1', 'localhost']
 # Quick-start development settings - unsuitable for production
@@ -23,6 +45,7 @@ ALLOWED_HOSTS = ['a304.site', '127.0.0.1', 'localhost']
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-g)2howhcux-dfu^m@934()fjvvd%vezh=(-19oyhc7#&t5sb5h'
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -78,7 +101,8 @@ WSGI_APPLICATION = 'mozzi_django.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-ALLOWED_HOSTS = ['a304.site','127.0.0.1','localhost']
+
+
 ### 로컬용
 # DATABASES = {
 #     'default': {

@@ -29,4 +29,6 @@ public class UserIngredientModel {
     private IngredientsModel ingredients;
 
     private Integer isLike;
+
+    private String mainAllergy;
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 
 import DiaryScreen from '../screens/diary/DiaryScreen'
 import DiaryDetailScreen from '../screens/diary/DiaryDetailScreen'
@@ -14,14 +14,15 @@ type RootStackParamList = {
   DiaryCreateSelect: undefined;
 }
 
-const Stack = createNativeStackNavigator<RootStackParamList>()
+const Stack = createStackNavigator<RootStackParamList>()
 
 function DiaryStack() {
   return (
     <Stack.Navigator
-      screenOptions={({ route }) => ({
+      screenOptions={{
         headerShown: false,
-      })}
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+      }}
     >
       <Stack.Screen name="Diary" component={DiaryScreen} />
       <Stack.Screen name="DiaryDetail" component={DiaryDetailScreen} />

@@ -1,15 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { FlatList, Keyboard, Platform, Text } from 'react-native';
+import { ScrollView, Keyboard, Platform, Text, Alert, Touchable } from 'react-native';
 import styled from 'styled-components/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-
 import { useNavigation } from '@react-navigation/native';
 
+import FridgeOCR from './FridgeOCR';
 import { Header } from '../../components/Header/Header';
 import { SearchFood } from '../../components/AutoWord/SearchFood';
 import useFridgeStore from '../../store/FridgeStore';
 import note from '../../assets/fridge/note.png';
 import clip from '../../assets/fridge/clip.png';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface FoodItem {
   food: string;
@@ -61,7 +62,7 @@ const MenuItem = styled(Text)`
 `;
 
 const InputContainer = styled.View`
-  margin-top: ${({ keyboardOpen }) => (keyboardOpen ? '200px' : '30px')};
+  margin-top: ${({ keyboardOpen }) => (keyboardOpen ? '200px' : '20px')};
   width: 100%;
   align-items: center;
   padding: 0 16px 0 16px;
@@ -87,7 +88,7 @@ const SendButton = styled.TouchableOpacity`
   top: 12;
   right: 30;
   bottom: 0; 
-`; 
+`;
 
 const FridgeDetailScreen = ({ route }) => {
   const [text, setText] = useState<FoodItem | null>(null);
@@ -122,23 +123,35 @@ const FridgeDetailScreen = ({ route }) => {
   }, [getMyFoods, route.params]);
 
   const handleSend = () => {
-    if (text) {
-      addFridge(text, storedPos); // Zustand 스토어 업데이트 및 DB 업데이트
-      setText(null); // 텍스트 입력 필드 초기화
-      Keyboard.dismiss(); // 키보드를 닫음
-      scrollViewRef.current?.scrollToEnd({ animated: true }); // 스크롤을 맨 아래로 이동
+    // allFoods 내에서 text 문자열이 존재하는지 확인
+    const isIngredientInList = allFoods.includes(text);
+  
+    if (text && isIngredientInList) {
+      addFridge(text, storedPos) // Zustand 스토어 업데이트 및 DB 업데이트
+      setText('') // 텍스트 입력 필드 초기화
+      Keyboard.dismiss() // 키보드를 닫음
+      scrollViewRef.current?.scrollToEnd({ animated: true }) // 스크롤을 맨 아래로 이동
+    } else {
+      // 식재료가 목록에 없을 경우 경고 메시지 표시
+      Alert.alert("알림", "모찌가 알지 못하는 식재료예요!\n정확한 식재료 이름을 입력해 주세요.");
     }
-  }
+  };
 
   const handleDelete = async (foodName) => {
     await deleteFood(foodName);
     getMyFoods(storedPos);
   };
 
+  // OCR 관련
+  const handleOcrResult = (text) => {
+    // 처리된 OCR 텍스트를 상태로 설정
+    setText(text);
+  };
+
   return (
     <Container behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Header>
-        <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
+        <Header.Icon iconName="arrow-back" onPress={navigation.goBack} />
       </Header>
 
       {!keyboardOpen && ( // 키보드가 열려있지 않을 때만 노트와 그 내용을 렌더링
@@ -170,7 +183,16 @@ const FridgeDetailScreen = ({ route }) => {
         </Note>
       )}
 
+      {/* 키보드가 열릴 때만 OCR 기능 활성화 버튼을 표시 */}
+      
+
       <InputContainer>
+        {keyboardOpen && (
+          <FridgeOCR 
+            onOcrComplete={handleOcrResult} 
+          />
+        )}
+        
         <SearchFood
           data={allFoods}
           setQuery={setText}

@@ -104,7 +104,7 @@
 //   return (
 //     <>
 //       <Header>
-//           <Header.Icon iconName="chevron-back" onPress={goBack} />
+//           <Header.Icon iconName="arrow-back" onPress={goBack} />
 //       </Header>
 //       <ScreenContainer>
 //         <HeaderTitle>쇼츠 만들기 (1/2)</HeaderTitle>
@@ -160,23 +160,23 @@ interface MyCarouselProps {
 export default class MyCarousel extends Component<MyCarouselProps, MyCarouselState> {
   data = [
   {
-    thumbnail: require('../../assets/recommend/pizza.jpg'),
+    thumbnail: require('../../assets/illustration/pizza.jpg'),
     title: 'pizza',
   },
   {
-    thumbnail: require('../../assets/recommend/pizza.jpg'),
+    thumbnail: require('../../assets/illustration/pizza.jpg'),
     title: 'pizza',
   },
   {
-    thumbnail: require('../../assets/recommend/pizza.jpg'),
+    thumbnail: require('../../assets/illustration/pizza.jpg'),
     title: 'pizza',
   },
   {
-    thumbnail: require('../../assets/recommend/pizza.jpg'),
+    thumbnail: require('../../assets/illustration/pizza.jpg'),
     title: 'pizza',
   },
   {
-    thumbnail: require('../../assets/recommend/pizza.jpg'),
+    thumbnail: require('../../assets/illustration/pizza.jpg'),
     title: 'pizza',
   },
   ]  

@@ -11,17 +11,15 @@ const Container = styled(View)`
   flex: 1;
   background-color: ${(props) => props.theme.palette.background};
   align-items: center;
+  padding: 0 16px 0 16px;
 `;
 
 const HeaderText = styled(Text)`
   color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.title};
-  font-size: 32px;
-  margin-top: 20px;
+  font-size: 28px;
   margin-bottom: 20px;
   align-self: flex-start;
-  padding-left: 28px;
-  padding-right: 28px;
 `
 
 const Body = styled.View`
@@ -29,13 +27,12 @@ const Body = styled.View`
   align-self: center;
   align-items: center;
   justify-content: center;
-  width: 350px;
-  height: 350px;
+  width: 100%;
+  /* aspect-ratio: 1; */
   border-radius: 20px;
   background-color: ${(props) => props.theme.palette.point};;
 `
 const FoodTitle = styled(Text)`
-  color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.title};
   padding: 5px;
   position: absolute;
@@ -64,18 +61,46 @@ const FoodTitle = styled(Text)`
   }};
 `;
 
+const Day = styled(Text)`
+  font-family: ${(props) => props.theme.fonts.content};
+  padding: 5px;
+  position: absolute;
+  font-size: 12px;
+  z-index: 1001;
+  left: 5%;
+  top: ${({ frameType }) => {
+    switch (frameType) {
+      case '화이트':
+        return '12%';
+      case '스페셜':
+        return '87%';
+      default:
+        return '12%';
+    }
+  }};
+  color: ${({ frameType }) => {
+    switch (frameType) {
+      case '화이트':
+        return 'white';
+      case '스페셜':
+        return 'black';
+      default:
+        return 'black';
+    }
+  }};
+`
+
 const FoodImage = styled.Image`
-  width: 350px;
-  height: 350px;
+  width: 100%;
+  aspect-ratio: 1;
 `
 
 const FramesContainer = styled(View)`
-  width: 350px;
+  width: 100%;
   flex-direction: row;
   justify-content: space-around;
-  padding: 10px;
-  margin-top: 10px;
-  margin-bottom: 30px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 `;
 
 const FrameButton = styled.TouchableOpacity`
@@ -86,29 +111,27 @@ const FrameButton = styled.TouchableOpacity`
 `
 
 const FrameText = styled(Text)`
-  color: ${(props) => props.theme.palette.main};
+  color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.title};
   text-align: center;
 `
 
 const ShareButton = styled(TouchableOpacity)`
-  width: 85%;
+  width: 100%;
   border-radius: 20px;
   padding: 16px;
   margin-top: 8px;
   margin-bottom: 8px;
-  margin-left: 16px;
-  margin-right: 16px;
   align-items: center;
   border-color: rgba(0, 0, 0, 0.2);
   background-color: ${(props) => props.theme.palette.point};;
-  border-width: 2px;
-  elevation: 2;
+  border-width: 1px;
+  elevation: 1;
 `;
 
 const ShareButtonText = styled(Text)`
-  color: ${(props) => props.theme.palette.main};
-  font-family: ${(props) => props.theme.fonts.title};
+  color: ${(props) => props.theme.palette.font};
+  font-family: ${(props) => props.theme.fonts.content};
   font-size: 16px;
 `;
 
@@ -138,6 +161,7 @@ const Stamp = ({ navigation, route }) => {
 
   // 권한 확인
   const hasStoragePermission = async () => {
+    // console.log(Data)
     if (Platform.OS === 'android') {
       const hasPermission = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE
         
@@ -220,7 +244,7 @@ const Stamp = ({ navigation, route }) => {
   return (
     <>
       <Header>
-        <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
+        <Header.Icon iconName="arrow-back" onPress={navigation.goBack} />
       </Header>
 
       <Container>
@@ -230,6 +254,7 @@ const Stamp = ({ navigation, route }) => {
         <Body ref={viewRef}>
           {/* store에서 불러온 food title로 수정하면 됨 */}
           <FoodTitle frameType={selectedFrame}>{data.foodName}</FoodTitle> 
+          <Day frameType={selectedFrame}>{data.photoDate}</Day>
           <FoodImage
             source={{ uri: `${data.photoUrl}` }}
           />

@@ -1,11 +1,12 @@
 package com.a304.mozzi.domain.user.controller;
 
+import com.a304.mozzi.config.AllergicComponent;
 import com.a304.mozzi.config.jwt.JwtIssuer;
 import com.a304.mozzi.config.kakao.KakaoApi;
 import com.a304.mozzi.config.security.UserPrincipal;
 import com.a304.mozzi.domain.foods.service.FoodService;
 import com.a304.mozzi.domain.ingredients.model.IngredientsModel;
-import com.a304.mozzi.domain.ingredients.service.IngrdientsService;
+import com.a304.mozzi.domain.ingredients.service.IngredientsService;
 import com.a304.mozzi.domain.user.customfood.dto.UserFoodInpDto;
 import com.a304.mozzi.domain.user.customfood.service.UserFoodService;
 import com.a304.mozzi.domain.user.customingredient.dto.IngredientsListDto;
@@ -45,9 +46,10 @@ public class UserController {
     private final KakaoApi kakaoApi;
     private final JwtIssuer jwtIssuer;
     private final FoodService foodService;
-    private final  IngrdientsService ingredientsService;
+    private final IngredientsService ingredientsService;
     private final UserIngredientService userIngredientService;
     private  final UserFoodService userFoodService;
+    private  final AllergicComponent allergicComponent;
     @GetMapping("/Oauth2/KakaoLogin")
     public ResponseEntity<java.util.Map<String, String>> ClientKakaoLogin() {
         // TODO: process POST request
@@ -239,7 +241,7 @@ public class UserController {
             for (UserIngredientModel userIngredientModel : userIngredientModels)
             {
                 log.info(userIngredientModel.getIngredients().getIngredientName() + "입니다");
-                UserIngredientDto userIngredientDto = UserIngredientDto.builder().ingredientName(userIngredientModel.getIngredients().getIngredientName()).isLike(userIngredientModel.getIsLike()).build();
+                UserIngredientDto userIngredientDto = UserIngredientDto.builder().ingredientName(userIngredientModel.getIngredients().getIngredientName()).isLike(userIngredientModel.getIsLike()).mainAllergy(userIngredientModel.getMainAllergy()).build();
                 userIngredientDtoList.add(userIngredientDto);
             }
             UserProfileDto userProfileDto = UserProfileDto.builder().id(user.getUserId()).isVegan(user.getUserIsvegan()).nickname(user.getUserNickname()).foods(userIngredientDtoList).build();
@@ -315,19 +317,43 @@ public class UserController {
             UserModel user = userService.findCurrentUser();
             userIngredientService.deleteAllByUser(user);
             for (UserFoodInpDto userFoodInpDto : listInp.getFoods()) {
-                IngredientsModel ingredientsModel =ingredientsService.findIngredientsByIngredientsName(userFoodInpDto.getFoodName());
-//              Food food = foodService.findFoodByFoodName(userFoodInpDto.getFoodName());
-                UserIngredientModel userIngredientModel = UserIngredientModel.builder()
-                        .user(user)
-                        .ingredients(ingredientsModel)
-                        .isLike(userFoodInpDto.getValue())
-                        .build();
-//                UserFood userFood = UserFood.builder()
-//                        .food(food)
-//                        .user(user)
-//                        .userFoodPreference(userFoodInpDto.getValue())
-//                        .build();
-                userIngredientService.create(userIngredientModel, user);
+                if (userFoodInpDto.getValue() == 2)
+                {
+                    allergicComponent.customAction();
+                    List<IngredientsModel> list = allergicComponent.categorizeIngredient(userFoodInpDto.getFoodName());
+                    for (IngredientsModel ingredientsModel : list)
+                    {
+                        UserIngredientModel userIngredientModel = UserIngredientModel.builder()
+                                .user(user)
+                                .ingredients(ingredientsModel)
+                                .isLike(userFoodInpDto.getValue())
+                                .mainAllergy(userFoodInpDto.getFoodName())
+                                .build();
+                        //                UserFood userFood = UserFood.builder()
+                        //                        .food(food)
+                        //                        .user(user)
+                        //                        .userFoodPreference(userFoodInpDto.getValue())
+                        //                        .build();
+                        userIngredientService.create(userIngredientModel, user);
+                    }
+                }
+                else
+                {
+                    IngredientsModel ingredientsModel =ingredientsService.findIngredientsByIngredientsName(userFoodInpDto.getFoodName());
+    //              Food food = foodService.findFoodByFoodName(userFoodInpDto.getFoodName());
+                    UserIngredientModel userIngredientModel = UserIngredientModel.builder()
+                            .user(user)
+                            .ingredients(ingredientsModel)
+                            .isLike(userFoodInpDto.getValue())
+                            .build();
+    //                UserFood userFood = UserFood.builder()
+    //                        .food(food)
+    //                        .user(user)
+    //                        .userFoodPreference(userFoodInpDto.getValue())
+    //                        .build();
+                    userIngredientService.create(userIngredientModel, user);
+                }
+
             }
             ResponseMessageDto responseMessageDto = ResponseMessageDto.builder().message("Item Created").build();
             log.info(String.valueOf(System.currentTimeMillis() - startTime));

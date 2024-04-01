@@ -11,26 +11,23 @@ const Container = styled(View)`
   background-color: ${(props) => props.theme.palette.background};
   display: flex;
   align-items: center;
+  padding: 0 16px 0 16px;
 `
 
 const HeaderText = styled(Text)`
   color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.title};
   font-size: 28px;
-  margin-top: 20px;
+  margin-bottom: 20px;
   align-self: flex-start;
-  padding-left: 28px;
-  padding-right: 28px;
 `
 
 
 const Content = styled(ScrollView).attrs({
   contentContainerStyle: {
-    paddingHorizontal: 10,
-    paddingTop: 20,
   },
 })`
-  width: 350px;
+  width: 100%;
 `
 
 const PolicyText = styled(Text)`
@@ -42,12 +39,12 @@ function TermsOfUseScreen() {
   return (
     <Container>
       <Header>
-        <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
+        <Header.Icon iconName="arrow-back" onPress={navigation.goBack} />
       </Header>
       
       <HeaderText>모찌 서비스 이용약관</HeaderText>
 
-      <Content contentContainerStyle={{ paddingHorizontal: 10, paddingTop: 20, width: 350, alignItems: 'center'}}>
+      <Content>
         <PolicyText>
           본 이용약관(이하 "약관")은 모찌 서비스(이하 "서비스")의 이용과 관련하여, 서비스 제공자(이하 "회사")와 이용자(이하 "회원") 사이의 권리, 의무 및 책임사항, 서비스 이용조건 및 절차, 회사와 회원의 권리와 의무 등 기본적인 사항을 규정합니다.
           {"\n\n"}1. 계약의 성립

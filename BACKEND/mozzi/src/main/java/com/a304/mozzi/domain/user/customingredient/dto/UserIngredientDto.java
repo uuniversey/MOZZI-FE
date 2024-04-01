@@ -11,5 +11,6 @@ public class UserIngredientDto {
 
     private String ingredientName;
     private Integer isLike;
+    private String mainAllergy;
 
 }

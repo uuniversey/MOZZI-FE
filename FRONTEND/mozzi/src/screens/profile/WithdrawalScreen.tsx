@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react'
-import { View, Text, TextInput, Button, ScrollView, TouchableOpacity } from 'react-native'
+import { View, Text, Image, TouchableOpacity } from 'react-native'
 import styled from 'styled-components/native'
 
 import Icon from "react-native-vector-icons/Ionicons"
 
 import useLoginStore from '../../store/LoginStore'
+import useProfileStore from '../../store/ProfileStore'
+import useDropdownStore from '../../store/DropdownStore'
 import { useNavigation } from '@react-navigation/native'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -30,13 +32,13 @@ const WarningContainer = styled(View)`
 
 const Warning = styled(Text)`
   margin-top: 10px;
-  font-size: 16px;
+  font-size: 12px;
   text-align: center;
   font-family: ${(props) => props.theme.fonts.content};
 `
 
 const YesBtn = styled(TouchableOpacity)`
-  background-color: #F9F7BB;
+  background-color: ${(props) => props.theme.palette.point};
   border-radius: 10px;
   width: 80px;
   height: 35px;
@@ -47,7 +49,7 @@ const YesBtn = styled(TouchableOpacity)`
 
 const CancelBtn = styled(TouchableOpacity)`
   border: 2px;
-  border-color: #F9F7BB;
+  border-color: ${(props) => props.theme.palette.point};
   border-radius: 10px;
   width: 80px;
   height: 35px;
@@ -67,19 +69,33 @@ const CenterView = styled(View)`
   display: flex;
   height: 100%;
   justify-content: center;
+  padding-bottom: 20px;
+`
+
+const SadImg = styled(Image)`
+  margin: 20px;
+  align-self: center;
+  width: 150px;
+  height: 150px;
 `
 
 const BtnContainer = styled(View)`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  gap: 15;
+  gap: 10;
 `
+
+const sadImg = [
+  require('../../assets/illustration/withdraw-sad.png'),
+];
 
 function WithdrawalScreen() {
   const navigation = useNavigation()
-  const { setIsLogin, userWithdrawal } = useLoginStore()
-
+  const { setIsLogin, userWithdrawal, userDataReset } = useLoginStore()
+  const { profileReset } = useProfileStore()
+  const { dropdownReset } = useDropdownStore()
+  
   const handleWithdrawal = async (navigation) => {
     userWithdrawal()
 
@@ -87,6 +103,10 @@ function WithdrawalScreen() {
     await AsyncStorage.removeItem('refreshToken')
 
     setIsLogin(false)
+
+    profileReset()
+    dropdownReset()
+    userDataReset()
 
     navigation.reset({
       index: 0,
@@ -97,11 +117,13 @@ function WithdrawalScreen() {
   return (
     <Container>
       <CenterView>
+        <SadImg source={sadImg[0]} />
         <Title>정말 모찌를 떠나실 건가요?</Title>
         <WarningContainer>
           {/* <Icon name="warning-outline" size={16}/> */}
-          <Warning>탈퇴가 완료된 계정은 다시 복구할 수 없습니다</Warning>
+          <Warning>탈퇴가 완료된 계정은 다시 복구할 수 없습니다.</Warning>
         </WarningContainer>
+        
         <BtnContainer>
           <CancelBtn onPress={navigation.goBack}>
             <BtnText>취소</BtnText>

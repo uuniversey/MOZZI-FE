@@ -151,7 +151,7 @@ function MakeShortsScreen () {
   return (
     <>
       <Header>
-        <Header.Icon iconName="chevron-back" onPress={goRecap} />
+        <Header.Icon iconName="arrow-back" onPress={goRecap} />
       </Header>
       <Container>
         <HeaderText>쇼츠 만들기 (2/2)</HeaderText>

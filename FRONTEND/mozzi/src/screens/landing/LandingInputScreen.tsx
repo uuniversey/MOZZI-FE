@@ -1,34 +1,28 @@
-import React, { useState, useEffect } from 'react'
-import { View, Text, TextInput, Button, TouchableOpacity } from 'react-native'
-import Icon from 'react-native-vector-icons/MaterialIcons'
-
+import React, { useState, useEffect, useLayoutEffect } from 'react'
+import { View, ScrollView, Text, TextInput, TouchableOpacity, KeyboardAvoidingView } from 'react-native'
 import styled from 'styled-components/native'
-import CustomDropdown from '../../components/Dropdown/CustomDropdown'
 
-import { useNavigation } from '@react-navigation/native'
+import CustomDropdown from '../../components/Dropdown/CustomDropdown'
+import { SearchBar } from '../../components/AutoWord/SearchLike'
+
 import useProfileStore from '../../store/ProfileStore'
+import useDropdownStore from '../../store/DropdownStore'
 import useLoginStore from '../../store/LoginStore'
+import useFridgeStore from '../../store/FridgeStore'
+
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-interface UserProfileState {
-  email: string
-  allergyInfo: string
-  favoriteFood: string
-  dislikedFood: string
-  isVegan: string
-}
-
-const Container = styled(View)`
+const Container = styled(ScrollView)`
   flex: 1;
   background-color: ${(props) => props.theme.palette.background};
 `
 
 const Title = styled(Text)`
   font-size: 36px;
-  margin: 50px 0px 0px 40px;
+  margin: 20px 0px 0px 40px;
   text-align: left;
   width: 100%;
-  font-family: ${(props) => props.theme.fonts.content};
+  font-family: ${(props) => props.theme.fonts.title};
   color: ${(props) => props.theme.palette.font}; 
 `
 
@@ -56,11 +50,6 @@ const StyledInput = styled(TextInput)`
   border-bottom-color: silver;
 `
 
-const StyledView = styled(View)`
-  height: auto;
-  margin: 10px 0px 10px 0px;
-`
-
 const JustifyView = styled(View)`
   display: flex;
   flex-direction: row;
@@ -69,7 +58,7 @@ const JustifyView = styled(View)`
 `
 
 const Btn = styled(TouchableOpacity)`
-  background-color: #${(props) => props.theme.palette.point};
+  background-color: ${(props) => props.theme.palette.point};
   border-radius: 10px;
   width: 80px;
   height: 35px;
@@ -85,123 +74,140 @@ const BtnText = styled(Text)`
   color: ${(props) => props.theme.palette.font};
 `
 
-function ProfileScreen () {
-  const { settingProfile } = useProfileStore()
-  const { setIsLogin, userData } = useLoginStore()
+function InputScreen () {
+  const { setIsLogin } = useLoginStore()
+  const { form, setForm, foodInfo, setFoodInfo, editNickname, editIsVegan, editFoodInfo } = useProfileStore()
+  const { allFoods } = useFridgeStore()
+  const { dropdownData, isVeganData } = useDropdownStore()
 
-  const [form, setForm] = useState<UserProfileState>({
-    email: '',
-    allergyInfo: '',
-    favoriteFood: '',
-    dislikedFood: '',
-    isVegan: ''
-  })
-
-  const handleEmailChange = (email: string) => setForm({ ...form, email })
-  const handleAllergyInfoChange = (allergyInfo: string) => setForm({ ...form, allergyInfo })
-  const handleFavoriteFoodChange = (favoriteFood: string) => setForm({ ...form, favoriteFood })
-  const handleDislikedFoodChange = (dislikedFood: string) => setForm({ ...form, dislikedFood })
-  const handleIsVeganChange = (isVegan: string) => setForm({ ...form, isVegan })
-
-  const goMain = () => {
-    setIsLogin(true)
-  }
-
-  const completeEnter = () => {
-    console.log('여기에 엑시오스 넣어라')
-  }
+  const [ likeData, setLikeData ] = useState([])
+  const [ unlikeData, setUnlikeData ] = useState([])
 
   useEffect(() => {
-    console.log('내가담은데이터', userData)
-    
     AsyncStorage.getItem('accessToken').then((accessToken) => {
       console.log('accessToken:', accessToken)
     })
   }, [])
+  
+  useEffect(() => {
+    const formatData = (data, value) => 
+    Array.isArray(data) ? data.map(foodName => ({ foodName, value })) : []
+    
+    const formattedData = [
+      ...formatData(unlikeData, 0),
+      ...formatData(likeData, 1),
+      ...formatData(dropdownData, 2),
+    ]
+    
+    console.log( '알러지/호불호 식재료 데이터 완성', formattedData)
+    setFoodInfo(formattedData)
+    
+  }, [unlikeData, likeData, dropdownData])
+  
+  // 스킵 버튼 클릭시
+  const goMain = () => {
+    setIsLogin(true)
+  }
+  
+  // 완료 버튼 클릭시
+  const completeInput = () => {
+    editNickname(form.nickname)
+    editIsVegan(Boolean(isVeganData))
+    editFoodInfo(foodInfo)
+    
+    setIsLogin(true)
+  }
+  
+
+  const handleLikeData = (recipeName: string) => {
+    console.log('좋아하는 재료', recipeName)
+    setLikeData(recipeName)
+  }
+
+  const handleUnlikeData = (recipeName: string) => {
+    console.log('싫어하는 재료', recipeName)
+    setUnlikeData(recipeName)
+  }
+
+  const handleNicknameChange = (nickname: string) => setForm({ ...form, nickname })
 
   return (
     <Container>
       <Title>회원 정보 입력</Title>
-      <Body>
-        <Label>닉네임</Label>
-        <StyledInput
-          placeholder="닉네임을 입력하세요"
-          value={form.email}
-          onChangeText={handleEmailChange}
-          placeholderTextColor="#ccc"
-        />
+      <KeyboardAvoidingView>
+        <Body>
+          <Label>닉네임</Label>
+          <StyledInput
+            placeholder="닉네임을 입력하세요"
+            value={form.nickname}
+            onChangeText={handleNicknameChange}
+            placeholderTextColor="#ccc"
+          />
 
-        <BgText>모찌가 레시피를 잘 추천할 수 있도록 아래의 추가 정보를 입력해 주세요!</BgText>
-        
-        <Label>알레르기 정보</Label>
-        <StyledView>
-        <CustomDropdown
-          data={allergyList}
-          placeholder="보유하고 있는 알레르기 정보를 선택해 주세요"
-          isMulti={true}
-        />
-        </StyledView>
+          <BgText>모찌가 레시피를 잘 추천할 수 있도록 아래의 추가 정보를 입력해 주세요!</BgText>
+          
+          <Label>알레르기 정보</Label>
+          <CustomDropdown
+            data={allergyList}
+            placeholder="보유하고 있는 알레르기 정보를 선택해 주세요"
+            isMulti={true}
+          />
 
-        <Label>좋아하는 음식</Label>
-        <StyledInput
-          placeholder="좋아하는 음식을 입력하세요"
-          value={form.favoriteFood}
-          onChangeText={handleFavoriteFoodChange}
-          placeholderTextColor="#ccc"
-        />
+          <Label>좋아하는 식재료</Label>
+          <SearchBar data={allFoods} onSelect={handleLikeData} flag={1}/>
 
-        <Label>싫어하는 음식</Label>
-        <StyledInput
-          placeholder="싫어하는 음식을 입력하세요"
-          value={form.dislikedFood}
-          onChangeText={handleDislikedFoodChange}
-          placeholderTextColor="#ccc"
-        />
+          <Label>싫어하는 식재료</Label>
+          <SearchBar data={allFoods} onSelect={handleUnlikeData} flag={0}/>
 
-        <Label>비건 여부</Label>
-        <StyledInput
-          placeholder="예/아니오로 입력하세요"
-          value={form.isVegan}
-          onChangeText={handleIsVeganChange}
-          placeholderTextColor="#ccc"
-        />
+          <Label>비건 여부</Label>
+          <CustomDropdown
+            data={isYes}
+            placeholder="비건 여부를 알려주세요"
+            isMulti={false}
+          />
 
-        <JustifyView>
-          <Btn onPress={goMain}>
-            <BtnText>스킵</BtnText>
-          </Btn>
+          <JustifyView>
+            <Btn onPress={goMain}>
+              <BtnText>스킵</BtnText>
+            </Btn>
 
-          <Btn onPress={completeEnter}>
-            <BtnText>완료</BtnText>
-          </Btn>
-        </JustifyView>
-      </Body>
+            <Btn onPress={completeInput}>
+              <BtnText>완료</BtnText>
+            </Btn>
+          </JustifyView>
+        </Body>
+      </KeyboardAvoidingView>
     </Container>
   )
 }
 
-export default ProfileScreen
+export default InputScreen
 
+// 이 밑에 더미데이터 아님 절대 지우면 안돼
 const allergyList = [
-  { label: '난류', value: 'egg' },
-  { label: '우유', value: 'milk' },
-  { label: '메밀', value: 'buckwheat' },
-  { label: '땅콩', value: 'peanut' },
-  { label: '대두', value: 'soy' },
-  { label: '밀', value: 'wheat' },
-  { label: '고등어', value: 'mackerel' },
-  { label: '새우', value: 'shrimp' },
-  { label: '게', value: 'crab' },
-  { label: '돼지고기', value: 'pork' },
-  { label: '복숭아', value: 'peach' },
-  { label: '토마토', value: 'tomato' },
-  { label: '아황산류', value: 'sulfites' },
-  { label: '호두', value: 'walnut' },
-  { label: '닭고기', value: 'chicken' },
-  { label: '쇠고기', value: 'beef' },
-  { label: '오징어', value: 'squid' },
-  { label: '굴', value: 'oyster' },
-  { label: '전복', value: 'abalone' },
-  { label: '홍합', value: 'mussel' },
-  { label: '잣', value: 'pine_nut' }
+  { label: '난류', value: '난류' },
+  { label: '우유', value: '우유' },
+  { label: '메밀', value: '메밀' },
+  { label: '땅콩', value: '땅콩' },
+  { label: '대두', value: '대두' },
+  { label: '밀', value: '밀' },
+  { label: '고등어', value: '고등어' },
+  { label: '새우', value: '새우' },
+  { label: '게', value: '게' },
+  { label: '돼지고기', value: '돼지고기' },
+  { label: '복숭아', value: '복숭아' },
+  { label: '토마토', value: '토마토' },
+  { label: '호두', value: '호두' },
+  { label: '닭고기', value: '닭고기' },
+  { label: '쇠고기', value: '쇠고기' },
+  { label: '오징어', value: '오징어' },
+  { label: '굴', value: '굴' },
+  { label: '전복', value: '전복' },
+  { label: '홍합', value: '홍합' },
+  { label: '잣', value: '잣' }
+]
+
+const isYes = [
+  {label:'Yes', value: true},
+  {label:'No', value: false}
 ]
