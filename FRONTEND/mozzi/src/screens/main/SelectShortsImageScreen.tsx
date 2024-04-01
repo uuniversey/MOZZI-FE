@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Image, View, Text, Alert, Dimensions, ScrollView, TouchableOpacity } from 'react-native'
 import styled from 'styled-components/native'
 import Icon from 'react-native-vector-icons/MaterialIcons'
@@ -7,6 +7,8 @@ import { Header } from '../../components/Header/Header'
 import { useNavigation } from '@react-navigation/native'
 import useVideoStore from '../../store/RecapStore'
 import axios from 'axios'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import useProfileStore from '../../store/ProfileStore'
 
 type ButtonProps = {
   title: string
@@ -138,20 +140,21 @@ function SelectShortsImageScreen () {
 
   const [selectedMusic, setSelectedMusic] = useState<number | null>(null)
   const [imageCount, setImageCount] = useState<number>(0)
-  const [selectedImages, setSelectedImages] = useState<number[]>([]);
+  const [selectedImages, setSelectedImages] = useState<string[]>([])
   // const [selectedButton, setSelectedButton] = useState<number | null>(null);
   const [excessImage, setExcessImage] = useState<boolean>(false)
+  const [shortsImageList, setShortsImageList] = useState<[]>([])
+  const { profileData } = useProfileStore()
 
 
-
-  const toggleImageSelection = (index: number) => {
-    if (selectedImages.includes(index)) {
-      setSelectedImages(selectedImages.filter((i) => i !== index));
+  const toggleImageSelection = (imageId: string) => {
+    if (selectedImages.includes(imageId)) {
+      setSelectedImages(selectedImages.filter((id) => id !== imageId))
       setImageCount((prevCount) => prevCount - 1)
       setExcessImage(false)
     } else {
       if (imageCount < 10) {
-        setSelectedImages([...selectedImages, index])
+        setSelectedImages([...selectedImages, imageId]);
         setImageCount((prevCount) => prevCount + 1)
         setExcessImage(false)
       } else {
@@ -177,29 +180,45 @@ function SelectShortsImageScreen () {
 
   // 회원의 이미지 불러오는 axios 필요함.
   const getImages = async () => {
+    const token = await AsyncStorage.getItem('accessToken')
     try {
-      const response = await axios.get('http://10.0.2.2:8000/maker/get_image/')
-      console.log(response)
+      const response = await axios.get('https://a304.site/api/mozzi/diary/getMyWholeDiary', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-type': 'application/json',
+      }
+    })
+      setShortsImageList(response.data.foods)
+      console.log(response, '------------------')
     } catch (error) {
       //응답 실패
       console.error(error)
     }
   }
 
+  useEffect(() => {
+    getImages()
+  }, [])
+  
+
   const renderImages = () => {
-    const images = []
-    for (let i = 0; i < 15; i++) {
-      const isImageSelected = selectedImages.includes(i)
-      images.push(
-        <TouchableOpacity key={i} onPress={() => toggleImageSelection(i)}>
+    return shortsImageList.map((image) => { // Assuming 'image.id' and 'image.photoUrl' are valid and 'image.id' is a string
+      // const startIndex = image.photoUrl.indexOf("com/") + "com/".length
+      // // ".jpg"의 인덱스를 찾음
+      // const endIndex = image.photoUrl.indexOf(".j")
+      // // 시작 인덱스와 끝 인덱스를 사용하여 부분 문자열을 추출
+      // const extractedString = image.photoUrl.substring(startIndex, endIndex)
+
+      const isImageSelected = selectedImages.includes(image.photoUrl)
+      return (
+        <TouchableOpacity key={image.id} onPress={() => toggleImageSelection(image.photoUrl)}>
           <SelectableImage
-            source={require('../../assets/illustration/pizza.jpg')}
+            source={{ uri: image.photoUrl }}
             isSelected={isImageSelected && imageCount <= 10}
           />
         </TouchableOpacity>
-      );
-    }
-    return images
+      )
+    })
   }
 
   const renderMusic = () => {
@@ -232,12 +251,12 @@ function SelectShortsImageScreen () {
   } 
 
   // 선택한 이미지 번호랑, 노래 번호 전달
-  const createShorts =  async (userId: string, selectedMusic: number, selectedImages: number[]) => {
+  const createShorts =  async (userId: string, selectedMusic: number, selectedImages: string[]) => {
     try {
       console.log(userId, selectedImages, selectedMusic)
       // useVideoStore.getState().setVideoComplete(true)
       navigation.navigate("RecapLanding")
-      const response = await axios.post('http://10.0.2.2:8000/maker/video_yk/', {
+      const response = await axios.post('http://10.0.2.2:8000/datas/make_video/', {
         user_id: userId,
         image_list: selectedImages,
         bgm_category: selectedMusic
@@ -312,7 +331,7 @@ function SelectShortsImageScreen () {
           <EnterContainer>
           <EnterButton onPress={() => {
             if (imageCount > 0 && selectedMusic !== null) {
-                    createShorts('baloo365', selectedMusic, selectedImages);
+                    createShorts(profileData.id, selectedMusic, selectedImages)
             } else {
               Alert.alert("Missing Selection", "Please select at least one image and a music mood.");
             }

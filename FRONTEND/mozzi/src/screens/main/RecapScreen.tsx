@@ -149,7 +149,6 @@ function RecapScreen() {
 
   const SelectShortsImage = () => {
     navigation.navigate("SelectShortsImage")
-    // callMakeVideoApi('baloo365', 1)
   }
 
   const goBack = () => {
