@@ -1138,7 +1138,9 @@ def make_video(request):
 
         image_folder = BASE_DIR / f"user_id_{user_id}"
         audio_path = BASE_DIR / "bgm" / f"{bgm_category}.mp3"
-        output_path = BASE_DIR / "media" / "output" / f"user_id_{user_id}.mp4"
+        print(audio_path)
+        output_path = BASE_DIR /"home"/"ubuntu"/"project"/"S10P22A304"/"BACKEND"/"mozzi_django_folder"/ "media" / "output" / f"user_id_{user_id}.mp4"
+        print(output_path)
         # image_folder = f"./user_id_{user_id}"
         print(5555)
         # audio_path = f"./bgm/{bgm_category}.mp3"
