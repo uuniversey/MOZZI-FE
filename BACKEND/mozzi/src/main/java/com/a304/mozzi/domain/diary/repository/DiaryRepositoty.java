@@ -14,6 +14,7 @@ public interface DiaryRepositoty extends JpaRepository<Diary, Integer> {
 
     List<Diary> findByUser(UserModel user);
 
+
     List<Diary> findDiariesByUser(UserModel user);
     @Query(value = "select count(*) from diary where diary.user_id = :userId", nativeQuery = true)
     Integer getTotalCount(Integer userId);

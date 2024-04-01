@@ -7,6 +7,7 @@ import com.a304.mozzi.config.security.UserPrincipal;
 import com.a304.mozzi.domain.foods.service.FoodService;
 import com.a304.mozzi.domain.ingredients.model.IngredientsModel;
 import com.a304.mozzi.domain.ingredients.service.IngredientsService;
+import com.a304.mozzi.domain.redis.model.LinkedList;
 import com.a304.mozzi.domain.user.customfood.dto.UserFoodInpDto;
 import com.a304.mozzi.domain.user.customfood.service.UserFoodService;
 import com.a304.mozzi.domain.user.customingredient.dto.IngredientsListDto;
@@ -47,8 +48,9 @@ public class UserController {
     private final JwtIssuer jwtIssuer;
     private final IngredientsService ingredientsService;
     private final UserIngredientService userIngredientService;
-    private  final UserFoodService userFoodService;
-    private  final AllergicComponent allergicComponent;
+    private final UserFoodService userFoodService;
+    private final AllergicComponent allergicComponent;
+    private final LinkedList linkedList;
     @GetMapping("/Oauth2/KakaoLogin")
     public ResponseEntity<java.util.Map<String, String>> ClientKakaoLogin() {
         // TODO: process POST request
@@ -152,6 +154,16 @@ public class UserController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+    @PostMapping("/makeCache")
+    public  ResponseEntity<?> makeMyCache()
+    {
+        UserModel userModel = userService.findCurrentUser();
+        linkedList.createUserCache(userModel.getUserCode().toString());
+        return ResponseEntity.ok().body(HttpStatus.OK);
+    }
+
+
+
     @GetMapping("/Oauth2/KakaoWeb")
     public ResponseEntity<?> loginForWeb(@RequestParam("code") String code) {
         try {

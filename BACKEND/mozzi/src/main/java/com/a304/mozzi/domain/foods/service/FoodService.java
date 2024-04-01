@@ -14,4 +14,8 @@ public class FoodService {
     public Food findFoodByFoodName(String foodName){
         return foodRepository.findFoodByFoodName(foodName);
     }
+    public Food findFoodByFoodId(Integer foodId)
+    {
+        return foodRepository.findFoodByFoodId(foodId);
+    }
 }

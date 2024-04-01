@@ -40,6 +40,11 @@ public class DiaryService {
         return diaryRepositoty.findByUserAndDiaryDate(userId, foodYear, foodMonth);
     };
 
+    public Diary findByDiaryId(Integer diaryId)
+    {
+        return diaryRepositoty.findByDiaryId(diaryId);
+    }
+
       
     public List<DiaryDto> toDtoList(List<Diary> diaries)
     {
