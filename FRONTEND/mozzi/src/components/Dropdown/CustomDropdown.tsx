@@ -28,9 +28,9 @@ function CustomDropdown ({ data, placeholder, isMulti }) {
   const { profileData } = useProfileStore()
   const [selected, setSelected] = useState(
     profileData.foods && profileData.foods.length > 0
-    ? profileData.foods
+    ? [...new Set(profileData.foods
       .filter(food => food.isLike === 2)
-      .map(food => food.ingredientName)
+      .map(food => food.mainAllergy))]
       : []
     )
 
