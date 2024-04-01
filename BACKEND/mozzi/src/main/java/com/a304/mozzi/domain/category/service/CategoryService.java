@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CategoryService
 {
-    CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
     public CategoryModel getCategoryModelById(Integer id)
     {
         return categoryRepository.findCategoryModelById(id);
