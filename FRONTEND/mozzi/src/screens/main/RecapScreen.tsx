@@ -6,6 +6,7 @@ import IconEntypo from 'react-native-vector-icons/Entypo'
 import { Header } from '../../components/Header/Header'
 import axios from '../../../axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import useRecipeStore from '../../store/RecipeStore'
 
 interface RecipeCardProps {
   id: number
@@ -104,6 +105,7 @@ const ButtonText = styled(Text)`
 function RecapScreen() {
   const navigation = useNavigation()
   const [myRecipes, setMyRecipes] = useState<RecipeCardProps[]>([])
+  const { getRecipeDetail } = useRecipeStore()
 
   const callMakeVideoApi = async (userId: string, bgmCategory: number) => {
     try {
@@ -152,6 +154,13 @@ function RecapScreen() {
     navigation.goBack()
   }
 
+  const moveRecapDetail = (foodName: string) => {
+    // if (foodName) {
+    //   getRecipeDetail(foodName)
+    // }
+    // navigation.navigate("Recipe")
+  }
+
   const convertDay = (day: string): string => {
     const today = new Date();
     const inputDate = new Date(day);
@@ -182,12 +191,15 @@ function RecapScreen() {
         <HeaderText>나의 모찌 기록</HeaderText>
         {myRecipes?.length > 0 ? (
               myRecipes.map((recipe: RecipeCardProps, index) => (
-                <RecipeCard
-                  key={index}
-                  photoDate={convertDay(recipe.photoDate)}
-                  foodName={recipe.foodName}
-                  photoUrl={{ uri: recipe.photoUrl }}
-                />
+                <TouchableOpacity
+                  key={index} 
+                  onPress={moveRecapDetail(recipe.foodName)}>
+                    <RecipeCard
+                      photoDate={convertDay(recipe.photoDate)}
+                      foodName={recipe.foodName}
+                      photoUrl={{ uri: recipe.photoUrl }}
+                    />
+                </TouchableOpacity>
               ))
             ) : (
               <NoRecipeCardContainer>
