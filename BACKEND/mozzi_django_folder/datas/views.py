@@ -1134,9 +1134,25 @@ def make_video(request):
         print(4444)
         # BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent.parent/home/ubuntu/project/S10P22A304/BACKEND/mozzi_django_folder/
         BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent.parent
+        contents = os.listdir(BASE_DIR)
+
+        # 결과 출력
+        for item in contents:
+            print(item,'item')
         print(BASE_DIR,'base_dir')
         BASE_DIR2 = Path(__file__).resolve().parent.parent
+        contents = os.listdir(BASE_DIR2)
+
+        # 결과 출력
+        for item in contents:
+            print(item,'item2')
         print(BASE_DIR2,'base_dir2')
+        BASE_DIR3 = Path(__file__).resolve().parent.parent.parent
+        contents = os.listdir(BASE_DIR3)
+
+        # 결과 출력
+        for item in contents:
+            print(item,'item3')
         image_folder = BASE_DIR /"home"/"ubuntu"/"project"/"S10P22A304"/"BACKEND"/"mozzi_django_folder"/ f"user_id_{user_id}"
         audio_path = BASE_DIR /"home"/"ubuntu"/"project"/"S10P22A304"/"BACKEND"/"mozzi_django_folder"/ "bgm" / f"{bgm_category}.mp3"
         print(audio_path)
