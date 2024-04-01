@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import WithdrawalScreen from '../screens/profile/WithdrawalScreen'
 
 const useLoginStore = create((set) => ({
-  isLogin: true,
+  isLogin: false,
   setIsLogin: (isLogin) => set({ isLogin }),
   
   userData: '',

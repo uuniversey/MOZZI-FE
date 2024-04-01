@@ -71,7 +71,7 @@ const AnimatedLoginButton = Animated.createAnimatedComponent(TouchableOpacity);
 
 function LandingScreen() {
   const navigation = useNavigation();
-  const { login: storeLogin, userData } = useLoginStore()
+  const { login: storeLogin, userData, login } = useLoginStore()
 
   const kakaoLogin = async () => {
     console.log("테스팅 중")
@@ -139,6 +139,11 @@ function LandingScreen() {
     { width: 80, height: 80, top: 702.3, left: 257 },
   ];
 
+
+  const tmpHandle = () => {
+    login()
+  } 
+
   return (
     <Container>
       <AnimatedBgImg source={wave} style={{ opacity: fadeAnims[0] }} />
@@ -173,6 +178,13 @@ function LandingScreen() {
           <Image source={kakao} />
         </AnimatedLoginButton>
       </LoginContainer>
+
+
+      
+      <TouchableOpacity >
+        <Text onPress={tmpHandle}>임시 로그인 버튼</Text>
+      </TouchableOpacity>
+
     </Container>
   );
 }
