@@ -202,3 +202,4 @@ widgetsnbextension==4.0.8
 zipp==3.17.0
 zope.event==5.0
 zope.interface==6.1
+moviepy==1.0.3

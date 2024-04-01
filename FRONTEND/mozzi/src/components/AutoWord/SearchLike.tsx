@@ -4,6 +4,7 @@ import Autocomplete from 'react-native-autocomplete-input'
 import styled from 'styled-components/native'
 
 import useProfileStore from '../../store/ProfileStore'
+import { Line } from 'react-native-svg'
 
 const Container = styled(View)`
   width: 100%;
@@ -16,14 +17,15 @@ const Container = styled(View)`
 
 const CustomAutoComplete = styled(Autocomplete)`
   background-color: ${(props) => props.theme.palette.background};
+  border-bottom-width: 1px;
+  border-bottom-color: ${(props) => props.theme.palette.light};
 `
 
 const IngreList = styled(View)`
   width: 100%;
   flex-direction: row;
-  padding-left: 5px;
+  padding: 10px;
   align-items: center;
-  margin-top: 5px;
 `
 
 const EmptySearchResults = styled(View)`
@@ -43,7 +45,7 @@ const SelectedStyle = styled(View)`
   margin-top: 8px;
   margin-right: 12px;
   border-radius: 14px;
-  background-color: #F9F7BB;
+  background-color: ${(props) => props.theme.palette.point};
 `
 
 const TextSelectedStyle = styled(Text)`
@@ -92,6 +94,7 @@ export const SearchBar = ({ data, onSelect, flag }) => {
       <CustomAutoComplete
         data={filteredData}
         onChangeText={handleAutoComplete}
+        inputContainerStyle={{ borderWidth: 0 }}
         flatListProps={{
           renderItem: ({ item }: { item: FoodItem }) => (
             <TouchableOpacity

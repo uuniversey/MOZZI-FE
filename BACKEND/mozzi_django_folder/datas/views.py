@@ -30,6 +30,9 @@ import pymysql
 from django.conf import settings
 import boto3
 from botocore.config import Config
+from django.http import FileResponse
+from rest_framework.response import Response
+from .videomake import *
 
 import math
 
@@ -43,6 +46,91 @@ from .tasks import reset_food_views
 
 
 # 작업 결과 확인
+from django.db import models
+from neo4j import GraphDatabase
+
+# Neo4j 서비스 클래스
+# class Neo4jService(object):
+#     def __init__(self, uri, user, password):
+#         self._driver = GraphDatabase.driver(uri, auth=(user, password))
+
+#     def close(self):
+#         self._driver.close()
+
+#     def create_node(self, label, properties):
+#         with self._driver.session() as session:
+#             session.write_transaction(self._create_node, label, properties)
+
+#     @staticmethod
+#     def _create_node(tx, label, properties):
+#         query = f"CREATE (n:{label} $properties) RETURN n"
+#         return tx.run(query, properties=properties)
+
+# # Neo4j 서비스 초기화
+# uri = "bolt://localhost:7687"
+# user = "neo4j"
+# password = "mozzimozzi"
+# service = Neo4jService(uri, user, password)
+
+# # FoodsFoods 데이터 조회 및 Neo4j에 삽입
+# # foods_foods = FoodsFoods.objects.all()
+# # for item in foods_foods:
+# #     properties = {
+# #         "food_id": item.food_id,
+# #         "other_food_id": item.other_food_id,
+# #         "relations": item.relations
+# #     }
+# #     service.create_node("FoodsFoods", properties)
+
+# # RefriIngredients 데이터 조회 및 Neo4j에 삽입
+# refri_ingredients = RefriIngredients.objects.all()
+# for item in refri_ingredients:
+#     properties = {
+#         "user_id": item.user_id,
+#         "ingredient_id": item.ingredient_id,
+#         "expiration_date": str(item.expiration_date),
+#         "stored_pos": item.stored_pos
+#     }
+#     service.create_node("RefriIngredients", properties)
+
+# # User 데이터 조회 및 Neo4j에 삽입
+# users = User.objects.all()
+# for item in users:
+#     properties = {
+#         "user_id": item.user_id,
+#         "user_isvegan": item.user_isvegan,
+#         "user_register_date": str(item.user_register_date),
+#         "user_code": item.user_code,
+#         "user_nickname": item.user_nickname,
+#         "worldcup": item.worldcup
+#     }
+#     service.create_node("User", properties)
+
+# # UserFood 데이터 조회 및 Neo4j에 삽입
+# user_foods = UserFood.objects.all()
+# for item in user_foods:
+#     properties = {
+#         "user_food_id": item.user_food_id,
+#         "food_id": item.food_id,
+#         "user_id": item.user_id,
+#         "user_food_preference": item.user_food_preference,
+#         "total": item.total
+#     }
+#     service.create_node("UserFood", properties)
+
+# # UserIngredients 데이터 조회 및 Neo4j에 삽입
+# user_ingredients = UserIngredients.objects.all()
+# for item in user_ingredients:
+#     properties = {
+#         "user_ingredients_id": item.user_ingredients_id,
+#         "user_id": item.user_id,
+#         "ingredient_id": item.ingredient_id,
+#         "is_like": item.is_like
+#     }
+#     service.create_node("UserIngredients", properties)
+
+# # 서비스 종료
+# service.close()
 
 
 def get_ingredients(start, last):
@@ -936,17 +1024,23 @@ def user_ingredient_affection(request):
     if len(token) != 165 :
         token = token[:-1]
     data=urlsafe_base64_decode(token)
+    print(data,'token')
     data = data.decode('latin-1')
+    print(33333333)
+    print(type(data))
+    # print(data)
+    print(2222222222222)
     index_e = data.index('"e":') + len('"e":')  # "e": 다음 인덱스부터 시작
+ 
     index_comma = data.index(',', index_e)  # 쉼표(,)가 나오는 인덱스 찾기
     e_value = data[index_e:index_comma]
     user_number = e_value[1:-1]
-
+    print(user_number)
 
    
     # data = base64.b64decode(token)
    
-    data = data.decode('latin-1')
+    
 
     print(user_number)
     # print(type(user))
@@ -1014,6 +1108,67 @@ def user_ingredient_affection(request):
 
     return JsonResponse({'ok' : 1})
  
+
+# 비디오 생성 api
+@api_view(['POST'])
+def make_video(request):
+    if request.method == 'POST':
+        user_id = request.data.get('user_id')
+        bgm_category = request.data.get('bgm_category')
+        image_list = request.data.get('image_list')  # 예: 이미지 파일의 전체 URL 리스트
+
+        image_url = []
+        for url in image_list:
+            img_name = url.split('/')[-1]
+            image_url.append(img_name)
+
+        download_images(image_list, user_id)
+        valid_extensions = ['.jpg', '.jpeg', '.png', '.gif']  # 유효한 이미지 확장자 목록
+        # download_images 함수에서 이미지를 다운로드하는 로직이 실행됨
+
+        image_folder = f"./user_id_{user_id}"
+        audio_path = f"./bgm/{bgm_category}.mp3"
+        output_path = f"./media/output/user_id_{user_id}.mp4"
+
+        filtered_images = []
+        for filename in os.listdir(image_folder):
+            if filename in image_url:
+                filtered_images.append(os.path.join(image_folder, filename))
+
+        # 이미지 폴더에서 URL 리스트에 맞는 이미지 파일만 선택
+        print(filtered_images)
+        
+        if not filtered_images:
+            return JsonResponse({'error': 'No images found in the folder'}, status=404)
+
+        # 비디오 생성 함수 실행
+        images_to_video_with_audio(filtered_images, audio_path, output_path)
+
+        # 완료 시 출력
+        return JsonResponse({'message': 'Video generation complete'})
+
+    else:
+        # 실패 시 출력
+        return JsonResponse({'error': 'Only POST requests are allowed'}, status=400)
+
+
+# 비디오 다운로드 api
+@api_view(['GET'])
+def download_video(request, user_id):
+    # 경로 지정
+    print(user_id)
+    video_path = os.path.join(settings.MEDIA_ROOT, 'output', f'user_id_{user_id}.mp4')
+
+    # 파일 있는지 체크
+    if request.method == 'GET' and os.path.exists(video_path):
+        # 파일 있으면 파일 보냄
+        response = FileResponse(open(video_path, 'rb'), as_attachment=True)
+        response['Content-Disposition'] = f'attachment; filename="{os.path.basename(video_path)}"'
+        return response
+    else:
+        # 파일 없으면 에러 메시지 보냄
+        return JsonResponse({'error': 'Video not found'}, status=404)
+
 
 def takeFilesFromS3(filename):
     s3_client = boto3.client(

@@ -36,10 +36,13 @@ function SpeechToText({ onNext, onPrev }) {
     setText(spokenText) // 화면에 표시할 텍스트 설정
     
     if (spokenText.includes("다음")) {
-      onNext && onNext();
+      onNext && onNext()
     } else if (spokenText.includes("이전")) {
-      onPrev && onPrev();
+      onPrev && onPrev()
     }
+
+     // 음성 인식 결과 처리 후, 다시 음성 인식을 시작합니다.
+    startListening()
   }
 
   const startListening = () => {
@@ -63,7 +66,6 @@ function SpeechToText({ onNext, onPrev }) {
     <Btn onPress={isListening ? stopListening : startListening}>
       <Icon name={isListening ? "mic-off" : "mic"} size={30} />
     </Btn>
-    <Text>{text}</Text>
     </>
   )
 }

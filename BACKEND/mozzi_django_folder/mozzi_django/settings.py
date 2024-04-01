@@ -56,6 +56,7 @@ TIME_ZONE = 'Asia/Seoul'
 # Application definition
 
 INSTALLED_APPS = [
+    'rest_framework',
     'datas',
     # 'django_celery_beat',
     'django_extensions',
@@ -233,4 +234,11 @@ STATIC_URL = 'static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
+CORS_ORIGIN_WHITELIST = ('http://10.0.2.2:8000', 'http://127.0.0.1:3000', 'http://localhost:3000')
+CORS_ALLOW_CREDENTIALS = True
+ALLOWED_HOSTS = ['10.0.2.2', 'localhost', '127.0.0.1']
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, '.', "media")

@@ -6,6 +6,7 @@ import RNFetchBlob from 'rn-fetch-blob'
 import { Header } from '../../components/Header/Header'
 import styled from 'styled-components/native'
 import Video from 'react-native-video'
+import useProfileStore from '../../store/ProfileStore'
 
 const Container = styled(View)`
   flex: 1;
@@ -66,6 +67,7 @@ function MakeShortsScreen () {
 
   const navigation = useNavigation() 
   const [videoPath, setVideoPath] = useState<string>(RNFetchBlob.fs.dirs.DownloadDir)
+  const { profileData } = useProfileStore()
 
   // const goBack = () => {
   //   navigation.goBack()
@@ -85,15 +87,16 @@ function MakeShortsScreen () {
 
   try {
     // console.log('hi')
-    const url = 'http://10.0.2.2:8000/maker/download_video/'; // 서버의 엔드포인트 URL
-    const localFile = `${RNFetchBlob.fs.dirs.DocumentDir}/baloo365.mp4`; // 파일을 저장할 로컬 경로
+    const userId = "" + profileData.id
+    const url = `http://10.0.2.2:8000/datas/download_video/${userId}/` // 서버의 엔드포인트 URL
+    const localFile = `${RNFetchBlob.fs.dirs.DocumentDir}/${userId}.mp4` // 파일을 저장할 로컬 경로
     const response = await RNFetchBlob.config({
         fileCache: true,
         path: localFile,
         addAndroidDownloads: {
           useDownloadManager: true, 
           notification: true,
-          path: RNFetchBlob.fs.dirs.DownloadDir + '/baloo365.mp4', 
+          path: RNFetchBlob.fs.dirs.DownloadDir + `/${userId}.mp4`, 
           description: 'Downloading image.',
           mime: 'video/mp4',
           mediaScannable: true,
@@ -125,8 +128,9 @@ function MakeShortsScreen () {
   const previewVideo = async () => {
   
     try {
-      const url = 'http://10.0.2.2:8000/maker/download_video/' // 서버의 엔드포인트 URL
-      const localFile = `${RNFetchBlob.fs.dirs.DocumentDir}/baloo365.mp4` // 파일을 저장할 로컬 경로
+      const userId = "" + profileData.id
+      const url = `http://10.0.2.2:8000/datas/download_video/${userId}/` // 서버의 엔드포인트 URL
+      const localFile = `${RNFetchBlob.fs.dirs.DocumentDir}/${userId}.mp4` // 파일을 저장할 로컬 경로
       const response = await RNFetchBlob.config({
           fileCache: true,
           path: localFile,
