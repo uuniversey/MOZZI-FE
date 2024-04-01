@@ -139,7 +139,20 @@ public class DiaryController {
             ResponseMessageDto responseMessageDto = ResponseMessageDto.builder().message("Diary Create failed").build();
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+}
+
+    @GetMapping("/getDetailDiary")
+    public ResponseEntity<?> getDetailDiary()
+    {
+        UserModel user = userService.findCurrentUser();
+        List<Diary> Diaries = diaryService.findByUser(user);
+        List<DiaryDto> DiariesDto = diaryService.toDtoList(Diaries);
+        log.info("REDIS에 저장되었음");
+        DiaryFoodListDto diaryFoodLists = DiaryFoodListDto.builder().foods(DiariesDto).build();
+        return ResponseEntity.status(HttpStatus.OK).body(diaryFoodLists);
     }
+
+
 
     @GetMapping("/getMyWholeDiary")
     public ResponseEntity<?> getMyWholeDiary()

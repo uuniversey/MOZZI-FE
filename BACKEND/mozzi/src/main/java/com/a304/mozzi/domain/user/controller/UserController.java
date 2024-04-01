@@ -45,7 +45,6 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
     private final KakaoApi kakaoApi;
     private final JwtIssuer jwtIssuer;
-    private final FoodService foodService;
     private final IngredientsService ingredientsService;
     private final UserIngredientService userIngredientService;
     private  final UserFoodService userFoodService;
@@ -152,7 +151,6 @@ public class UserController {
         {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-
     }
     @GetMapping("/Oauth2/KakaoWeb")
     public ResponseEntity<?> loginForWeb(@RequestParam("code") String code) {
