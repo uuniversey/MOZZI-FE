@@ -1157,6 +1157,11 @@ def make_video(request):
         audio_path = BASE_DIR2/"bgm"/f"{bgm_category}.mp3"
         print(6666)
         output_path = BASE_DIR2/"media"/"output"/f"user_id_{user_id}.mp4"
+        
+
+        output_dir = BASE_DIR2 / "media" / "output"
+        os.makedirs(output_dir, exist_ok=True)
+
         print(audio_path)
         print(output_path)
         print(7777)
