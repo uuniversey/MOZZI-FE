@@ -924,14 +924,14 @@ def user_recommendation(request):
 
 @api_view(["PUT"])
 def user_ingredient_affection(request):
-    input_ingredient_name = "두부"
 
     # print(request.data['foods'])
     token = request.headers['Authorization'].split(' ')[1]
-    data = base64.b64decode(token)
-   
+    if len(token) != 165 :
+        token = token[:-1]
+
+    data=urlsafe_base64_decode(token)
     data = data.decode('latin-1')
-    
     index_e = data.index('"e":') + len('"e":')  # "e": 다음 인덱스부터 시작
  
     index_comma = data.index(',', index_e)  # 쉼표(,)가 나오는 인덱스 찾기
@@ -939,6 +939,12 @@ def user_ingredient_affection(request):
     e_value = data[index_e:index_comma]
 
     user_number = e_value[1:-1]
+
+
+   
+    # data = base64.b64decode(token)
+   
+    data = data.decode('latin-1')
 
     print(user_number)
     # print(type(user))
