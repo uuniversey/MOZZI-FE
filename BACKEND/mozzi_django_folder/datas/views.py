@@ -1133,13 +1133,8 @@ def make_video(request):
         # download_images 함수에서 이미지를 다운로드하는 로직이 실행됨
         print(4444)
         # BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent.parent/home/ubuntu/project/S10P22A304/BACKEND/mozzi_django_folder/
-        BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent.parent
-        contents = os.listdir(BASE_DIR)
-
-        # 결과 출력
-        for item in contents:
-            print(item,'item')
-        print(BASE_DIR,'base_dir')
+        
+        
         BASE_DIR2 = Path(__file__).resolve().parent.parent
         contents = os.listdir(BASE_DIR2)
 
@@ -1153,16 +1148,17 @@ def make_video(request):
         # 결과 출력
         for item in contents:
             print(item,'item3')
-        image_folder = BASE_DIR /"home"/"ubuntu"/"project"/"S10P22A304"/"BACKEND"/"mozzi_django_folder"/ f"user_id_{user_id}"
-        audio_path = BASE_DIR /"home"/"ubuntu"/"project"/"S10P22A304"/"BACKEND"/"mozzi_django_folder"/ "bgm" / f"{bgm_category}.mp3"
-        print(audio_path)
-        output_path = BASE_DIR /"home"/"ubuntu"/"project"/"S10P22A304"/"BACKEND"/"mozzi_django_folder"/ "media" / "output" / f"user_id_{user_id}.mp4"
-        print(output_path)
-        # image_folder = f"./user_id_{user_id}"
-        print(5555)
-        # audio_path = f"./bgm/{bgm_category}.mp3"
+        # image_folder = BASE_DIR2 /"home"/"ubuntu"/"project"/"S10P22A304"/"BACKEND"/"mozzi_django_folder"/ f"user_id_{user_id}"
+        # audio_path = BASE_DIR2 /"home"/"ubuntu"/"project"/"S10P22A304"/"BACKEND"/"mozzi_django_folder"/ "bgm" / f"{bgm_category}.mp3"
+        # output_path = BASE_DIR2 /"home"/"ubuntu"/"project"/"S10P22A304"/"BACKEND"/"mozzi_django_folder"/ "media" / "output" / f"user_id_{user_id}.mp4"
+        image_folder = BASE_DIR2/"user_id_{user_id}"
+        # image_folder = f"/user_id_{user_id}"
+        
+        audio_path = BASE_DIR2/"bgm"/"{bgm_category}.mp3"
         print(6666)
-        # output_path = f"./media/output/user_id_{user_id}.mp4"
+        output_path = BASE_DIR2/"media"/"output"/"user_id_{user_id}.mp4"
+        print(audio_path)
+        print(output_path)
         print(7777)
 
         filtered_images = []
