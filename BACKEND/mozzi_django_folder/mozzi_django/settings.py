@@ -39,7 +39,6 @@ AWS_S3_REGION_NAME=os.environ.get('AWS_S3_REGION_NAME')
 AWS_S3_ADDRESSING_STYLE=os.environ.get('AWS_S3_ADDRESSING_STYLE')
  
 
-ALLOWED_HOSTS = ['a304.site', '127.0.0.1', 'localhost']
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -236,7 +235,8 @@ STATIC_URL = 'static/'
 
 CORS_ORIGIN_WHITELIST = ('http://10.0.2.2:8000', 'http://127.0.0.1:3000', 'http://localhost:3000')
 CORS_ALLOW_CREDENTIALS = True
-ALLOWED_HOSTS = ['10.0.2.2', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['10.0.2.2', 'localhost', '127.0.0.1','a304.site','']
+# ALLOWED_HOSTS = ['a304.site', '127.0.0.1', 'localhost']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
