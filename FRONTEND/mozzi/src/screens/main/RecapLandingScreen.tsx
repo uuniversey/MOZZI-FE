@@ -120,14 +120,14 @@ const RecapLandingScreen: React.FC = () => {
       </BackButton>
       <View>
         <Animated.Image
-            source={require('../../assets/recommend/ladle.png')}
+            source={require('../../assets/illustration/ladle.png')}
             style={[
               styles.filmReel,
               { transform: [{ rotate: spin }] }, 
             ]}
           /> 
         <ImageContainer
-          source={require('../../assets/recommend/pot.png')}
+          source={require('../../assets/illustration/pot.png')}
         />
       </View>
       <Description>아우엉님 님의 {'\n'} 추억을 요리하고 있어요!</Description>

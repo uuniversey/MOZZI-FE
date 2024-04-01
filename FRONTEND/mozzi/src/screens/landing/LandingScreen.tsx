@@ -62,7 +62,7 @@ const BigTitle = styled(Text)`
 
 const LoginContainer = styled.View`
   position: absolute;
-  bottom: 22%;
+  bottom: 20%;
   width: 100%;
   align-items: center;
 `;
@@ -99,31 +99,6 @@ function LandingScreen() {
       }
     }
   }
-  
-  // const signInWithKakao = async (): Promise<void> => {
-  //   try {
-  //     const token = await kakaoLoginFunc();
-  //     setResult(JSON.stringify(token));
-  //   } catch (err) {
-  //     console.error('login err', err);
-  //   }
-  // };
-
-  // // 테스트 코드
-  // const sendRequest = async () => {
-  //   try {
-  //     const response = await axios.get('https://a304.site/api/mozzi/test');
-  //     console.log('성공:', response.data);
-  //   } catch (error) {
-  //     console.error('에러:', error);
-  //   }
-  // };  
-  // // sendRequest 함수 호출
-  // sendRequest();
-
-  // const fadeAnims = useRef(
-  //   Array.from({ length: 9 }, () => new Animated.Value(0))
-  // ).current;
 
   // 각 아이콘과 로그인 버튼에 대한 페이드인 애니메이션 값
   const fadeAnims = useRef(icons.map(() => new Animated.Value(0))).current;
@@ -142,26 +117,26 @@ function LandingScreen() {
   useEffect(() => {
     // 아이콘 애니메이션
     fadeAnims.forEach((anim, index) => {
-      fadeIn(anim, index * 500); // 각 아이콘이 0.5초 간격으로 나타나게 설정
+      fadeIn(anim, index * 200); // 각 아이콘이 0.5초 간격으로 나타나게 설정
     });
 
     // 모든 아이콘 애니메이션 후 로그인 버튼 애니메이션 시작
-    const lastIconDelay = icons.length * 500;
+    const lastIconDelay = icons.length * 200;
     fadeIn(loginFadeAnim, lastIconDelay);
   }, []);
 
 
   // 위치와 크기 정보
   const positions = [
-    { width: 53, height: 53, top: 334.82, left: 77 },
-    { width: 64, height: 64, top: 361.72, left: 179 },
-    { width: 65, height: 65, top: 270, left: 286 },
-    { width: 66, height: 66, top: 442.42, left: 44 },
-    { width: 50, height: 50, top: 529.09, left: 190 },
-    { width: 67, height: 67, top: 467.32, left: 290 },
-    { width: 58, height: 58, top: 765.21, left: 53 },
-    { width: 65, height: 65, top: 707.43, left: 149 },
-    { width: 80, height: 80, top: 742.3, left: 277 },
+    { width: 53, height: 53, top: 304.82, left: 57 },
+    { width: 64, height: 64, top: 331.72, left: 159 },
+    { width: 65, height: 65, top: 240, left: 266 },
+    { width: 66, height: 66, top: 412.42, left: 24 },
+    { width: 50, height: 50, top: 499.09, left: 170 },
+    { width: 67, height: 67, top: 437.32, left: 270 },
+    { width: 58, height: 58, top: 725.21, left: 33 },
+    { width: 65, height: 65, top: 667.43, left: 129 },
+    { width: 80, height: 80, top: 702.3, left: 257 },
   ];
 
   return (

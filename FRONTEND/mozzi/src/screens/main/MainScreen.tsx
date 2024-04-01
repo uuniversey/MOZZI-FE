@@ -162,10 +162,8 @@ function MainScreen() {
             <Card>
               <MealQuestion>오늘 모찌에서 {"\n"}가장 많이 사랑받은 레시피는?</MealQuestion>
               <StyledImage
-                // source={require('../../assets/recommend/pizza.jpg')}
                 source={{ uri: recipe?.photo }}
                 />
-              {/* <MealName>피자 최고</MealName> */}
               <MealName>{recipe?.foodName}</MealName>
             </Card>
           </TouchableOpacity>

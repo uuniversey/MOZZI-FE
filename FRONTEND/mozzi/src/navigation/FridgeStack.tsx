@@ -1,17 +1,18 @@
 import React from 'react'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 
 import FridgeScreen from '../screens/fridge/FridgeScreen'
 import FridgeDetailScreen from '../screens/fridge/FridgeDetailScreen'
 
-const Stack = createNativeStackNavigator()
+const Stack = createStackNavigator()
 
 function FridgeStack() {
   return (
     <Stack.Navigator
-      screenOptions={({ route }) => ({
+      screenOptions={{
         headerShown: false,
-      })}
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+      }}
     >
       <Stack.Screen name="Fridge" component={FridgeScreen} />
       <Stack.Screen name="FridgeDetail" component={FridgeDetailScreen} />

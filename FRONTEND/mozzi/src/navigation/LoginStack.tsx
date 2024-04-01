@@ -1,22 +1,22 @@
 import React from 'react'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 
 import LandingScreen from '../screens/landing/LandingScreen'
-import LandingInputScreen from '../screens/landing/LandingInputScreen'
-import TestLogin from '../screens/landing/TestLogin'
+import InputScreen from '../screens/landing/LandingInputScreen'
 
-const Stack = createNativeStackNavigator()
+const Stack = createStackNavigator()
 
 function LoginStack() {
   return (
     <Stack.Navigator
-      screenOptions={({ route }) => ({
+      screenOptions={{
         headerShown: false,
-      })}
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+      }}
     >
       {/* <Stack.Screen name="TestLogin" component={TestLogin} /> */}
       <Stack.Screen name="Landing" component={LandingScreen} />
-      <Stack.Screen name="LandingInput" component={LandingInputScreen} />
+      <Stack.Screen name="LandingInput" component={InputScreen} />
     </Stack.Navigator>
   )
 }
