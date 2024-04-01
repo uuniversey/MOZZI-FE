@@ -3,9 +3,8 @@ import { View, ScrollView, Text, TextInput, TouchableOpacity, KeyboardAvoidingVi
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import styled from 'styled-components/native'
 import { useNavigation } from '@react-navigation/native'
-
+import SmallButton from '../../components/Button/SmallButton'
 import { Header } from '../../components/Header/Header'
-
 import EditScreen from './EditScreen'
 import useProfileStore from '../../store/ProfileStore'
 import useDropdownStore from '../../store/DropdownStore'
@@ -17,7 +16,7 @@ const Container = styled(ScrollView)`
 
 const Title = styled(Text)`
   font-size: 36px;
-  margin: 20px 0px 0px 40px;
+  margin: 20px 0px 0px 16px;
   text-align: left;
   width: 100%;
   font-family: ${(props) => props.theme.fonts.title};
@@ -25,37 +24,22 @@ const Title = styled(Text)`
 `
 
 const Body = styled(View)`
-  margin: 0px 40px 0px 40px;
+  margin: 0px 16px 20px 16px;
 `
 
 const Label = styled(Text)`
-  margin-top: 30px;
+  margin-top: 20px;
+  font-size: 16;
   font-family: ${(props) => props.theme.fonts.content};
   color: ${(props) => props.theme.palette.font};
 `
 
 const StyledInput = styled(TextInput)`
   height: 40px;
+  font-size: 16;
   margin: 10px 0px 10px 0px;
   border-bottom-width: 1px;
-  border-bottom-color: silver;
-`
-
-const Btn = styled(TouchableOpacity)`
-  background-color: ${(props) => props.theme.palette.point};
-  border-radius: 10px;
-  width: 80px;
-  height: 35px;
-  justify-content: center;
-  align-self: flex-end;
-  margin-top: 30px;
-`
-
-const BtnText = styled(Text)`
-  font-size: 16px;
-  text-align: center;
-  font-family: ${(props) => props.theme.fonts.content};
-  color: ${(props) => props.theme.palette.font};
+  border-bottom-color: ${(props) => props.theme.palette.light};
 `
 
 function ProfileScreen () {
@@ -63,6 +47,7 @@ function ProfileScreen () {
   const { getProfile, profileData, foodInfo, editNickname, editIsVegan, editFoodInfo, form } = useProfileStore()
   const { dropdownData, isVeganData } = useDropdownStore()
   const [ isEdit, setIsEdit ] = useState<boolean>(false)
+
 
   useLayoutEffect (() => {
     getProfile()
@@ -80,7 +65,7 @@ function ProfileScreen () {
   return (
     <Container>
       <Header>
-        <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
+        <Header.Icon iconName="arrow-back" onPress={navigation.goBack} />
       </Header>
 
       <Title>내 정보</Title>
@@ -99,10 +84,10 @@ function ProfileScreen () {
               <StyledInput
                 placeholder={
                   profileData.foods && profileData.foods.length > 0
-                    ? profileData.foods
-                        .filter(food => food.isLike === 2)
-                        .map(food => food.ingredientName)
-                        .join(', ')
+                    ? [...new Set(profileData.foods
+                      .filter(food => food.isLike === 2)
+                      .map(food => food.mainAllergy))]
+                      .join(', ')
                     : "보유하고 있는 알레르기 정보를 선택해 주세요"
                 }
                 editable={false}
@@ -139,9 +124,13 @@ function ProfileScreen () {
             </View>
             )
           }
-          <Btn onPress={handleIsEdit}>
-            <BtnText>{isEdit ? '완료' : '수정'}</BtnText>
-          </Btn>
+          <SmallButton 
+            onPress={handleIsEdit}
+            text={isEdit ? '완료' : '수정'}
+            style={{
+              marginTop: 20,
+            }}
+          />
         </Body>
       </KeyboardAvoidingView>
     </Container>

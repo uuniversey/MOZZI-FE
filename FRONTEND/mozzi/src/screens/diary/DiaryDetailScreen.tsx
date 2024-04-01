@@ -34,19 +34,27 @@ const Body = styled(View)`
 `
 
 const DiaryInfo = styled(View)`
+  width: 100%;
   display: flex;
+  align-items: center;
   flex-direction: row;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
+`
+
+const FoodTitle = styled(Text).attrs({
+  numberOfLines: 1,
+  ellipsizeMode: 'tail',
+})`
+  width: 300px;
+  font-size: 16px;
+  font-family: ${(props) => props.theme.fonts.content};
+  color: ${(props) => props.theme.palette.font};
 `
 
 const BtnContainer = styled(View)`
   display: flex;
   flex-direction: row;
-`
-
-const CardView = styled(View)`
-  margin-bottom: 20px;
 `
 
 const ShareBtn = styled(TouchableOpacity)`
@@ -57,18 +65,17 @@ const ShareBtn = styled(TouchableOpacity)`
   border-radius: 28px;
 `
 
+const CardView = styled(View)`
+  margin-bottom: 20px;
+`
+
 const FoodImage = styled(Image)`
   width: 100%;
   aspect-ratio: 1;
   border-radius: 5px;
 `
 
-const FoodTitle = styled(Text)`
-  font-size: 20px;
-  margin-bottom: 10px;
-  font-family: ${(props) => props.theme.fonts.content};
-  color: ${(props) => props.theme.palette.font};
-`
+
 
 const ItemContainer = styled(ScrollView)`
   display: flex;
@@ -93,7 +100,7 @@ function DiaryDetailScreen ({ route }) {
   return (
     <Container>
       <Header>
-        <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
+        <Header.Icon iconName="arrow-back" onPress={navigation.goBack} />
       </Header>
 
       <View>
@@ -106,7 +113,6 @@ function DiaryDetailScreen ({ route }) {
         {dayData.map((data) => (
           <CardView key={data.id}>
             <Body>
-              <View>
                 <DiaryInfo>
                   <FoodTitle>{data.foodName}</FoodTitle> 
                   <BtnContainer>
@@ -118,7 +124,6 @@ function DiaryDetailScreen ({ route }) {
                 <FoodImage
                   source={{ uri: `${data.photoUrl}` }}
                 />
-              </View>
             </Body>
           </CardView>
           ))

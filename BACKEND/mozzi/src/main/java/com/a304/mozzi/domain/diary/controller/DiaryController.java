@@ -142,7 +142,7 @@ public class DiaryController {
     }
 
     @GetMapping("/getMyWholeDiary")
-    public ResponseEntity<?> getmyDiary()
+    public ResponseEntity<?> getMyWholeDiary()
     {
         UserModel user = userService.findCurrentUser();
         List<Diary> Diaries = diaryService.findByUser(user);

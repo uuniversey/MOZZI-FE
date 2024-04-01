@@ -7,7 +7,8 @@ import { launchImageLibrary } from 'react-native-image-picker'
 import { format } from 'date-fns'
 import DateTimePickerModal from 'react-native-modal-datetime-picker'
 import { Header } from '../../components/Header/Header'
-// import axios from '../../../axios'
+import LongButton from '../../components/Button/LongButton'
+import SmallButton from '../../components/Button/SmallButton'
 import axios from 'axios'
 import styled from 'styled-components/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -35,7 +36,7 @@ const DateText = styled(Text)`
 `
 
 const Line = styled(View)`
-  border-bottom-color: #A4A4A4;
+  border-bottom-color: ${(props) => props.theme.palette.light};
   border-bottom-width: 1px;
   width: 100%;
   align-self: center;
@@ -43,7 +44,7 @@ const Line = styled(View)`
 `
 
 const ImageContainer = styled(View)`
-  border: 1px solid #A4A4A4;
+  border: 1px solid ${(props) => props.theme.palette.light};;
   background-color: ${(props) => props.theme.palette.background};
   width: 100%;
   aspect-ratio: 1;
@@ -54,7 +55,7 @@ const ImageContainer = styled(View)`
 
 const ImageInnerContainer = styled(TouchableOpacity)`
   border-width: 1px;
-  border-color: #A4A4A4;
+  border-color: ${(props) => props.theme.palette.light};;
   border-radius: 10px;
   border-style: dotted;
   width: 90%;
@@ -77,47 +78,11 @@ const ImagePlaceholderText = styled(Text)`
   font-family: ${(props) => props.theme.fonts.content};
 `
 
-const RecipeButton = styled(TouchableOpacity)`
-  background-color: ${(props) => props.theme.palette.point};
-  border-color: rgba(0, 0, 0, 0.2);
-  border-width: 2px;
-  padding: 20px;
-  border-radius: 30px;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  elevation: 2;
-`
-
 const EnterContainer = styled(View)`
   width: 100%;
   margin-top: 50px;
   flex-direction: row;
   justify-content: flex-end;
-`
-
-const ButtonText = styled(Text)`
-  font-size: 16px;
-  text-align: center;
-  margin-left: 6px;
-  color: ${(props) => props.theme.palette.font};
-  font-family: ${(props) => props.theme.fonts.content};
-`
-
-const EnterButton = styled(TouchableOpacity)`
-  border-radius: 10px;
-  width: 80px;
-  height: 35px;
-  justify-content: center;
-  background-color: ${props => props.disabled ? '#cccccc' : '#F9F7BB'};
-`
-
-const EnterButtonText = styled(Text)`
-  font-size: 16px;
-  text-align: center;
-  color: ${(props) => props.theme.palette.font};
-  font-family: ${(props) => props.theme.fonts.content};
 `
 
 const CalendarButton = styled(TouchableOpacity)`
@@ -269,7 +234,7 @@ function DiaryCreateScreen () {
   return (
     <>
       <Header>
-        <Header.Icon iconName="chevron-back" onPress={goBack} />
+        <Header.Icon iconName="arrow-back" onPress={goBack} />
       </Header>
       <Container>
         <DateContainer>
@@ -296,7 +261,6 @@ function DiaryCreateScreen () {
                 style={{ width: '105%', height: '105%' }} 
               />
             ) : (
-              
               <ImageButton onPress={handleChoosePhoto}>
                 <ImagePlaceholderText>사진 첨부</ImagePlaceholderText>
               </ImageButton>
@@ -304,18 +268,20 @@ function DiaryCreateScreen () {
             )}
            </ImageInnerContainer>
         </ImageContainer>
-        <RecipeButton
-          onPress={moveDiaryCreateSelect} >
-          <Icon name="menu-book" size={20}/>
-          <ButtonText>{selectedRecipeName ? selectedRecipeName : '레시피 불러오기'}</ButtonText>
-        </RecipeButton>
+        <LongButton
+          onPress={moveDiaryCreateSelect}
+          iconName="menu-book"
+          text={selectedRecipeName ? selectedRecipeName : '레시피 불러오기'}
+          style={{
+            flexDirection: "row"
+          }}
+        />
         <EnterContainer>
-          <EnterButton 
-            onPress={handleCreateDiaryPress} 
+        <SmallButton 
+            onPress={handleCreateDiaryPress}
+            text="등록"
             disabled={!isButtonEnabled}
-            >
-            <EnterButtonText>등록</EnterButtonText>
-          </EnterButton>
+          />
         </EnterContainer>
       </Container>
     </>

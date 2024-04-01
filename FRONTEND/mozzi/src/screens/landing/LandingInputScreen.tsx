@@ -6,9 +6,9 @@ import CustomDropdown from '../../components/Dropdown/CustomDropdown'
 import { SearchBar } from '../../components/AutoWord/SearchLike'
 
 import useProfileStore from '../../store/ProfileStore'
-import useRecipeStore from '../../store/RecipeStore'
 import useDropdownStore from '../../store/DropdownStore'
 import useLoginStore from '../../store/LoginStore'
+import useFridgeStore from '../../store/FridgeStore'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
@@ -75,9 +75,9 @@ const BtnText = styled(Text)`
 `
 
 function InputScreen () {
-  const { setIsLogin, userData } = useLoginStore()
-  const { profileData, form, setForm, foodInfo, setFoodInfo, editNickname, editIsVegan, editFoodInfo } = useProfileStore()
-  const { ingredientData, getIngredient } = useRecipeStore()
+  const { setIsLogin } = useLoginStore()
+  const { form, setForm, foodInfo, setFoodInfo, editNickname, editIsVegan, editFoodInfo } = useProfileStore()
+  const { allFoods } = useFridgeStore()
   const { dropdownData, isVeganData } = useDropdownStore()
 
   const [ likeData, setLikeData ] = useState([])
@@ -154,10 +154,10 @@ function InputScreen () {
           />
 
           <Label>좋아하는 식재료</Label>
-          <SearchBar data={ingredientData} onSelect={handleLikeData} flag={1}/>
+          <SearchBar data={allFoods} onSelect={handleLikeData} flag={1}/>
 
           <Label>싫어하는 식재료</Label>
-          <SearchBar data={ingredientData} onSelect={handleUnlikeData} flag={0}/>
+          <SearchBar data={allFoods} onSelect={handleUnlikeData} flag={0}/>
 
           <Label>비건 여부</Label>
           <CustomDropdown

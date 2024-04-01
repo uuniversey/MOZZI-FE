@@ -14,7 +14,8 @@ const SelectedStyle = styled(View)`
   margin-top: 8px;
   margin-right: 12px;
   border-radius: 14px;
-  background-color: #F9F7BB;
+  background-color: ${(props) => props.theme.palette.point};
+  font-size: 16;
 `
 
 const TextSelectedStyle = styled(Text)`
@@ -28,9 +29,9 @@ function CustomDropdown ({ data, placeholder, isMulti }) {
   const { profileData } = useProfileStore()
   const [selected, setSelected] = useState(
     profileData.foods && profileData.foods.length > 0
-    ? profileData.foods
+    ? [...new Set(profileData.foods
       .filter(food => food.isLike === 2)
-      .map(food => food.ingredientName)
+      .map(food => food.mainAllergy))]
       : []
     )
 
@@ -42,26 +43,16 @@ function CustomDropdown ({ data, placeholder, isMulti }) {
     console.log(dropdownData, '선택된 애들')
   }, [dropdownData])
 
-  // open했을때 css
-  // const renderItem = item => {
-  //   return (
-  //     <View>
-  //       <Text>{item.label}</Text>
-  //     </View>
-  //   )
-  // }
-
-
   return (
     <>
       {isMulti ?
         <MultiSelect
-          style={{borderBottomWidth:1, borderBottomColor:'silver'}}
+          style={{borderBottomWidth:1, borderBottomColor:'#e1dfd4'}}
           data={data}
           labelField="label"
           valueField="value"
           placeholder={placeholder}
-          placeholderStyle={{fontSize:14, color:'#ccc'}}
+          placeholderStyle={{fontSize:16, color:'#e1dfd4'}}
           value={selected}
           onChange={item => {
             setDropdownData(item)
@@ -81,12 +72,12 @@ function CustomDropdown ({ data, placeholder, isMulti }) {
         />
       :
         <Dropdown
-          style={{ borderBottomWidth: 1, borderBottomColor: 'silver' }}
+          style={{ borderBottomWidth: 1, borderBottomColor: '#e1dfd4' }}
           data={data}
           labelField="label"
           valueField="value"
           placeholder={placeholder}
-          placeholderStyle={{ fontSize: 14, color: '#ccc' }}
+          placeholderStyle={{ fontSize: 16, color: '#e1dfd4' }}
           onChange={(item) => handleData(item)}
         />
       }

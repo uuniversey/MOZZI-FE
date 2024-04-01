@@ -25,6 +25,7 @@ const Content = styled(View)`
   display: flex;
   justify-content: center;
   width: 100%;
+  padding: 0px 16px 0px 16px;
 `
 
 const Title = styled(Text)`
@@ -36,10 +37,10 @@ const Title = styled(Text)`
 `
 
 const Order = styled(Text)`
-  padding: 0 50px 0 50px;
-  font-size: 20px;
+  font-size: 18px;
   align-self: center;
-  margin: 0px 0px 20px 0px;
+  padding: 0 8px 0 8px;
+  margin-bottom: 20px;
   font-family: ${(props) => props.theme.fonts.content};
   color: ${(props) => props.theme.palette.font};
 `
@@ -48,15 +49,15 @@ const Body = styled(View)`
   align-self: center;
   align-items: center;
   justify-content: center;
-  width: 330px;
-  height: 330px;
+  width: 100%;
+  aspect-ratio: 1;
   border-radius: 10px;
   background-color: ${(props) => props.theme.palette.point};
 `
 
 const FoodImage = styled(Image)`
-  width: 300px;
-  height: 300px;
+  width: 290px;
+  height: 290px;
   border-radius: 5px;
 `
 
@@ -201,7 +202,7 @@ function RecipeScreen () {
   return (
     <Container>
       <Header>
-        <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
+        <Header.Icon iconName="arrow-back" onPress={navigation.goBack} />
       </Header>
 
       <GestureHandlerRootView>
@@ -214,10 +215,10 @@ function RecipeScreen () {
             }}>
             
             <Content>
-            <IconContainer>
-              <SpeechToText onNext={handleNext} onPrev={handlePrev} />
-              <TextToSpeech text={recipeDetailData[`MANUAL${strIdx}`]} />        
-            </IconContainer>
+              <IconContainer>
+                <SpeechToText onNext={handleNext} onPrev={handlePrev} />
+                <TextToSpeech text={recipeDetailData[`MANUAL${strIdx}`]} />        
+              </IconContainer>
               <Title>{recipeDetailData.RCP_NM}</Title>
               <Line />
               <Order>{recipeDetailData[`MANUAL${strIdx}`]}</Order>
