@@ -1132,7 +1132,10 @@ def make_video(request):
         valid_extensions = ['.jpg', '.jpeg', '.png', '.gif']  # 유효한 이미지 확장자 목록
         # download_images 함수에서 이미지를 다운로드하는 로직이 실행됨
         print(4444)
-        BASE_DIR = Path(__file__).resolve().parent.parent
+        # BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent.parent/home/ubuntu/project/S10P22A304/BACKEND/mozzi_django_folder/
+        BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent.parent
+        print(BASE_DIR,'base_dir')
+
         image_folder = BASE_DIR / f"user_id_{user_id}"
         audio_path = BASE_DIR / "bgm" / f"{bgm_category}.mp3"
         output_path = BASE_DIR / "media" / "output" / f"user_id_{user_id}.mp4"

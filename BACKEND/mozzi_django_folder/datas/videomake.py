@@ -32,7 +32,8 @@ def download_images(image_urls, user_id):
 def images_to_video_with_audio(filtered_images, audio_path, output_path, fadeout_duration=3):
     # 비디오 클립들을 저장할 리스트 생성
     video_clips = []
-    
+    print(audio_path,'audio')
+    print(output_path,'output')
     # 각 이미지를 비디오 클립으로 변환하여 리스트에 추가
     for img_path in filtered_images:
         image_clip = ImageClip(img_path).set_duration(5)  # 이미지의 지속 시간은 1초로 설정
