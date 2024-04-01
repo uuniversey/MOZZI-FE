@@ -30,6 +30,9 @@ import pymysql
 from django.conf import settings
 import boto3
 from botocore.config import Config
+from django.http import FileResponse
+from rest_framework.response import Response
+from .videomake import *
 
 import math
 
@@ -1006,6 +1009,67 @@ def user_ingredient_affection(request):
 
     return JsonResponse({'ok' : 1})
  
+
+# 비디오 생성 api
+@api_view(['POST'])
+def make_video(request):
+    if request.method == 'POST':
+        user_id = request.data.get('user_id')
+        bgm_category = request.data.get('bgm_category')
+        image_list = request.data.get('image_list')  # 예: 이미지 파일의 전체 URL 리스트
+
+        image_url = []
+        for url in image_list:
+            img_name = url.split('/')[-1]
+            image_url.append(img_name)
+
+        download_images(image_list, user_id)
+        valid_extensions = ['.jpg', '.jpeg', '.png', '.gif']  # 유효한 이미지 확장자 목록
+        # download_images 함수에서 이미지를 다운로드하는 로직이 실행됨
+
+        image_folder = f"./user_id_{user_id}"
+        audio_path = f"./bgm/{bgm_category}.mp3"
+        output_path = f"./media/output/user_id_{user_id}.mp4"
+
+        filtered_images = []
+        for filename in os.listdir(image_folder):
+            if filename in image_url:
+                filtered_images.append(os.path.join(image_folder, filename))
+
+        # 이미지 폴더에서 URL 리스트에 맞는 이미지 파일만 선택
+        print(filtered_images)
+        
+        if not filtered_images:
+            return JsonResponse({'error': 'No images found in the folder'}, status=404)
+
+        # 비디오 생성 함수 실행
+        images_to_video_with_audio(filtered_images, audio_path, output_path)
+
+        # 완료 시 출력
+        return JsonResponse({'message': 'Video generation complete'})
+
+    else:
+        # 실패 시 출력
+        return JsonResponse({'error': 'Only POST requests are allowed'}, status=400)
+
+
+# 비디오 다운로드 api
+@api_view(['GET'])
+def download_video(request, user_id):
+    # 경로 지정
+    print(user_id)
+    video_path = os.path.join(settings.MEDIA_ROOT, 'output', f'user_id_{user_id}.mp4')
+
+    # 파일 있는지 체크
+    if request.method == 'GET' and os.path.exists(video_path):
+        # 파일 있으면 파일 보냄
+        response = FileResponse(open(video_path, 'rb'), as_attachment=True)
+        response['Content-Disposition'] = f'attachment; filename="{os.path.basename(video_path)}"'
+        return response
+    else:
+        # 파일 없으면 에러 메시지 보냄
+        return JsonResponse({'error': 'Video not found'}, status=404)
+
 
 def takeFilesFromS3(filename):
     s3_client = boto3.client(

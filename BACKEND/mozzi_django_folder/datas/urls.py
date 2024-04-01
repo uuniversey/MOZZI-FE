@@ -22,4 +22,7 @@ urlpatterns = [
     path('worldcup/',views.user_ingredient_affection),
     # path('save_ingredient_ratio/',views.save_ingredient_ratio),
     # path('neo4j_visualization/',views.neo4j_visualization),
-]
+    path('make_video/', views.make_video),
+    path('download_video/<str:user_id>/', views.download_video),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
