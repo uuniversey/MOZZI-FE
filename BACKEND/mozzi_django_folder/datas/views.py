@@ -623,7 +623,7 @@ def add_ingredients_to_refrigerator(request):
         
         ingredient_ids = []
         for food_name in foods:
-            print(food_name)
+            # print(food_name)
             ingredient_id = Ingredient.objects.filter(ingredient_name=food_name['foodName']).values_list('id', flat=True).first()
             pos = food_name['storedPos']
             ingredient_ids.append((ingredient_id, pos))
@@ -633,7 +633,7 @@ def add_ingredients_to_refrigerator(request):
                 # 이미 존재하는지 확인
                 cursor.execute("SELECT COUNT(*) as count FROM refri_ingredients WHERE user_id = %s AND ingredient_id = %s", [user_id, ingredient_id[0]]) 
                 row_count = cursor.fetchone()[0]
-                print(row_count)
+                # print(row_count)
                 
                 # 중복 삽입 방지
 
@@ -875,7 +875,7 @@ def recommendFoods():
         df_foods = pd.DataFrame(np.zeros((maxFoodsIndex, maxFoodsIndex)))
 
         for foodId1 in range(maxFoodsIndex):
-            print(foodId1)
+            # print(foodId1)
             for foodId2 in range(foodId1, maxFoodsIndex):
                 np1 = df.loc[[foodId1], :].to_numpy()
                 np2 = df.loc[[foodId2], :].T.to_numpy()
