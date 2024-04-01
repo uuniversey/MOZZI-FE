@@ -1,5 +1,6 @@
 package com.a304.mozzi.domain.user.customingredient.service;
 
+import com.a304.mozzi.config.AllergicComponent;
 import com.a304.mozzi.domain.foodIngredient.model.FoodIngredientModel;
 import com.a304.mozzi.domain.foodIngredient.repository.FoodIngredientRepository;
 import com.a304.mozzi.domain.foods.model.Food;
@@ -12,7 +13,10 @@ import com.a304.mozzi.domain.user.model.UserModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +27,8 @@ public class UserIngredientService {
     private final UserFoodService userFoodService;
     public void deleteAllByUser(UserModel user)
     {
+
+
         List<UserIngredientModel> userIngredientModels =  userIngredientRepository.findUserIngredientModelsByUser(user);
         for (UserIngredientModel userIngredientModel : userIngredientModels)
         {

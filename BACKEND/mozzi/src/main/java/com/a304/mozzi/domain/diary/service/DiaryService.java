@@ -34,7 +34,7 @@ public class DiaryService {
     }
     public List<Diary> findByUser(UserModel user)
     {
-        return  diaryRepositoty.findByUser(user);
+        return  diaryRepositoty.findDiariesByUser(user);
     }
     public List<Diary> findByUserAndDiaryDate(Integer userId, String foodYear, String foodMonth){
         return diaryRepositoty.findByUserAndDiaryDate(userId, foodYear, foodMonth);
