@@ -27,7 +27,7 @@ const RecommendItemScreen = ({
   return (
     <>
       <Header>
-        <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
+        <Header.Icon iconName="arrow-back" onPress={navigation.goBack} />
       </Header>
       <Container>
         <TextContainer>

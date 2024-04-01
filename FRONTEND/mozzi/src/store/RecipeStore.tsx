@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 const useRecipeStore = create((set) => ({
   
   recipeData: [],
+  worldcupData: [],
   recipeDetailData: [],
   ingredientData: [],
 
@@ -38,6 +39,15 @@ const useRecipeStore = create((set) => ({
 
   //////// 월드컵 관련 axios ////////
   // 월드컵 음식 선호도 업데이트 함수
+  getWorldcupRecipe: async () => {
+    try {
+      const response = await axios.get('recommend/datas/random_food/')
+      set({ worldcupData: response.data.data.foods });
+    } catch (error) {
+      console.error('월드컵용 레시피 데이터 가져오기 실패:', error);
+    }
+  },
+
   updatePreferences: async (foodPreferences) => {
     const token = await AsyncStorage.getItem('accessToken');
     console.log(token)
@@ -64,23 +74,6 @@ const useRecipeStore = create((set) => ({
       console.error('음식 선호도 업데이트 중 오류가 발생했습니다:', error);
     }
   },
-
-  getIngredient: async () => {
-    const token = await AsyncStorage.getItem('accessToken')
-    try {
-      const response = await axios.get('recommend/datas/get_ingredient_list/',
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          },
-        }
-      )
-      set({ ingredientData: response.data.data.ingredients })
-      console.log( response.data.data ,'재료 데이터 얻기 성공')
-    } catch (error) {
-      console.error('레시피 상세 데이터 얻기 실패:', error)
-    }
-  }
 
 }))
 

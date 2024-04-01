@@ -1,15 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ScrollView, Keyboard, Platform, Text, Alert } from 'react-native';
+import { ScrollView, Keyboard, Platform, Text, Alert, Touchable } from 'react-native';
 import styled from 'styled-components/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-
 import { useNavigation } from '@react-navigation/native';
 
+import FridgeOCR from './FridgeOCR';
 import { Header } from '../../components/Header/Header';
 import { SearchFood } from '../../components/AutoWord/SearchFood';
 import useFridgeStore from '../../store/FridgeStore';
 import note from '../../assets/fridge/note.png';
 import clip from '../../assets/fridge/clip.png';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 interface FoodItem {
   food: string;
@@ -87,7 +88,7 @@ const SendButton = styled.TouchableOpacity`
   top: 12;
   right: 30;
   bottom: 0; 
-`; 
+`;
 
 const FridgeDetailScreen = ({ route }) => {
   const [text, setText] = useState<FoodItem | null>(null);
@@ -141,10 +142,16 @@ const FridgeDetailScreen = ({ route }) => {
     getMyFoods(storedPos);
   };
 
+  // OCR 관련
+  const handleOcrResult = (text) => {
+    // 처리된 OCR 텍스트를 상태로 설정
+    setText(text);
+  };
+
   return (
     <Container behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Header>
-        <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
+        <Header.Icon iconName="arrow-back" onPress={navigation.goBack} />
       </Header>
 
       {!keyboardOpen && ( // 키보드가 열려있지 않을 때만 노트와 그 내용을 렌더링
@@ -176,7 +183,16 @@ const FridgeDetailScreen = ({ route }) => {
         </Note>
       )}
 
+      {/* 키보드가 열릴 때만 OCR 기능 활성화 버튼을 표시 */}
+      
+
       <InputContainer>
+        {keyboardOpen && (
+          <FridgeOCR 
+            onOcrComplete={handleOcrResult} 
+          />
+        )}
+        
         <SearchFood
           data={allFoods}
           setQuery={setText}
