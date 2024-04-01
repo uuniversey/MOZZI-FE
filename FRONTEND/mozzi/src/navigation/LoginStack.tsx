@@ -2,7 +2,7 @@ import React from 'react'
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 
 import LandingScreen from '../screens/landing/LandingScreen'
-import LandingInputScreen from '../screens/landing/LandingInputScreen'
+import InputScreen from '../screens/landing/LandingInputScreen'
 
 const Stack = createStackNavigator()
 
@@ -16,7 +16,7 @@ function LoginStack() {
     >
       {/* <Stack.Screen name="TestLogin" component={TestLogin} /> */}
       <Stack.Screen name="Landing" component={LandingScreen} />
-      <Stack.Screen name="LandingInput" component={LandingInputScreen} />
+      <Stack.Screen name="LandingInput" component={InputScreen} />
     </Stack.Navigator>
   )
 }

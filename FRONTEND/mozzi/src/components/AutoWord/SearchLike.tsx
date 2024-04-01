@@ -1,22 +1,66 @@
 import React, { useEffect, useState } from 'react'
 import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'react-native'
-import Icon from 'react-native-vector-icons/MaterialIcons'
 import Autocomplete from 'react-native-autocomplete-input'
 import styled from 'styled-components/native'
 
+import useProfileStore from '../../store/ProfileStore'
 
-const StyledView = styled.View`
+const Container = styled(View)`
   width: 100%;
-  height: 50px;
+  max-height: 20%;
+  flex-direction: row;
+  align-items: center;
+  margin: 10px 0px 5px 0px;
+  background-color: ${(props) => props.theme.palette.background};
+`
+
+const CustomAutoComplete = styled(Autocomplete)`
+  background-color: ${(props) => props.theme.palette.background};
+`
+
+const IngreList = styled(View)`
+  width: 100%;
   flex-direction: row;
   padding-left: 5px;
   align-items: center;
   margin-top: 5px;
 `
 
-export const SearchBar = ({ data, onSelect }) => {
+const EmptySearchResults = styled(View)`
+  align-items: center;
+  justify-content: center;
+`
 
-  const [ tmpData, setTmpData ] = useState([])
+const JustifyView = styled(View)`
+  flex-direction: row;
+  align-items: center;
+`
+
+const SelectedStyle = styled(View)`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-top: 8px;
+  margin-right: 12px;
+  border-radius: 14px;
+  background-color: #F9F7BB;
+`
+
+const TextSelectedStyle = styled(Text)`
+  font-size: 16px;
+  font-family: ${(props) => props.theme.fonts.content};
+  color: ${(props) => props.theme.palette.font};
+`
+
+export const SearchBar = ({ data, onSelect, flag }) => {
+  const { profileData } = useProfileStore()
+  const [ tmpData, setTmpData ] = useState(
+    profileData.foods && profileData.foods.length > 0
+    ? profileData.foods
+      .filter(food => food.isLike === flag)
+      .map(food => food.ingredientName)
+      : []
+    )
   const [ searchQuery, setSearchQuery ] = useState('')
   const [ filteredData, setFilteredData ] = useState([])
   const [ recipeName, setRecipeName ] = useState('')
@@ -31,9 +75,9 @@ export const SearchBar = ({ data, onSelect }) => {
 
   const handleSelect = (item) => {
     setTmpData(prev => [...prev, item])
+    setSearchQuery('')
     setRecipeName(item)
     handleAutoComplete(item)
-    setSearchQuery(item)
     setFilteredData([])
   }
 
@@ -43,90 +87,41 @@ export const SearchBar = ({ data, onSelect }) => {
   }, [tmpData])
 
   return (
-    <View style={styles.searchSection}>
-      <View style={styles.InputSection}>
-        <Autocomplete
-          data={filteredData}
-          onChangeText={handleAutoComplete}
-          inputContainerStyle={styles.input}
-          flatListProps={{
-            renderItem: ({ item }: { item: FoodItem }) => (
-              <TouchableOpacity
-                style={styles.listButton}
-                onPress={() => {handleSelect(item)}}>
-                <StyledView>
-                  <Text>{item}</Text>
-                </StyledView>
-              </TouchableOpacity>
-            ),
-            scrollEnabled: true,
-            style: { ...styles.list, ...styles.shadow },
-          }}
-        />
-          {filteredData.length === 0 && searchQuery.length > 0 && recipeName !== searchQuery && (
-            <View style={styles.emptySearchResults}>
-              <Text>검색 결과가 없습니다.</Text>
-            </View>
-          )}
-      </View>
+    <>
+    <Container>
+      <CustomAutoComplete
+        data={filteredData}
+        onChangeText={handleAutoComplete}
+        flatListProps={{
+          renderItem: ({ item }: { item: FoodItem }) => (
+            <TouchableOpacity
+              onPress={() => {handleSelect(item)}}>
+              <IngreList>
+                <Text>{item}</Text>
+              </IngreList>
+            </TouchableOpacity>
+          ),
+          scrollEnabled: true,
+        }}
+      />
+    </Container>
+    <View>
+      {filteredData.length === 0 && searchQuery.length > 0 && recipeName !== searchQuery && (
+        <EmptySearchResults>
+          <Text>검색 결과가 없습니다.</Text>
+        </EmptySearchResults>
+      )}
+
+      <JustifyView>
+        {tmpData.map((item, index)=>(
+          <TouchableOpacity key={index} onPress={() => setTmpData(tmpData.filter(data => data !== item))}>
+            <SelectedStyle>
+              <TextSelectedStyle>{item}</TextSelectedStyle>
+            </SelectedStyle>
+          </TouchableOpacity>
+        ))}
+      </JustifyView>
     </View>
+  </>
   )
 }
-
-const styles = StyleSheet.create({
-  searchSection: {
-    marginTop: 10,
-    width: 350,
-    height: 50,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: '#E4E196',
-    borderRadius: 8,
-    paddingLeft: 10,
-    marginBottom: 15,
-  },
-  InputSection: {
-    position: 'absolute',
-    top: 4,
-    left: 35,
-    width: 327,
-  },
-  searchIcon: {
-    marginRight: 10,
-  },
-  input: {
-    flex: 1,
-    width: 300,
-    backgroundColor: '#fff',
-    borderWidth: 0,
-    borderColor: 'transparent',
-  },
-  list: {
-    position: 'absolute',
-    top: -2,
-    left: -6,
-    right: 0,
-    backgroundColor: 'white',
-    borderWidth: 0,
-    borderColor: 'transparent',
-    maxHeight: 220,
-    zIndex: 25,
-  },
-  listButton: {
-    flexDirection: 'row',
-  },
-  shadow: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-    elevation: 5,
-  },
-  emptySearchResults: {
-    alignItems: 'center', // 메시지를 중앙 정렬
-    justifyContent: 'center',
-    padding: 10, // 적당한 패딩
-  },
-})
