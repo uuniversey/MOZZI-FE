@@ -69,7 +69,7 @@ public class LinkedList {
             values.set(userId + ":LinkedList:Diary:Node:" + Id, Value);
             Length++;
             values.set(userId + ":LinkedList:Diary:meta:Length", Length.toString());
-            
+
             this.pushTail(userId, Id);
         }
         else
