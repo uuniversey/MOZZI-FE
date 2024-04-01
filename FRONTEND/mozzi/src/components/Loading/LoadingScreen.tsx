@@ -19,8 +19,8 @@ const LoadingText = styled(Text)`
   font-family: ${(props) => props.theme.fonts.content};
 `;
 
-const LoadingScreen = ({ recipeDataLength }) => {
-  if (recipeDataLength === 0) {
+const LoadingScreen = ({ dataLength }) => {
+  if (dataLength === 0) {
     return (
       <LoadingContainer>
         <Dice />

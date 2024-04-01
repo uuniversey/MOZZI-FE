@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import useLoginStore from '../../store/LoginStore'
 import useProfileStore from '../../store/ProfileStore'
 import FloatingBalloon from '../../components/Animation/FloatingBallon'
+import useRecipeStore from '../../store/RecipeStore'
 
 interface RecipeItem {
   foodName: string
@@ -105,6 +106,8 @@ function MainScreen() {
   const [recipe, setRecipe] = useState<RecipeItem | null>(null)
   const { userData } = useLoginStore()
   const { profileData } = useProfileStore()
+  const { getRecipeDetail } = useRecipeStore()
+
   // 로그인 유저 호출
   // 최다 뷰카운트 호출
   const popularRecipe = async () => {
@@ -130,6 +133,9 @@ function MainScreen() {
 
 
   const moveRecipeDetail = () => {
+    if (recipe) {
+      getRecipeDetail(recipe.foodName)
+    }
     navigation.navigate("Recipe")
   }
 
