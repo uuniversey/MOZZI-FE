@@ -9,7 +9,6 @@ const OCRButton = styled(TouchableOpacity)`
   margin-top: 70px;
   background-color: ${(props) => props.theme.palette.point};
   border-radius: 10px;
-  width: 70px;
   padding: 5px;
   align-items: center;
   align-self: flex-end;

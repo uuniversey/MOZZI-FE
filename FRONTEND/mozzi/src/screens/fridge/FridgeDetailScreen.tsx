@@ -4,7 +4,7 @@ import styled from 'styled-components/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 
-import FridgeOCR from './FridgeOcr';
+import FridgeOCR from './FridgeOCR';
 import { Header } from '../../components/Header/Header';
 import { SearchFood } from '../../components/AutoWord/SearchFood';
 import useFridgeStore from '../../store/FridgeStore';
@@ -192,6 +192,7 @@ const FridgeDetailScreen = ({ route }) => {
             onOcrComplete={handleOcrResult} 
           />
         )}
+        
         <SearchFood
           data={allFoods}
           setQuery={setText}
