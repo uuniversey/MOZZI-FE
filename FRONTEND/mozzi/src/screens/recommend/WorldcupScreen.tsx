@@ -117,7 +117,9 @@ function WorldcupScreen() {
   return (
     <Container>
       {worldcupData && worldcupData.length === 0 ? ( // worldcupData가 정의되어 있는지와 비어 있는지 확인
-        <LoadingScreen />
+        <LoadingScreen 
+          dataLength={worldcupData.length}
+        />
       ) : (
         <>
           <TextContainer>

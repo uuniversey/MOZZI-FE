@@ -49,15 +49,16 @@ function ProfileScreen () {
   const [ isEdit, setIsEdit ] = useState<boolean>(false)
 
 
-  useLayoutEffect (() => {
+  useLayoutEffect(() => {
     getProfile()
+
   }, [isEdit])
  
-  const handleIsEdit = () => {
+  const handleIsEdit = async () => {
     if (isEdit) {
-      editNickname(form.nickname)
-      editIsVegan(Boolean(isVeganData))
-      editFoodInfo(foodInfo)
+      await editNickname(form.nickname)
+      await editIsVegan(Boolean(isVeganData))
+      await editFoodInfo(foodInfo)
     }
     setIsEdit(!isEdit)
   }
