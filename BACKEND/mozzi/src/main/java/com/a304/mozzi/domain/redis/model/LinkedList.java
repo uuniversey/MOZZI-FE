@@ -22,7 +22,7 @@ public class LinkedList {
     public void createUserCache(String userId)
     {
         log.info(userId);
-        Set<String> keyToDelete = redisTemplate.keys(userId);
+        Set<String> keyToDelete = redisTemplate.keys(userId + ":LinkedList*");
         log.info(keyToDelete.toString());
         if (keyToDelete != null && !keyToDelete.isEmpty())
         {
@@ -79,6 +79,12 @@ public class LinkedList {
         }
     }
 
+    public void Debuging(Integer userId)
+    {
+        ValueOperations<String, Object> values = redisTemplate.opsForValue();
+        String Head = values.get(userId + ":LinkedList:Diary:Head").toString();
+        while ()
+    }
     public void pushTail(String userId, String Id)
     {
         ValueOperations<String, Object> values = redisTemplate.opsForValue();
