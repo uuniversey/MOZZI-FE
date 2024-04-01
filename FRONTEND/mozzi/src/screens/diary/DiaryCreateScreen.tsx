@@ -277,7 +277,7 @@ function DiaryCreateScreen () {
           }}
         />
         <EnterContainer>
-        <SmallButton 
+          <LongButton 
             onPress={handleCreateDiaryPress}
             text="등록"
             disabled={!isButtonEnabled}

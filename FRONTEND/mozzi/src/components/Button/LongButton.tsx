@@ -6,7 +6,7 @@ import styled from 'styled-components/native'
 const ButtonContainer = styled(TouchableOpacity)`
   width: 100%;
   height: 60px;
-  background-color: ${(props) => props.theme.palette.point};
+  background-color: ${(props) => props.disabled ? props.theme.palette.light : props.theme.palette.point};
   border-radius: 20px;
   justify-content: center;
   align-items: center;
@@ -23,9 +23,9 @@ const ButtonText = styled(Text)`
   color: ${(props) => props.theme.palette.font};
 `;
 
-const LongButton = ({ text, iconName, iconSize, onPress, style }) => {
+const LongButton = ({ text, iconName, iconSize, onPress, disabled, style }) => {
   return (
-    <ButtonContainer onPress={onPress} style={style}>
+    <ButtonContainer onPress={onPress} disabled={disabled} style={style}>
       {iconName && <StyledIcon name={iconName} size={iconSize || 20} />}
       <ButtonText>  
         {text}
