@@ -241,7 +241,7 @@ public class UserController {
             for (UserIngredientModel userIngredientModel : userIngredientModels)
             {
                 log.info(userIngredientModel.getIngredients().getIngredientName() + "입니다");
-                UserIngredientDto userIngredientDto = UserIngredientDto.builder().ingredientName(userIngredientModel.getIngredients().getIngredientName()).isLike(userIngredientModel.getIsLike()).build();
+                UserIngredientDto userIngredientDto = UserIngredientDto.builder().ingredientName(userIngredientModel.getIngredients().getIngredientName()).isLike(userIngredientModel.getIsLike()).mainAllergy(userIngredientModel.getMainAllergy()).build();
                 userIngredientDtoList.add(userIngredientDto);
             }
             UserProfileDto userProfileDto = UserProfileDto.builder().id(user.getUserId()).isVegan(user.getUserIsvegan()).nickname(user.getUserNickname()).foods(userIngredientDtoList).build();
@@ -327,6 +327,7 @@ public class UserController {
                                 .user(user)
                                 .ingredients(ingredientsModel)
                                 .isLike(userFoodInpDto.getValue())
+                                .mainAllergy(userFoodInpDto.getFoodName())
                                 .build();
                         //                UserFood userFood = UserFood.builder()
                         //                        .food(food)

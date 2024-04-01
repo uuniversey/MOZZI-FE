@@ -28,12 +28,12 @@ public class AllergicComponent {
             case 1:
                 if (ingredient.equals("난류"))
                 {
-                    CategoryModel categoryModel = categoryService.getCategoryModelById(1);
+                    CategoryModel categoryModel = categoryService.getCategoryModelById(2);
                     return ingredientsService.findIngredientsModelByCategory(categoryModel);
                 }
                 else if (ingredient.equals("우유"))
                 {
-                    CategoryModel categoryModel = categoryService.getCategoryModelById(2);
+                    CategoryModel categoryModel = categoryService.getCategoryModelById(5);
                     return ingredientsService.findIngredientsModelByCategory(categoryModel);
                 }
                 else
