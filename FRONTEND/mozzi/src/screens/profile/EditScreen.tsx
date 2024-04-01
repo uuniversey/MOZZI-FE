@@ -11,15 +11,17 @@ import useFridgeStore from '../../store/FridgeStore'
 
 const Label = styled(Text)`
   margin-top: 30px;
+  font-size: 16;
   font-family: ${(props) => props.theme.fonts.content};
   color: ${(props) => props.theme.palette.font};
 `
 
 const StyledInput = styled(TextInput)`
+  font-size: 16;
   height: 40px;
   margin: 10px 0px 10px 0px;
   border-bottom-width: 1px;
-  border-bottom-color: silver;
+  border-bottom-color: ${(props) => props.theme.palette.light};
 `
 
 function EditScreen() {

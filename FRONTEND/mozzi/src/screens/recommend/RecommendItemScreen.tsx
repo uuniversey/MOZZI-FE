@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import { useNavigation } from '@react-navigation/native'
 import { Header } from '../../components/Header/Header'
 import { Image, TouchableOpacity, View, Text } from 'react-native'
+import LongButton from '../../components/Button/LongButton'
 
 type Props = {
   date: string
@@ -42,12 +43,17 @@ const RecommendItemScreen = ({
             {/* <Icon name="timer" size={20} color="#000" />
             <TimeText>1시간</TimeText> */}
           </TimerContainer>
-          <RecipeButton onPress={onSharePress}>
-            <ButtonText>레시피 보러가기</ButtonText>
-          </RecipeButton>
-          <RetryButton onPress={onRetryPress}>
-            <ButtonText>다시 추천 받기</ButtonText>
-          </RetryButton>
+          <LongButton 
+            text="레시피 보러가기"
+            onPress={onSharePress}
+          />
+          <LongButton 
+            text="다시 추천 받기"
+            onPress={onRetryPress}
+            style={{
+              backgroundColor: '#e1dfd4'
+            }}
+          />
         </ButtonContainer>
       </Container>
     </>
@@ -70,7 +76,7 @@ const TextContainer = styled(View)`
 
 const DateText = styled(Text)`
   font-size: 24px;
-  color: #888;
+  color: ${(props) => props.theme.palette.gray};
   font-family: ${(props) => props.theme.fonts.content};
 `
 
@@ -100,7 +106,7 @@ const DishNameText = styled(Text).attrs({
 `
 
 const Line = styled(View)`
-  border-bottom-color: #000;
+  border-bottom-color: ${(props) => props.theme.palette.font};
   border-bottom-width: 2px;
   width: 70%;
   padding-left: 16px;
@@ -119,34 +125,6 @@ const TimerContainer = styled(View)`
 const ButtonContainer = styled(View)`
   flex-direction: column;
   width: 90%;
-`
-
-const RecipeButton = styled(TouchableOpacity)`
-  height: 60px;
-  background-color: ${(props) => props.theme.palette.point};
-  border-radius: 20px;
-  justify-content: center;
-  border-color: rgba(0, 0, 0, 0.2);
-  border-width: 1px;
-  elevation: 1;
-  margin-bottom: 15px;
-`
-
-const RetryButton = styled(TouchableOpacity)`
-  height: 60px;
-  background-color: ${(props) => props.theme.palette.background};
-  border-radius: 20px;
-  justify-content: center;
-  border-color: rgba(0, 0, 0, 0.2);
-  border-width: 1px;
-  elevation: 1;
-`
-
-const ButtonText = styled(Text)`
-  color: ${(props) => props.theme.palette.font};
-  text-align: center;
-  font-size: 16px;
-  font-family: ${(props) => props.theme.fonts.content};
 `
 
 export default RecommendItemScreen

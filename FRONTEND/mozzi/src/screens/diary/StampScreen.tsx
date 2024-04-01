@@ -4,6 +4,7 @@ import Share from 'react-native-share'
 import Snackbar from 'react-native-snackbar'
 import { CameraRoll } from '@react-native-camera-roll/camera-roll'
 import { captureRef } from 'react-native-view-shot'
+import LongButton from '../../components/Button/LongButton';
 import { Header } from '../../components/Header/Header'
 import styled from 'styled-components/native'
 
@@ -73,7 +74,7 @@ const Day = styled(Text)`
       case '화이트':
         return '12%';
       case '스페셜':
-        return '87%';
+        return '5%';
       default:
         return '12%';
     }
@@ -106,27 +107,25 @@ const FramesContainer = styled(View)`
 const FrameButton = styled.TouchableOpacity`
   background-color: ${(props) => props.theme.palette.pointDark};
   border-radius: 10px;
-  padding: 10px;
+  padding: 5px;
   width: 100px;
 `
 
 const FrameText = styled(Text)`
   color: ${(props) => props.theme.palette.font};
-  font-family: ${(props) => props.theme.fonts.title};
+  font-family: ${(props) => props.theme.fonts.content};
   text-align: center;
 `
 
 const ShareButton = styled(TouchableOpacity)`
+  height: 60px;
   width: 100%;
   border-radius: 20px;
   padding: 16px;
-  margin-top: 8px;
-  margin-bottom: 8px;
+  margin-top: 5px;
+  margin-bottom: 5px;
   align-items: center;
-  border-color: rgba(0, 0, 0, 0.2);
   background-color: ${(props) => props.theme.palette.point};;
-  border-width: 1px;
-  elevation: 1;
 `;
 
 const ShareButtonText = styled(Text)`
@@ -228,9 +227,11 @@ const Stamp = ({ navigation, route }) => {
 
       // 캡쳐된 이미지를 공유 옵션에 설정
       const shareOptions = {
-        title: '공유 프레임 선택하기',
+        title: '공유하기',
+        message: '모찌에서 레시피 구경할래?',
         url: uri,
       };
+  
 
       // 공유 실행
       const result = await Share.open(shareOptions)
@@ -274,12 +275,14 @@ const Stamp = ({ navigation, route }) => {
         </FramesContainer>
 
         {/* 이미지 공유하기 버튼 */}
-        <ShareButton onPress={shareEditedImg}>
-          <ShareButtonText>공유하기</ShareButtonText>
-        </ShareButton>
-        <ShareButton onPress={saveEditedImg}>
-          <ShareButtonText>저장하기</ShareButtonText>
-        </ShareButton>
+        <LongButton 
+          text="공유하기"
+          onPress={shareEditedImg}
+        />
+        <LongButton 
+          text="저장하기"
+          onPress={saveEditedImg}
+        />
       </Container>
     </>
   );
