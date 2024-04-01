@@ -74,9 +74,9 @@ function ProfileScreen () {
   const [ isEdit, setIsEdit ] = useState<boolean>(false)
   const [ foodInfo, setFoodInfo ] = useState(
   [
-    { foodName : "당근",
+    { foodName : "파마산치즈",
       "value" : 1},
-    { foodName : "토마토",
+    { foodName : "고추",
       "value" : 0},
     { foodName : "우유",
       "value" : 2},
@@ -89,8 +89,6 @@ function ProfileScreen () {
  
   const handleIsEdit = () => {
     if (isEdit) {
-      console.log('this is form', form)
-      // 입력 값으로 바꿔야 함
       editNickname(form.nickname)
       editIsVegan(Boolean(dropdownData))
       editFoodInfo(foodInfo)
@@ -112,27 +110,27 @@ function ProfileScreen () {
           <View>
             <Label>닉네임</Label>
             <StyledInput
-              placeholder={`${form.nickname}`}
+              placeholder={`${profileData.nickname}`}
               editable={false}
             />
             <Label>알레르기 정보</Label>
             <StyledInput
-              placeholder={`${form.foods}`}
+              placeholder={`${profileData.foods}`}
               editable={false}
             />
-            <Label>좋아하는 음식</Label>
+            <Label>좋아하는 식재료</Label>
             <StyledInput
-              placeholder={`${form.foods}`}
+              placeholder={`${profileData.foods}`}
               editable={false}
             />
-            <Label>싫어하는 음식</Label>
+            <Label>싫어하는 식재료</Label>
             <StyledInput
-              placeholder={`${form.foods}`}
+              placeholder={`${profileData.foods}`}
               editable={false}
             />
             <Label>비건 여부</Label>
             <StyledInput
-              placeholder={`${form.isVegan}`}
+              placeholder={`${(profileData.isVegan)? '네':'아니오'}`}
               editable={false}
             />
           </View>

@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Animated, Image } from 'react-native'
+import { View, Text, TouchableOpacity, Animated, Image, Easing } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import styled from 'styled-components/native'
@@ -15,15 +15,28 @@ const Container = styled(View)`
   background-color: ${(props) => props.theme.palette.background};
 `
 
+const IconContainer = styled(View)`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+`
+
+const Content = styled(View)`
+  display: flex;
+  justify-content: center;
+  width: 100%;
+`
+
 const Title = styled(Text)`
   font-size: 36px;
   align-self: center;
-  margin: 50px 0px 10px 0px;
+  margin: 20px 0px 10px 0px;
   font-family: ${(props) => props.theme.fonts.title};
   color: ${(props) => props.theme.palette.font}; 
 `
 
 const Order = styled(Text)`
+  padding: 0 50px 0 50px;
   font-size: 20px;
   align-self: center;
   margin: 0px 0px 20px 0px;
@@ -35,9 +48,9 @@ const Body = styled(View)`
   align-self: center;
   align-items: center;
   justify-content: center;
-  width: 350px;
-  height: 350px;
-  border-radius: 20px;
+  width: 330px;
+  height: 330px;
+  border-radius: 10px;
   background-color: ${(props) => props.theme.palette.point};
 `
 
@@ -48,6 +61,16 @@ const FoodImage = styled(Image)`
 `
 
 const Tip = styled(Text)`
+  padding: 0 50px 0 50px;
+  font-size: 14px;
+  align-self: center;
+  margin: 20px 0px 20px 0px;
+  font-family: ${(props) => props.theme.fonts.content};
+  color: ${(props) => props.theme.palette.font};
+`
+
+const EndingText = styled(Text)`
+  padding: 0 50px 0 50px;
   font-size: 14px;
   align-self: center;
   margin: 20px 0px 20px 0px;
@@ -80,7 +103,8 @@ function RecipeScreen () {
   const [ idx, setIdx ] = useState(1)
   const [ strIdx, setStrIdx ] = useState('01')
   const [ isLast, setIsLast ] = useState(false)
-
+  const [ isOpen, setIsOpen ] = useState(false)
+  const [tipHeight, setTipHeight] = useState(new Animated.Value(0))
   const [translateY, setTranslateY] = useState(new Animated.Value(0))
   const [lastTranslateY, setLastTranslateY] = useState(0) // 마지막 translationY 값을 저장할 상태
 
@@ -121,7 +145,25 @@ function RecipeScreen () {
     }
   }
 
-  // !!!!참고!!!! 렌더링 문제 해결 솔루션 - 뎁스를 하나 더 들어가서 한다.
+  // "다음" 명령 처리
+  const handleNext = () => {
+    const nextIdx = (parseInt(strIdx) + 1).toString().padStart(2, '0')
+    if (recipeDetailData[`MANUAL${nextIdx}`]) {
+      setIdx(prevIdx => prevIdx + 1)
+      setStrIdx(nextIdx)
+    }
+  }
+
+  // "이전" 명령 처리
+  const handlePrev = () => {
+    const prevIdx = (parseInt(strIdx) - 1).toString().padStart(2, '0')
+    if (prevIdx !== '00') {
+      setIdx(prevIdx => prevIdx - 1)
+      setStrIdx(prevIdx)
+    }
+  }
+
+  /// 렌더링 문제 해결 솔루션 - 뎁스를 하나 더 들어가서 한다.
   const moveOrder = () => {
     setIdx(prevIdx => {
       const nextIdx = prevIdx + 1
@@ -131,6 +173,7 @@ function RecipeScreen () {
     })
   }
   
+  // 끝에 도착하면 화살표 없애기
   useEffect(() => {
     const nextIdx = (parseInt(strIdx)+1).toString().padStart(2, '0')
     if (recipeDetailData[`MANUAL${nextIdx}`] === "" || nextIdx == '21')
@@ -141,14 +184,25 @@ function RecipeScreen () {
     }
   }, [strIdx])
   
+  const handleIsOpen = () => {
+    setIsOpen(!isOpen)
+  }
+
+  // isOpen 상태가 변경될 때마다 애니메이션 실행
+  useEffect(() => {
+    Animated.timing(tipHeight, {
+      toValue: isOpen ? 150 : 0, // isOpen이 true면 높이를 150으로, false면 0으로 변경
+      duration: 500, // 애니메이션 지속 시간
+      useNativeDriver: false, // 높이 변경은 네이티브 드라이버를 사용하지 않음
+      easing: Easing.inOut(Easing.ease), // 시작과 끝에서 부드럽게
+    }).start()
+  }, [isOpen, tipHeight])
+
   return (
     <Container>
       <Header>
         <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
       </Header>
-      
-      <SpeechToText />
-      <TextToSpeech text={recipeDetailData[`MANUAL${strIdx}`]} />
 
       <GestureHandlerRootView>
         <PanGestureHandler
@@ -159,7 +213,11 @@ function RecipeScreen () {
               transform: [{ translateY: translateY }],
             }}>
             
-            <View>
+            <Content>
+            <IconContainer>
+              <SpeechToText onNext={handleNext} onPrev={handlePrev} />
+              <TextToSpeech text={recipeDetailData[`MANUAL${strIdx}`]} />        
+            </IconContainer>
               <Title>{recipeDetailData.RCP_NM}</Title>
               <Line />
               <Order>{recipeDetailData[`MANUAL${strIdx}`]}</Order>
@@ -168,14 +226,23 @@ function RecipeScreen () {
                   source={{ uri: recipeDetailData[`MANUAL_IMG${strIdx}`] }}
                 />
               </Body>
-              <Tip>TIP: {recipeDetailData.RCP_NA_TIP}</Tip>
-              {isLast ? 
-                '' :
+              {isOpen ? (
+                  <Animated.View style={{height: tipHeight}}>
+                    <Tip onPress={handleIsOpen}>TIP: {recipeDetailData.RCP_NA_TIP}</Tip>
+                  </Animated.View>
+                ) : (
+                  <Tip onPress={handleIsOpen}>TIP</Tip>
+                )
+              }
+              {isLast ? ( 
+                <EndingText>레시피의 마지막 순서입니다.</EndingText> 
+                ) : (
                 <Btn onPress={moveOrder}>
                   <Icon name="keyboard-double-arrow-down" size={50} color="silver" />
-                </Btn> 
+                </Btn>
+                ) 
               }
-            </View>
+            </Content>
           
           </Animated.View>
         </PanGestureHandler>
@@ -185,54 +252,3 @@ function RecipeScreen () {
 }
 
 export default RecipeScreen
-
-
-const dummyData = {
-  "RCP_PARTS_DTLS": "고구마(50g), 바나나(17g), 달걀(1개),\n크림치즈(10g), 우유(20g), 생크림(25g),\n딸기잼(15g), 젤라틴(8g), 바닐라빈(1g),\n올리고당(2g)",
-  "RCP_PAT2": "후식",
-  "RCP_NM": "뼈해장국",
-  "ATT_FILE_NO_MK": "http://www.foodsafetykorea.go.kr/uploadimg/cook/10_01097_1.png",
-  "ATT_FILE_NO_MAIN": "http://www.foodsafetykorea.go.kr/uploadimg/cook/10_01097_2.png",
-  "RCP_NA_TIP": " 뼈해장국은 고구마 바나나 무스로 변화할 수 있어요",
-  "MANUAL_IMG01": "http://www.foodsafetykorea.go.kr/uploadimg/cook/20_01097_1.JPG",
-  "MANUAL_IMG02": "http://www.foodsafetykorea.go.kr/uploadimg/cook/20_01097_2.JPG",
-  "MANUAL_IMG03": "http://www.foodsafetykorea.go.kr/uploadimg/cook/20_01097_3.JPG",
-  "MANUAL_IMG04": "http://www.foodsafetykorea.go.kr/uploadimg/cook/20_01097_4.JPG",
-  "MANUAL_IMG05": "http://www.foodsafetykorea.go.kr/uploadimg/cook/20_01097_5.JPG",
-  "MANUAL_IMG06": "http://www.foodsafetykorea.go.kr/uploadimg/cook/20_01097_6.JPG",
-  "MANUAL_IMG07": "",
-  "MANUAL_IMG08": "",
-  "MANUAL_IMG09": "",
-  "MANUAL_IMG10": "",
-  "MANUAL_IMG11": "",
-  "MANUAL_IMG12": "",
-  "MANUAL_IMG13": "",
-  "MANUAL_IMG14": "",
-  "MANUAL_IMG15": "",
-  "MANUAL_IMG16": "",
-  "MANUAL_IMG17": "",
-  "MANUAL_IMG18": "",
-  "MANUAL_IMG19": "",
-  "MANUAL_IMG20": "",
-
-  "MANUAL01": "1. 삶아 으깬 고구마와 으깬\n바나나를 섞는다.",
-  "MANUAL02": "2. 볼에 달걀노른자, 올리고당,\n우유, 바닐라빈을 넣고 중탕시켜\n걸쭉하게 만든 뒤 1번과 섞는다.",
-  "MANUAL03": "3. 2번에 휘핑한 생크림을 넣고 섞은\n뒤 젤라틴을 넣는다.",
-  "MANUAL04": "4. 딸기잼에 우유를 넣고 끓여\n젤리를 만든다.",
-  "MANUAL05": "5. 무스 틀에 3번과 딸기잼 젤리를\n차곡차곡 넣어 굳힌다.",
-  "MANUAL06": "6. 굳힌 무스위에 크림치즈를\n올린다.",
-  "MANUAL07": "",
-  "MANUAL08": "",
-  "MANUAL09": "",
-  "MANUAL10": "",
-  "MANUAL11": "",
-  "MANUAL12": "",
-  "MANUAL13": "",
-  "MANUAL14": "",
-  "MANUAL15": "",
-  "MANUAL16": "",
-  "MANUAL17": "",
-  "MANUAL18": "",
-  "MANUAL19": "",
-  "MANUAL20": "",
-}

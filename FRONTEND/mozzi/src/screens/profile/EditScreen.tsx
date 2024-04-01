@@ -1,12 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useLayoutEffect } from 'react'
 import { View, Text, TextInput, Button } from 'react-native'
 import styled from 'styled-components/native'
 
 import CustomDropdown from '../../components/Dropdown/CustomDropdown'
-import {SearchFood} from '../../components/AutoWord/SearchFood'
+import { SearchBar } from '../../components/AutoWord/SearchLike'
 
 import useProfileStore from '../../store/ProfileStore'
-import useFridgeStore from '../../store/FridgeStore'
+import useRecipeStore from '../../store/RecipeStore'
+import useDropdownStore from '../../store/DropdownStore'
 
 const Label = styled(Text)`
   margin-top: 30px;
@@ -22,16 +23,53 @@ const StyledInput = styled(TextInput)`
 `
 
 function EditScreen() {
-  const { form, setForm } = useProfileStore()
-  const { allFoods } = useFridgeStore()
+  const { profileData, form, setForm } = useProfileStore()
+  const { ingredientData, getIngredient } = useRecipeStore()
+  const { dropdownData } = useDropdownStore()
 
-  const [text, setText] = useState('')
+  const [ likeData, setLikeData ] = useState([])
+  const [ unlikeData, setUnlikeData ] = useState([])
+
+  useEffect(() => {
+    const formatData = (data, value) => 
+    Array.isArray(data) ? data.map(foodName => ({ foodName, value })) : []
+    
+    const formattedData = [
+      ...formatData(unlikeData, 0),
+      ...formatData(likeData, 1),
+      ...formatData(dropdownData, 2),
+    ]
+
+    console.log(formattedData, '내가 원하던 데이터 드디어 완성')
+
+  }, [unlikeData, likeData, dropdownData])
+
+
+  const handleLikeData = (recipeName: string) => {
+    console.log('좋아하는 재료', recipeName)
+    setLikeData(recipeName)
+  }
+
+  const handleUnlikeData = (recipeName: string) => {
+    console.log('싫어하는 재료', recipeName)
+    setUnlikeData(recipeName)
+  }
 
   const handleNicknameChange = (nickname: string) => setForm({ ...form, nickname })
-  const handleAllergyInfoChange = (allergyInfo: string) => setForm({ ...form, allergyInfo })
-  const handleFavoriteFoodChange = (favoriteFood: string) => setForm({ ...form, favoriteFood })
-  const handleDislikedFoodChange = (dislikedFood: string) => setForm({ ...form, dislikedFood })
-  const handleIsVeganChange = (isVegan: string) => setForm({ ...form, isVegan })
+  // const handleAllergyInfoChange = (allergyInfo: string) => setForm({ ...form, allergyInfo })
+  // const handleFavoriteFoodChange = (favoriteFood: string) => setForm({ ...form, favoriteFood })
+  // const handleDislikedFoodChange = (dislikedFood: string) => setForm({ ...form, dislikedFood })
+  // const handleIsVeganChange = (isVegan: string) => setForm({ ...form, isVegan })
+
+  // [
+  //   { foodName : "당근",
+  //     "value" : 1},
+  //   { foodName : "토마토",
+  //     "value" : 0},
+  //   { foodName : "우유",
+  //     "value" : 2},
+  // ]
+
 
   return (
     <View>
@@ -51,18 +89,10 @@ function EditScreen() {
       />
 
       <Label>좋아하는 식재료</Label>
-      <CustomDropdown
-        data={allFoods}
-        placeholder="좋아하는 식재료를 입력하세요" 
-        isMulti={true}
-      />
+      <SearchBar data={ingredientData} onSelect={handleLikeData}/>
 
       <Label>싫어하는 식재료</Label>
-            <CustomDropdown
-        data={allFoods}
-        placeholder="싫어하는 식재료를 입력하세요"
-        isMulti={true}
-      />
+      <SearchBar data={ingredientData} onSelect={handleUnlikeData}/>
 
       <Label>비건 여부</Label>
       <CustomDropdown
@@ -76,28 +106,29 @@ function EditScreen() {
 
 export default EditScreen
 
+
+// 이 밑에 더미데이터 아님 절대 지우면 안돼
 const allergyList = [
-  { label: '난류', value: 'egg' },
-  { label: '우유', value: 'milk' },
-  { label: '메밀', value: 'buckwheat' },
-  { label: '땅콩', value: 'peanut' },
-  { label: '대두', value: 'soy' },
-  { label: '밀', value: 'wheat' },
-  { label: '고등어', value: 'mackerel' },
-  { label: '새우', value: 'shrimp' },
-  { label: '게', value: 'crab' },
-  { label: '돼지고기', value: 'pork' },
-  { label: '복숭아', value: 'peach' },
-  { label: '토마토', value: 'tomato' },
-  { label: '아황산류', value: 'sulfites' },
-  { label: '호두', value: 'walnut' },
-  { label: '닭고기', value: 'chicken' },
-  { label: '쇠고기', value: 'beef' },
-  { label: '오징어', value: 'squid' },
-  { label: '굴', value: 'oyster' },
-  { label: '전복', value: 'abalone' },
-  { label: '홍합', value: 'mussel' },
-  { label: '잣', value: 'pine_nut' }
+  { label: '난류', value: '난류' },
+  { label: '우유', value: '우유' },
+  { label: '메밀', value: '메밀' },
+  { label: '땅콩', value: '땅콩' },
+  { label: '대두', value: '대두' },
+  { label: '밀', value: '밀' },
+  { label: '고등어', value: '고등어' },
+  { label: '새우', value: '새우' },
+  { label: '게', value: '게' },
+  { label: '돼지고기', value: '돼지고기' },
+  { label: '복숭아', value: '복숭아' },
+  { label: '토마토', value: '토마토' },
+  { label: '호두', value: '호두' },
+  { label: '닭고기', value: '닭고기' },
+  { label: '쇠고기', value: '쇠고기' },
+  { label: '오징어', value: '오징어' },
+  { label: '굴', value: '굴' },
+  { label: '전복', value: '전복' },
+  { label: '홍합', value: '홍합' },
+  { label: '잣', value: '잣' }
 ]
 
 const isYes = [

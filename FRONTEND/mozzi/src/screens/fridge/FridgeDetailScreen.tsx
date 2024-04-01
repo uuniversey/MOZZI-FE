@@ -27,16 +27,17 @@ const ClipImg = styled.Image`
 `;
 
 const NoteImg = styled.Image`
-  height: ${({ keyboardOpen }) => (keyboardOpen ? '300px' : '460px')};
+  width: 98%;
+  /* height: ${({ keyboardOpen }) => (keyboardOpen ? '300px' : '460px')}; */
   box-shadow: 5px 5px 5px gray;
 `;
 
 const Note = styled.View`
-  padding-top: 50px;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
+  padding: 50px 16px 0 16px;
 `;
 
 const TitleContainer = styled.View`
@@ -63,13 +64,14 @@ const InputContainer = styled.View`
   margin-top: ${({ keyboardOpen }) => (keyboardOpen ? '200px' : '30px')};
   width: 100%;
   align-items: center;
+  padding: 0 16px 0 16px;
 `;
 
 const MyFood = styled.ScrollView`
   position: absolute;
   top: 200;
-  width: 280px;
-  height: 280px;
+  width: 70%;
+  height: 70%;
 `;
 
 const MyFoodText = styled(Text)`
@@ -83,9 +85,8 @@ const DeleteButton = styled.TouchableOpacity`
 const SendButton = styled.TouchableOpacity`
   position: absolute;
   top: 12;
-  right: 32;
-  bottom: 0;
-  padding: 0 10px;
+  right: 30;
+  bottom: 0; 
 `; 
 
 const FridgeDetailScreen = ({ route }) => {
@@ -150,7 +151,13 @@ const FridgeDetailScreen = ({ route }) => {
               {name}
             </MenuItem>
           </TitleContainer>
-          <MyFood ref={scrollViewRef}>
+          <MyFood 
+            contentContainerStyle={{
+              justifyContent: 'center', // 세로 방향으로 중앙 정렬
+              alignItems: 'center', // 가로 방향으로 중앙 정렬
+            }}
+            ref={scrollViewRef}
+          >
             {savedFoods.map((item, index) => (
               <MyFoodText key={index}>
                 {item.foodName}

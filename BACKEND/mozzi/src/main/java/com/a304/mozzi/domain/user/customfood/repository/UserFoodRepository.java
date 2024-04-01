@@ -22,4 +22,5 @@ public interface UserFoodRepository extends JpaRepository<UserFood, Integer> {
             "where user.user_id = :userId", nativeQuery = true)
     public void createWholeRelation(@Param("userId") Integer userId);
 
+    UserFood findUserFoodByUserAndFood(UserModel user, Food food);
 }

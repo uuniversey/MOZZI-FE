@@ -17,7 +17,7 @@ from celery.schedules import crontab
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+ALLOWED_HOSTS = ['a304.site', '127.0.0.1', 'localhost']
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -34,8 +34,7 @@ TIME_ZONE = 'Asia/Seoul'
 
 INSTALLED_APPS = [
     'datas',
-    'django_celery_beat',
-    'django_celery_results',
+    # 'django_celery_beat',
     'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -79,7 +78,7 @@ WSGI_APPLICATION = 'mozzi_django.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-ALLOWED_HOSTS = ['a304.site','127.0.0.1']
+ALLOWED_HOSTS = ['a304.site','127.0.0.1','localhost']
 ### 로컬용
 # DATABASES = {
 #     'default': {
@@ -102,7 +101,6 @@ ALLOWED_HOSTS = ['a304.site','127.0.0.1']
 #     db='my_mongodb_database',  # 여기에는 사용할 MongoDB 데이터베이스 이름을 넣으세요.
 #     host='mongodb://localhost:27017/',  # MongoDB 호스트 주소입니다. 포트 번호 27017을 사용합니다.
 #     alias='default',  # 이 부분은 Django에서 사용할 alias를 설정하는 부분입니다.
-
 # )
 ### 서버용
 DATABASES = {
@@ -131,7 +129,6 @@ DATABASES = {
 
 
 }
-
 connect(
     db='mozzi',
     host='a304.site',
@@ -142,28 +139,27 @@ connect(
     authentication_mechanism='SCRAM-SHA-1'
 )
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://a304.site:6379/0',  # 여기서 '1'은 레디스 데이터베이스 번호입니다.
-        'OPTIONS': {
-            "PASSWORD" : "ssafy",
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        }
-    }
-}
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django_redis.cache.RedisCache',
+#         'LOCATION': 'redis://a304.site:6379/0',  # 여기서 '1'은 레디스 데이터베이스 번호입니다.
+#         'OPTIONS': {
+#             "PASSWORD" : "ssafy",
+#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+#         }
+#     }
+# }
 
 # CELERY_BROKER_URL = 'redis://default:ssafy@a304.site:6379/0'
 # CELERY_RESULT_BACKEND = 'redis://default:ssafy@a304.site:6379/0'
 
-CELERY_BROKER_URL = 'redis://a304.site:6379/0'
-CELERY_RESULT_BACKEND = 'redis://a304.site:6379/0'
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'Asia/Seoul'
+# CELERY_BROKER_URL = 'redis://a304.site:6379/0'
+# CELERY_RESULT_BACKEND = 'redis://a304.site:6379/0'
+# CELERY_ACCEPT_CONTENT = ['json']
+# CELERY_TASK_SERIALIZER = 'json'
+# CELERY_RESULT_SERIALIZER = 'json'
+# CELERY_TIMEZONE = 'Asia/Seoul'
 # CELERY_APP = 'mozzi_django'
-CELERY_TIMEZONE = 'Asia/Seoul'
 
 # CELERY_BEAT_SCHEDULE = {
 #     'reset_food_today_views': {

@@ -56,6 +56,7 @@ const useFridgeStore = create((set) => ({
     }
   },
 
+  // 냉장고에 새로운 음식 저장하기
   addFridge: async (food, pos) => {
     const token = await AsyncStorage.getItem('accessToken');
     console.log('토큰:', token);
@@ -64,7 +65,7 @@ const useFridgeStore = create((set) => ({
     console.log(`newFood: ${JSON.stringify(newFood)}`);
   
     set((state) => {
-      // 상태 업데이트를 위해 newFood 객체를 추가합니다.
+      // 상태 업데이트를 위해 newFood 객체를 추가
       const updatedFoods = [...state.savedFoods, newFood];
       return { savedFoods: updatedFoods };
     });
@@ -85,37 +86,6 @@ const useFridgeStore = create((set) => ({
       console.error('냉장고 업데이트 실패:', error.response ? error.response.data : error);
     }
   },
-  
-  // // 냉장고에 새로운 음식 저장하기
-  // addFridge: async (food, pos) => {
-  //   const token = await AsyncStorage.getItem('accessToken')
-  //   console.log('토큰:', token)
-  //   console.log(`food: ${food}`)
-  //   console.log(`storedPos: ${pos}`)
-  //   const newFood = { foodName: food, storedPos: pos };
-  //   console.log(`newFood: ${JSON.stringify(newFood)}`)
-
-  //   set((state) => {
-  //     const updatedFoods = [...state.savedFoods, food]
-  //     return { savedFoods: updatedFoods }
-  //   });
-
-  //   try {
-  //     console.log(`내가 보낼 데이터: ${food}`)
-  //     await axios.post(
-  //       'recommend/datas/add_ingredients_to_refrigerator/',
-  //       { foods: [newFood] },
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`
-  //         }
-  //       }
-  //     );
-  //     console.log('냉장고 업데이트 성공')
-  //   } catch (error) {
-  //     console.error('냉장고 업데이트 실패:', error)
-  //   }
-  // },
 
 
   // 저장된 음식 삭제하기

@@ -80,20 +80,6 @@ function RecommendScreen () {
     day: 'numeric', // "19일"
   })
 
-  // const todayRecommend =  async (userId: string, index: number) => {
-  //   try {
-  //     console.log(userId, index)
-  //     const response = await axios.get(`http://10.0.2.2:8000/maker/video_yk/?user_id=${userId}&index=${index}`)
-  //     console.log(response)
-  //     // useVideoStore.getState().setVideoComplete(true)
-  //     setTodayRecipe(response.data)
-  //   } catch (error) {
-  //     //응답 실패
-  //     console.error(error);
-  //   }
-  // }
-
- 
 
   const todayRecommend = (recipeIndex: number) => {
     // dummyRecipe 배열에서 recipeIndex에 해당하는 레시피를 찾아 설정합니다.

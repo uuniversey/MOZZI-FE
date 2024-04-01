@@ -13,9 +13,9 @@ const Btn = styled(TouchableOpacity)`
   border-radius: 28px;
 `
 
-function SpeechToText() {
+function SpeechToText({ onNext, onPrev }) {
   const [text, setText] = useState('')
-  const [isListening, setIsListening] = useState(true)
+  const [isListening, setIsListening] = useState(false)
 
   useEffect(() => {
 
@@ -31,17 +31,14 @@ function SpeechToText() {
   }, [])
 
   const onSpeechResults = (e) => {
-    console.log(e)
-    console.log(2)
     const spokenText = e.value[0]
+    console.log(e.value[0], '이거야?')
     setText(spokenText) // 화면에 표시할 텍스트 설정
     
-    if (spokenText.includes("다음") && !isListening) {
-      startListening()
-    }
-
-    else if (spokenText.includes("이전") && !isListening) {
-      stopListening()
+    if (spokenText.includes("다음")) {
+      onNext && onNext();
+    } else if (spokenText.includes("이전")) {
+      onPrev && onPrev();
     }
   }
 
@@ -63,12 +60,10 @@ function SpeechToText() {
   
   return (
     <>
-    <Text>인식된 텍스트: {text}</Text>
-    <Btn>
-      <Icon name="mic" size={40} onPress={startListening}/>
+    <Btn onPress={isListening ? stopListening : startListening}>
+      <Icon name={isListening ? "mic-off" : "mic"} size={30} />
     </Btn>
-      <Button title="듣기 시작" onPress={startListening} disabled={isListening} />
-      <Button title="듣기 중지" onPress={stopListening} disabled={!isListening} />
+    <Text>{text}</Text>
     </>
   )
 }

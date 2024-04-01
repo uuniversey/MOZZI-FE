@@ -5,6 +5,7 @@ import styled from 'styled-components/native'
 
 import useLoginStore from '../../store/LoginStore'
 import useProfileStore from '../../store/ProfileStore'
+import useRecipeStore from '../../store/RecipeStore'
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useNavigation } from '@react-navigation/native'
@@ -19,7 +20,7 @@ const TitleContainer = styled(View)`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 50px 0 50px 0;
+  margin: 50px 16px 50px 16px;
 `
 
 const Title = styled(Text)`
@@ -31,7 +32,7 @@ const Title = styled(Text)`
 `
 
 const JustifyView = styled(View)`
-  width: 350px;
+  width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -39,13 +40,13 @@ const JustifyView = styled(View)`
 `
 
 const TopBorder = styled(View)`
-  width: 350px;
-  border-bottom-width: 3px;
-  border-color: #E0E0E0;
+  width: 100%;
+  border-bottom-width: 2px;
+  border-color: ${(props) => props.theme.palette.font};
 `
 
 const Border = styled(View)`
-  width: 350px;
+  width: 90%;
   border-bottom-width: 1px;
   border-color: #E0E0E0;
 `
@@ -87,8 +88,13 @@ const ListBtnText = styled(Text)`
 function UserScreen() {
   const { userData, setIsLogin } = useLoginStore()
   const { profileData } = useProfileStore()
+  const { getIngredient } = useRecipeStore()
 
   const navigation = useNavigation()
+
+  useLayoutEffect (() => {
+    getIngredient()
+  }, [])
 
   const handleLogout = async (navigation) => {
     await AsyncStorage.removeItem('accessToken')
@@ -141,7 +147,7 @@ function UserScreen() {
           <ListBtnText>서비스 탈퇴</ListBtnText>
           <Icon name="keyboard-arrow-right" size={25} color="black"/>
         </ListButton>
-        <Border></Border>
+        <Border />
       </MenuList>
     </Container>
   )

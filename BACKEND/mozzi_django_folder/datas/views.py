@@ -23,6 +23,11 @@ from neo4j import GraphDatabase
 import neo4jupyter
 from py2neo import Graph
 from pyvis.network import Network
+import pandas as pd
+import numpy as np
+import pymysql
+from .models import  RefriIngredients, User , UserFood, UserIngredients
+
 from django.utils.http import urlsafe_base64_decode
 from . import tasks
 # result = tasks.reset_food_views.delay()
@@ -33,6 +38,91 @@ from .tasks import reset_food_views
 
 
 # 작업 결과 확인
+from django.db import models
+from neo4j import GraphDatabase
+
+# Neo4j 서비스 클래스
+class Neo4jService(object):
+    def __init__(self, uri, user, password):
+        self._driver = GraphDatabase.driver(uri, auth=(user, password))
+
+    def close(self):
+        self._driver.close()
+
+    def create_node(self, label, properties):
+        with self._driver.session() as session:
+            session.write_transaction(self._create_node, label, properties)
+
+    @staticmethod
+    def _create_node(tx, label, properties):
+        query = f"CREATE (n:{label} $properties) RETURN n"
+        return tx.run(query, properties=properties)
+
+# Neo4j 서비스 초기화
+uri = "bolt://localhost:7687"
+user = "neo4j"
+password = "mozzimozzi"
+service = Neo4jService(uri, user, password)
+
+# FoodsFoods 데이터 조회 및 Neo4j에 삽입
+# foods_foods = FoodsFoods.objects.all()
+# for item in foods_foods:
+#     properties = {
+#         "food_id": item.food_id,
+#         "other_food_id": item.other_food_id,
+#         "relations": item.relations
+#     }
+#     service.create_node("FoodsFoods", properties)
+
+# RefriIngredients 데이터 조회 및 Neo4j에 삽입
+refri_ingredients = RefriIngredients.objects.all()
+for item in refri_ingredients:
+    properties = {
+        "user_id": item.user_id,
+        "ingredient_id": item.ingredient_id,
+        "expiration_date": str(item.expiration_date),
+        "stored_pos": item.stored_pos
+    }
+    service.create_node("RefriIngredients", properties)
+
+# User 데이터 조회 및 Neo4j에 삽입
+users = User.objects.all()
+for item in users:
+    properties = {
+        "user_id": item.user_id,
+        "user_isvegan": item.user_isvegan,
+        "user_register_date": str(item.user_register_date),
+        "user_code": item.user_code,
+        "user_nickname": item.user_nickname,
+        "worldcup": item.worldcup
+    }
+    service.create_node("User", properties)
+
+# UserFood 데이터 조회 및 Neo4j에 삽입
+user_foods = UserFood.objects.all()
+for item in user_foods:
+    properties = {
+        "user_food_id": item.user_food_id,
+        "food_id": item.food_id,
+        "user_id": item.user_id,
+        "user_food_preference": item.user_food_preference,
+        "total": item.total
+    }
+    service.create_node("UserFood", properties)
+
+# UserIngredients 데이터 조회 및 Neo4j에 삽입
+user_ingredients = UserIngredients.objects.all()
+for item in user_ingredients:
+    properties = {
+        "user_ingredients_id": item.user_ingredients_id,
+        "user_id": item.user_id,
+        "ingredient_id": item.ingredient_id,
+        "is_like": item.is_like
+    }
+    service.create_node("UserIngredients", properties)
+
+# 서비스 종료
+service.close()
 
 
 def get_ingredients(start, last):
@@ -47,10 +137,7 @@ def get_ingredients(start, last):
             # 정규표현식을 사용하여 숫자와 숫자 뒤에 붙은 문자열을 제거
             ingredient_name = re.sub(r'\d+(\S+)', '', ingredient)
             ingredient_name = ingredient_name.strip()  # 좌우 공백 제거
-            # print(ingredient_name)
-           
-     
-        
+            # print(ingredient_name)   
 
 def migrate_food_recipe_from_mongo_to_mysql(request):
     # MongoDB에서 데이터 가져오기
@@ -109,7 +196,27 @@ def save_food_recipe_mongo(request):
 
     return JsonResponse({'message':'okay'})
 
+def update_food_pic(request):
+    start = 1
+    last = 1001
+    URL = f"http://openapi.foodsafetykorea.go.kr/api/2055492edca74694aa38/COOKRCP01/json/{start}/{last}"
+    response = requests.get(URL)
+    data = response.json()
 
+    for item in data['COOKRCP01']['row']:
+        new_food_pic = item.get('ATT_FILE_NO_MAIN')
+        if not new_food_pic:
+            continue
+
+        # 기존에 해당 'ATT_FILE_NO_MK' 값을 가진 데이터를 찾아 업데이트
+        existing_food = Foods.objects.filter(food_pic=item.get('ATT_FILE_NO_MK')).first()
+
+        if existing_food:
+            # 해당 'ATT_FILE_NO_MK' 값을 가진 데이터의 'food_pic' 필드 업데이트
+            existing_food.food_pic = new_food_pic
+            existing_food.save()
+  
+    return JsonResponse({'message': 'okay'})
 def save_food(request):
     start = 1
     last = 1001
@@ -136,7 +243,8 @@ def save_food(request):
         mongo_index += 1
 
         # 응답에서 'food_pic' 필드에 대한 값이 없을 경우를 확인합니다.
-        food_pic = item.get('ATT_FILE_NO_MK')
+        # food_pic = item.get('ATT_FILE_NO_MK')
+        food_pic = item.get('ATT_FILE_NO_MAIN')
         if not food_pic:
             # 'food_pic' 필드가 비어 있는 경우를 처리합니다.
             # 이 부분에 대해 원하는 동작을 수행하거나 오류를 처리할 수 있습니다.
@@ -287,7 +395,8 @@ def get_recipe_list(request):
     return JsonResponse({'foods': data})
 
 def get_ingredient_list(request):
-    
+    foods = Foods.objects.all()
+    print(len(foods))
     ingredients = Ingredient.objects.all()
     ingredient_names = [ingredient.ingredient_name for ingredient in ingredients]
     return JsonResponse({'data': {'ingredients': ingredient_names}},json_dumps_params={'ensure_ascii': False})
@@ -397,7 +506,6 @@ def save_ingredients_category(request):
 #     for mongo in mongo_foods:
 #         file.write(mongo.food_recipe['RCP_PARTS_DTLS'] + '\n\n')
 
-
 def migrate_sql_to_neo4j(request):
     # MySQL 연결 설정
     mysql_connection = mysql.connector.connect(
@@ -413,35 +521,43 @@ def migrate_sql_to_neo4j(request):
     neo4j_user = "neo4j"
     neo4j_password = "mozzimozzi"
     neo4j_driver = GraphDatabase.driver(neo4j_uri, auth=(neo4j_user, neo4j_password))
+    # Food와 Ingredient를 연결하는 관계 생성 함수
+    def create_food_ingredient_relation(tx, food_id, ingredient_id, ingredient_ratio, ingredient_count):
+        tx.run("""
+        MATCH (f:Food {id: $food_id})
+        MATCH (i:Ingredient {id: $ingredient_id})
+        MERGE (f)-[:CONTAINS {
+            ratio: $ingredient_ratio,
+            count: $ingredient_count
+        }]->(i)
+        """, food_id=food_id, ingredient_id=ingredient_id, ingredient_ratio=ingredient_ratio, ingredient_count=ingredient_count)
 
-    # MySQL 데이터 읽어오기
-    mysql_cursor.execute("SELECT * FROM datas_ingredient")
-    foods = mysql_cursor.fetchall()
+#   MySQL에서 user_food 데이터 읽어오기
+    mysql_cursor.execute("SELECT food_id, user_id, ingredient_ratio, ingredient_count FROM food_ingredient")
+    mappings = mysql_cursor.fetchall()
 
-    # Neo4j에 데이터 저장
-    def create_food_node(tx, ingredient_name, category_id):
-        tx.run("CREATE (f:Food {name: $ingredient_name, category_id: $category_id})", 
-            ingredient_name=ingredient_name, category_id=category_id)
-
-    def create_category_node(tx, category_name, category_id):
-        tx.run("MERGE (c:Category {id: $category_id}) ON CREATE SET c.name = $category_name", 
-            category_name=category_name, category_id=category_id)
-
-    def create_relation(tx, ingredient_name, category_id):
-        tx.run("MATCH (f:Food {name: $ingredient_name}), (c:Category {id: $category_id}) "
-               "MERGE (f)-[:BELONGS_TO]->(c)", ingredient_name=ingredient_name, category_id=category_id)
-
+    # 데이터 삽입 (User와 Food를 연결하는 관계 생성)
     with neo4j_driver.session() as session:
-        for food in foods:
-            category_id = food['category_id']
-            mysql_cursor.execute("SELECT category_name FROM datas_category WHERE id = %s", (category_id,))
-            category_name = mysql_cursor.fetchone()['category_name']
+        for mapping in mappings:
+            session.write_transaction(create_food_ingredient_relation, mapping['food_id'], mapping['ingredient_id'], mapping['ingredient_ratio'], mapping['ingredient_count'])
+#     def create_food_ingredient_relation(tx, food_id, ingredient_id, ingredient_ratio, ingredient_count):
+#         tx.run("""
+#         MATCH (f:Food {id: $food_id})
+#         MATCH (i:Ingredient {id: $ingredient_id})
+#         MERGE (f)-[:CONTAINS {
+#             ratio: $ingredient_ratio,
+#             count: $ingredient_count
+#         }]->(i)
+#         """, food_id=food_id, ingredient_id=ingredient_id, ingredient_ratio=ingredient_ratio, ingredient_count=ingredient_count)
 
-            session.write_transaction(create_category_node, category_name, category_id)
-            session.write_transaction(create_food_node, food['ingredient_name'], category_id)
-            session.write_transaction(create_relation, food['ingredient_name'], category_id)
+#   # MySQL에서 food_ingredient 데이터 읽어오기
+#     mysql_cursor.execute("SELECT food_id, ingredient_id, ingredient_ratio, ingredient_count FROM food_ingredient")
+#     mappings = mysql_cursor.fetchall()
 
-    print("Data migrated successfully.")
+#     # 데이터 삽입 (Food와 Ingredient를 연결하는 관계 생성)
+#     with neo4j_driver.session() as session:
+#         for mapping in mappings:
+#             session.write_transaction(create_food_ingredient_relation, mapping['food_id'], mapping['ingredient_id'], mapping['ingredient_ratio'], mapping['ingredient_count'])
 
     # 연결 종료
     mysql_cursor.close()
@@ -458,36 +574,20 @@ def add_ingredients_to_refrigerator(request):
 
     foodingredients = FoodIngredient.objects.all()
     # print(request.headers['Authorization'],'adddddddddddddddd')
-    try:
-        token = request.headers['Authorization'].split(' ')[1]
-    except KeyError:
-        return JsonResponse({"error": "Authorization header is missing"}, status=401)
-    header, payload, signature = token.split('.')
-    decoded_payload = base64.b64decode(payload + "==").decode('utf-8')
-    padding_needed = 4 - (len(payload) % 4)
-    if padding_needed > 0 and padding_needed != 4:
-        payload += '=' * padding_needed
-    # print("Padded Token:", token)
-    # print("Padded Token Length:", len(token))
-    # print(22222222222222222222)
-    # print(token,len(token))
-    # print(3333333333333333333333333)
-    # data = base64.b64decode(token[:166])
-    data = base64.b64decode(payload).decode('utf-8')
-    # print(111111)
-    # print(data,'data')
-    # data = data.decode('latin-1')
-    # print(data,'latin')
-    try:
-        index_e = data.index('"e":') + len('"e":')
-        index_comma = data.index(',', index_e)
-        e_value = data[index_e:index_comma]
-        user_number = e_value[1:-1]
-        user_id = int(user_number)
-    except ValueError:
-            return JsonResponse({"error": "Invalid user id."}, status=401)
-
-    print(user_number,321)
+    token = request.headers['Authorization'].split(' ')[1]
+    if len(token) != 165 :
+        token = token[:-1]
+   
+    data=urlsafe_base64_decode(token)
+    # data = base64.b64decode(token)
+   
+    data = data.decode('latin-1')
+    
+    index_e = data.index('"e":') + len('"e":')  # "e": 다음 인덱스부터 시작
+    index_comma = data.index(',', index_e)  # 쉼표(,)가 나오는 인덱스 찾기
+    e_value = data[index_e:index_comma]
+    user_number = e_value[1:-1]
+    
     # 결과 출력
     user_id =0
     
@@ -725,3 +825,194 @@ def add_ingredients_to_refrigerator(request):
 
 #     # HTML 파일 경로 반환
 #     return HttpResponse(html_file_path)
+
+
+def recommendFoods():
+    db = pymysql.connect(
+                        host = "localhost",
+                        port = 3306,
+                        user = "ssafy",
+                        password = "ssafy",
+                         )
+    
+    with db.cursor() as cursor:
+        query = "select food_id from mozzi.datas_foods order by food_id desc limit 1"
+        cursor.execute(query)
+        maxFoodsIndex = cursor.fetchall()[0][0]
+        print(maxFoodsIndex) 
+
+        # query = "select count(*) as total_rows from mozzi.datas_ingredient"
+        query = "select ingredient_id from mozzi.datas_ingredient order by ingredient_id desc limit 1"
+        cursor.execute(query)
+        maxIngredientsIndex = cursor.fetchall()[0][0]
+        print(maxIngredientsIndex)
+        df = pd.DataFrame(np.zeros((maxFoodsIndex, maxIngredientsIndex)))
+        
+        query = "select food_id, ingredient_id, ingredient_ratio from mozzi.food_ingredient"
+        cursor.execute(query)
+        parameterList = cursor.fetchall()
+        for parameter in parameterList:
+            # df[parameter[0]][parameter[1]] = parameter[2] / 100
+            df.iloc[parameter[0] - 1, parameter[1] - 1] = parameter[2] / 100
+    
+        # print(df)
+        # print(df.T)
+        # print(df.dot(df.T))
+
+        # print(df.loc[858])
+        df_foods = pd.DataFrame(np.zeros((maxFoodsIndex, maxFoodsIndex)))
+
+        for foodId1 in range(maxFoodsIndex):
+            print(foodId1)
+            for foodId2 in range(foodId1, maxFoodsIndex):
+                np1 = df.loc[[foodId1], :].to_numpy()
+                np2 = df.loc[[foodId2], :].T.to_numpy()
+                # print(np.linalg.norm(np2))
+                # print(np1, np2)
+                # print(np.dot(np1, np2) , "\n---------------------------------------------------------------------------\n")
+                # print(np.linalg.norm(np1))
+                # print(np.dot(np1, np2)/(np.linalg.norm(np1) * np.linalg.norm(np2)))
+                # print(np.linalg.norm(np1), np.linalg.norm(np2) )
+                if (np.linalg.norm(np2) == 0 or np.linalg.norm(np1) == 0): continue
+                result = np.dot(np1, np2)/(np.linalg.norm(np1) * np.linalg.norm(np2))
+                df_foods.iloc[foodId1, foodId2] = result 
+                df_foods.iloc[foodId2, foodId1] = result 
+
+                # print(result)
+                # break
+            # break
+        print(df_foods)
+        df_foods.to_pickle("df.pkl")
+
+        
+def readPkl():
+
+    print(pd.read_pickle("df.pkl"))
+    df = pd.read_pickle("df2.pkl")
+
+    print(df)    
+    print(df.sort_values(by=[0]))
+    # print(pd.read_sql( "select * from mozzi.datas_foods" ,db))
+    
+def set_Category():
+    df = pd.read_pickle("df.pkl")
+    db = pymysql.connect(
+                        host = "a304.site",
+                        port = 3306,
+                        user = "ssafy",
+                        password = "ssafy",
+                         )
+    
+    with db.cursor() as cursor:
+
+        query = "select food_id from mozzi.datas_foods order by food_id desc limit 1"
+        cursor.execute(query)
+        maxFoodsIndex = cursor.fetchall()[0][0]
+        df_foods_categories = pd.DataFrame(np.zeros((maxFoodsIndex, 19)))
+
+        query = "SELECT  food_ingredient.food_id, datas_ingredient.category_id, SUM(food_ingredient.ingredient_ratio),  COUNT(*)  FROM mozzi.food_ingredient LEFT JOIN mozzi.datas_ingredient ON food_ingredient.ingredient_id = datas_ingredient.id GROUP BY food_ingredient.food_id, datas_ingredient.category_id"
+        cursor.execute(query)
+        parameter_categories = cursor.fetchall()
+
+        for parameter_category in parameter_categories:
+            df_foods_categories.iloc[parameter_category[0] - 1, parameter_category[1] - 1] = parameter_category[2]
+
+        df_foods_foods = pd.read_pickle("df.pkl")
+
+        for foodId1 in range(maxFoodsIndex):
+            print(foodId1)
+            for foodId2 in range(foodId1 + 1, maxFoodsIndex):
+                np1 = df_foods_categories.loc[[foodId1], :].to_numpy()
+                np2 = df_foods_categories.loc[[foodId2], :].T.to_numpy()
+                # print(np.linalg.norm(np2))
+                # print(np1, np2)
+                # print(np.dot(np1, np2) , "\n---------------------------------------------------------------------------\n")
+                # print(np.linalg.norm(np1))
+                # print(np.dot(np1, np2)/(np.linalg.norm(np1) * np.linalg.norm(np2)))
+                # print(np.linalg.norm(np1), np.linalg.norm(np2))
+                if (np.linalg.norm(np2) == 0 or np.linalg.norm(np1) == 0): continue
+                result = np.dot(np1, np2)/(np.linalg.norm(np1) * np.linalg.norm(np2))
+                df_foods_foods.iloc[foodId1, foodId2] += result 
+                df_foods_foods.iloc[foodId1, foodId2] /= 2
+                df_foods_foods.iloc[foodId2, foodId1] += result
+                df_foods_foods.iloc[foodId2, foodId1] /= 2
+                
+                # print(df_foods_foods.iloc[foodId1, foodId2]) 
+        df_foods_foods.to_pickle("df2.pkl")
+
+
+@api_view(["PUT"])
+def user_ingredient_affection(request):
+    input_ingredient_name = "두부"
+    # print(request.data['foods'])
+    token = request.headers['Authorization'].split(' ')[1]
+    
+    if len(token) != 165 :
+        token = token[:-1]
+   
+    data=urlsafe_base64_decode(token)
+   
+    # data = base64.b64decode(token)
+    
+    data = data.decode('latin-1')
+   
+    index_e = data.index('"e":') + len('"e":')  # "e": 다음 인덱스부터 시작
+ 
+    index_comma = data.index(',', index_e)  # 쉼표(,)가 나오는 인덱스 찾기
+
+    e_value = data[index_e:index_comma]
+
+    user_number = e_value[1:-1]
+
+    print(user_number)
+    # print(type(user))
+    db = pymysql.connect(
+                        host = "a304.site",
+                        port = 3306,
+                        user = "ssafy",
+                        password = "ssafy",
+                         )
+    # print(user)
+
+        # 해당 음식과 관련있는 모든 음싟 
+        # 유저가 총 한 횟수 가져옴
+        # 모든 음식들에 대해서 필터링
+        
+    with db.cursor() as cursor:
+        query = f"select user_id from mozzi.user where user_code = {user_number}"
+        cursor.execute(query)
+        userId = cursor.fetchall()[0][0]
+
+
+        for food in request.data['foods']:
+            print(food)
+            isWin = food['value']
+            # 모든 음식 상태 데이터베이스 가져옴
+            try:
+                df = pd.read_pickle(f"{userId}-df.pkl")
+            except:
+                df = pd.read_sql(f"select * from mozzi.user_food where user_id = {userId}" ,db)
+            print(df)
+            print(food['foodName'])
+            foodName = food['foodName']
+            query = f'select food_id from mozzi.datas_foods where food_name = "{foodName}"'
+            cursor.execute(query)
+            food_id = cursor.fetchall()[0][0]
+
+            print(food_id)
+            query = f'select * from mozzi.foods_foods where food_id = {food_id} or other_food_id = {food_id}'
+            # query = f"SELECT distinct food_id, ingredient_ratio from mozzi.food_ingredient LEFT JOIN mozzi.datas_ingredient ON food_ingredient.ingredient_id = datas_ingredient.id \
+            #         WHERE ingredient_name = '{input_ingredient_name}'"
+            cursor.execute(query)
+            foodList = cursor.fetchall()
+            print(foodList)
+        
+            # for food in foodList:
+                # print(food)
+    return JsonResponse({'ok' : 1})
+        
+
+
+    
+
+# savepkls()

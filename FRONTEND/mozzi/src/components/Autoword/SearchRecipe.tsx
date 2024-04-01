@@ -72,6 +72,7 @@ export const SearchBar = ({ data, onSelect }: SearchBarProps) => {
                       setRecipeName(item.foodName)
                       onSelect(item.foodName)
                       handleAutoComplete(item.foodName)
+                      setFilteredData([])
                     }}>
                     <StyledView>
                       <StyledImage
@@ -86,7 +87,7 @@ export const SearchBar = ({ data, onSelect }: SearchBarProps) => {
                 style: { ...styles.list, ...styles.shadow },
               }}
             />
-            {filteredData.length === 0 && searchQuery.length > 0 && (
+            {filteredData.length === 0 && searchQuery.length > 0 && recipeName !== searchQuery && (
               <View style={styles.emptySearchResults}>
                 <Text>검색 결과가 없습니다.</Text>
               </View>
