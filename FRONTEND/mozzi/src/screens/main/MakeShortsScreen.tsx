@@ -86,7 +86,7 @@ function MakeShortsScreen () {
   try {
     // console.log('hi')
     const userId = "" + profileData.id
-    const url = `http://10.0.2.2:8000/datas/download_video/${userId}/` // 서버의 엔드포인트 URL
+    const url = `https://a304.site/api/recommend/datas/download_video/${userId}/` // 서버의 엔드포인트 URL
     const localFile = `${RNFetchBlob.fs.dirs.DocumentDir}/${userId}.mp4` // 파일을 저장할 로컬 경로
     const response = await RNFetchBlob.config({
         fileCache: true,
@@ -127,7 +127,7 @@ function MakeShortsScreen () {
   
     try {
       const userId = "" + profileData.id
-      const url = `http://10.0.2.2:8000/datas/download_video/${userId}/` // 서버의 엔드포인트 URL
+      const url = `https://a304.site/api/recommend/datas/download_video/${userId}/` // 서버의 엔드포인트 URL
       const localFile = `${RNFetchBlob.fs.dirs.DocumentDir}/${userId}.mp4` // 파일을 저장할 로컬 경로
       const response = await RNFetchBlob.config({
           fileCache: true,

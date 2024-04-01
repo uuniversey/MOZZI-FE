@@ -232,7 +232,7 @@ function SelectShortsImageScreen () {
       console.log(userId, selectedImages, selectedMusic)
       // useVideoStore.getState().setVideoComplete(true)
       navigation.navigate("RecapLanding")
-      const response = await axios.post('http://10.0.2.2:8000/datas/make_video/', {
+      const response = await axios.post('https://a304.site/api/recommend/datas/make_video/', {
         user_id: userId,
         image_list: selectedImages,
         bgm_category: selectedMusic
