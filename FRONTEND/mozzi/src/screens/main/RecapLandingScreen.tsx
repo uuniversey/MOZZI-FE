@@ -116,7 +116,7 @@ const RecapLandingScreen: React.FC = () => {
   return (
     <Container>
       <BackButton onPress={() => navigation.goBack()}>
-        <Ionicons name="chevron-back" size={24} color="#000" />
+        <Ionicons name="arrow-back" size={24} color="#000" />
       </BackButton>
       <View>
         <Animated.Image

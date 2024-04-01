@@ -39,7 +39,7 @@ function TermsOfUseScreen() {
   return (
     <Container>
       <Header>
-        <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
+        <Header.Icon iconName="arrow-back" onPress={navigation.goBack} />
       </Header>
       
       <HeaderText>모찌 서비스 이용약관</HeaderText>

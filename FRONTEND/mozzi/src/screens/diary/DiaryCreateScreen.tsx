@@ -269,7 +269,7 @@ function DiaryCreateScreen () {
   return (
     <>
       <Header>
-        <Header.Icon iconName="chevron-back" onPress={goBack} />
+        <Header.Icon iconName="arrow-back" onPress={goBack} />
       </Header>
       <Container>
         <DateContainer>

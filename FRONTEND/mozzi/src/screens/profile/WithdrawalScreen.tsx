@@ -92,7 +92,7 @@ const sadImg = [
 
 function WithdrawalScreen() {
   const navigation = useNavigation()
-  const { setIsLogin, userWithdrawal } = useLoginStore()
+  const { setIsLogin, userWithdrawal, userDataReset } = useLoginStore()
   const { profileReset } = useProfileStore()
   const { dropdownReset } = useDropdownStore()
   
@@ -106,6 +106,7 @@ function WithdrawalScreen() {
 
     profileReset()
     dropdownReset()
+    userDataReset()
 
     navigation.reset({
       index: 0,

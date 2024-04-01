@@ -104,7 +104,7 @@
 //   return (
 //     <>
 //       <Header>
-//           <Header.Icon iconName="chevron-back" onPress={goBack} />
+//           <Header.Icon iconName="arrow-back" onPress={goBack} />
 //       </Header>
 //       <ScreenContainer>
 //         <HeaderTitle>쇼츠 만들기 (1/2)</HeaderTitle>

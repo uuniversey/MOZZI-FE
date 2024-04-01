@@ -64,6 +64,7 @@ function ProfileScreen () {
   const { dropdownData, isVeganData } = useDropdownStore()
   const [ isEdit, setIsEdit ] = useState<boolean>(false)
 
+
   useLayoutEffect (() => {
     getProfile()
   }, [isEdit])
@@ -80,7 +81,7 @@ function ProfileScreen () {
   return (
     <Container>
       <Header>
-        <Header.Icon iconName="chevron-back" onPress={navigation.goBack} />
+        <Header.Icon iconName="arrow-back" onPress={navigation.goBack} />
       </Header>
 
       <Title>내 정보</Title>
@@ -99,10 +100,10 @@ function ProfileScreen () {
               <StyledInput
                 placeholder={
                   profileData.foods && profileData.foods.length > 0
-                    ? profileData.foods
-                        .filter(food => food.isLike === 2)
-                        .map(food => food.ingredientName)
-                        .join(', ')
+                    ? [...new Set(profileData.foods
+                      .filter(food => food.isLike === 2)
+                      .map(food => food.mainAllergy))]
+                      .join(', ')
                     : "보유하고 있는 알레르기 정보를 선택해 주세요"
                 }
                 editable={false}
