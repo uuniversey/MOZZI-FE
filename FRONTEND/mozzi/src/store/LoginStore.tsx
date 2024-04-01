@@ -49,6 +49,11 @@ const useLoginStore = create((set) => ({
       console.error('회원 탈퇴 요청 실패', error)
     }
   },
+
+  // 탈퇴 시 로직
+  userDataReset: () => set({
+    userData: [],
+  }),
 }))
 
 export default useLoginStore
