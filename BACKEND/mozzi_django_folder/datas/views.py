@@ -1023,9 +1023,12 @@ def user_ingredient_affection(request):
         token = token[:-1]
 
     data=urlsafe_base64_decode(token)
+    print(data,'token')
     data = data.decode('latin-1')
-    print(data)
+    print(33333333)
     print(type(data))
+    # print(data)
+    print(2222222222222)
     index_e = data.index('"e":') + len('"e":')  # "e": 다음 인덱스부터 시작
     print(index_e)
     index_comma = data.index(',', index_e)  # 쉼표(,)가 나오는 인덱스 찾기
@@ -1033,7 +1036,7 @@ def user_ingredient_affection(request):
     e_value = data[index_e:index_comma]
 
     user_number = e_value[1:-1]
-    
+    print(user_number)
 
    
     # data = base64.b64decode(token)
