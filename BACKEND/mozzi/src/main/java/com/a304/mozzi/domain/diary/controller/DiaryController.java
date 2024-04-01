@@ -141,6 +141,16 @@ public class DiaryController {
         }
     }
 
+    @GetMapping("/getMyWholeDiary")
+    public ResponseEntity<?> getmyDiary()
+    {
+        UserModel user = userService.findCurrentUser();
+        List<Diary> Diaries = diaryService.findByUser(user);
+        List<DiaryDto> DiariesDto = diaryService.toDtoList(Diaries);
+        DiaryFoodListDto diaryFoodLists = DiaryFoodListDto.builder().foods(DiariesDto).build();
+        return ResponseEntity.status(HttpStatus.OK).body(diaryFoodLists);
+    }
+
     @DeleteMapping("/deletemydiary")
     public ResponseEntity<?> deleteMyDiary(@RequestParam Integer id) {
         diaryService.deleteByDiaryId(id);
