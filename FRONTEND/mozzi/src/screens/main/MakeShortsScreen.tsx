@@ -12,17 +12,15 @@ const Container = styled(View)`
   flex: 1;
   background-color: ${(props) => props.theme.palette.background};
   align-items: center;
+  padding: 0 16px 0 16px;
 `
 
 const HeaderText = styled(Text)`
-  font-size: 32px;
-  margin-top: 50px;
-  margin-bottom: 20px;
-  align-self: flex-start;
-  padding-left: 28px;
-  padding-right: 28px;
   color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.title};
+  font-size: 28px;
+  margin-bottom: 20px;
+  align-self: flex-start;
 `
 
 const PlayButton = styled(View)`
