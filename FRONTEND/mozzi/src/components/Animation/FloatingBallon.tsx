@@ -3,8 +3,8 @@ import styled from 'styled-components/native';
 import { Animated, Easing } from 'react-native';
 
 const BalloonImage = styled.Image`
-  width: 100px;
-  height: 100px;
+  width: 150px;
+  height: 150px;
   opacity: 0.8;
 `;
 

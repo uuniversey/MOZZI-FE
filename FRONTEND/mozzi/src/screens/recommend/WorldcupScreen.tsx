@@ -43,7 +43,7 @@ const ChoiceButton = styled(TouchableOpacity)`
 `;
 
 const StyledImage = styled(Image)`
-  border: 1px solid ${(props) => props.theme.palette.pointDark};
+  /* border: 1px solid ${(props) => props.theme.palette.pointDark}; */
   width: 100px;
   height: 100px;
   border-radius: 100px;

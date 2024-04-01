@@ -33,6 +33,8 @@ const theme = {
   palette: {
     background: '#FFFEF2',
     font: '#1c1a11',
+    gray: '#888',
+    light: '#e1dfd4',
     point: '#F9F7BB',
     pointDark: '#E4E196',
   }
@@ -83,7 +85,7 @@ return (
                 if (route.name === 'RecommendTab') {
                   return (
                     <Animated.View style={{ transform: [{ rotate: spin }] }}>
-                      <MaterialIcons name="casino" size={size} color={focused ? theme.palette.pointDark : 'lightgray'} />
+                      <MaterialIcons name="casino" size={size} color={focused ? theme.palette.pointDark : theme.palette.light } />
                     </Animated.View>
                   );
                 }
@@ -96,7 +98,7 @@ return (
                 }[route.name];
 
                 const Icon = route.name === 'FridgeTab' || route.name === 'DiaryTab' ? MaterialIcons : MaterialCommunityIcons;
-                return <Icon name={iconName} size={size} color={focused ? theme.palette.pointDark : 'lightgray'} />;
+                return <Icon name={iconName} size={size} color={focused ? theme.palette.pointDark : theme.palette.light } />;
               },
               tabBarButton: (props) => (
                 <TouchableOpacity

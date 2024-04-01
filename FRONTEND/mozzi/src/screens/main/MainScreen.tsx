@@ -73,7 +73,7 @@ const MealName = styled(Text)`
 `
 
 const Button = styled(TouchableOpacity)`
-  background-color: rgba(211, 236, 216, 0.7);
+  background-color: rgba(199, 218, 159, 0.7);
   border-radius: 15px;
   justify-content: center;
   align-items: center;
@@ -128,10 +128,6 @@ function MainScreen() {
     }
   }
 
-  // const handleCardPress = () => {
-  //   // navigation.navigate("DiaryDetail", { recipe: recipe })
-  //   navigation.navigate("DiaryDetail")
-  // }
 
   const moveRecipeDetail = () => {
     navigation.navigate("Recipe")

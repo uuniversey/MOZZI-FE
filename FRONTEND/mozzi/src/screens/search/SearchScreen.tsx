@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import styled from 'styled-components/native'
 
+import SmallButton from '../../components/Button/SmallButton'
 import { SearchBar } from '../../components/AutoWord/SearchRecipe'
 import { Header } from '../../components/Header/Header'
 import { useNavigation } from '@react-navigation/native'
@@ -46,23 +47,6 @@ const MealName = styled(Text)`
   color: ${(props) => props.theme.palette.font};
   margin-bottom: 8px;
   font-family: ${(props) => props.theme.fonts.title};
-`
-
-const Btn = styled(TouchableOpacity)`
-  margin-top: 70px;
-  background-color: ${(props) => props.theme.palette.point};
-  border-radius: 10px;
-  width: 70px;
-  padding: 5px;
-  align-items: center;
-  align-self: flex-end;
-  z-index: -10;
-`
-
-const BtnText = styled(Text)`
-  font-size: 16px;
-  font-family: ${(props) => props.theme.fonts.content};
-  color: ${(props) => props.theme.palette.font};
 `
 
 const SelectedText = styled(Text)`
@@ -116,10 +100,14 @@ function SearchScreen () {
           {selectedRecipeName}의 레시피로 이동할까요?
         </SelectedText> : ''
         }
-
-        <Btn onPress={moveRecipe}>
-          <BtnText>이동</BtnText>
-        </Btn>
+        <SmallButton
+          text="이동"
+          onPress={moveRecipe}
+          style={{
+            marginTop: 70,
+            zIndex: -10,
+          }}
+        />
       </Container>
     </>
   )
