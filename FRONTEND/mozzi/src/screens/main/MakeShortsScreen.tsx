@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import Snackbar from 'react-native-snackbar'
 import { useNavigation } from '@react-navigation/native'
 import RNFetchBlob from 'rn-fetch-blob'
+import LongButton from '../../components/Button/LongButton'
 import { Header } from '../../components/Header/Header'
 import styled from 'styled-components/native'
 import Video from 'react-native-video'
@@ -25,41 +26,16 @@ const HeaderText = styled(Text)`
 `
 
 const PlayButton = styled(View)`
-  border-radius: 20px;
-  width: 350px;
-  height: 350px;
+  width: 100%;
+  aspect-ratio: 1;
   padding: 16px;
   margin-top: 8px;
-  margin-bottom: 8px;
-  margin-left: 16px;
-  margin-right: 16px;
+  margin-bottom: 16px;
   align-items: center;
   justify-content: center;
-  border-color: rgba(0, 0, 0, 0.2);
+  border-color: ${(props) => props.theme.palette.light};
   background-color: ${(props) => props.theme.palette.background};
-  border-width: 2px;
-  elevation: 2;
-`
-
-const DownloadButton = styled(TouchableOpacity)`
-  width: 85%;
-  border-radius: 20px;
-  padding: 16px;
-  margin-top: 8px;
-  margin-bottom: 8px;
-  margin-left: 16px;
-  margin-right: 16px;
-  align-items: center;
-  border-color: rgba(0, 0, 0, 0.2);
-  background-color: ${(props) => props.theme.palette.point};
-  border-width: 2px;
-  elevation: 2;
-`
-
-const DownloadButtonText = styled(Text)`
-  font-size: 16px;
-  color: ${(props) => props.theme.palette.font};
-  font-family: ${(props) => props.theme.fonts.content};
+  border-width: 1px;
 `
 
 function MakeShortsScreen () {
@@ -175,9 +151,10 @@ function MakeShortsScreen () {
           />
           {/* <Icon name="play-circle" size={60} color="#000" /> */}
         </PlayButton>
-        <DownloadButton onPress={downloadVideo}>
-          <DownloadButtonText>다운로드</DownloadButtonText>
-        </DownloadButton>
+        <LongButton 
+          text="다운로드"
+          onPress={downloadVideo}
+        />
       </Container>
     </>
   )

@@ -8,6 +8,7 @@ import { Line } from 'react-native-svg'
 
 const Container = styled(View)`
   width: 100%;
+  /* max-height: 20%; */
   flex-direction: row;
   align-items: center;
   margin: 10px 0px 5px 0px;
@@ -22,6 +23,7 @@ const CustomAutoComplete = styled(Autocomplete)`
 `
 
 const IngreList = styled(View)`
+  background-color: ${(props) => props.theme.palette.background};
   width: 100%;
   flex-direction: row;
   padding: 10px;

@@ -77,8 +77,8 @@ function ProfileScreen () {
   return (
     <Container>
       { flag ?
-        <LoadingScreen dataLength={0}/>
-      : <>
+        (<LoadingScreen dataLength={0}/>)
+      : (<>
           <Header>
             <Header.Icon iconName="arrow-back" onPress={navigation.goBack} />
           </Header>
@@ -148,7 +148,7 @@ function ProfileScreen () {
               />
             </Body>
           </KeyboardAvoidingView>
-        </>
+        </>)
       }
     </Container>
   )

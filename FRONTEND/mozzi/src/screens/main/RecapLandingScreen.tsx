@@ -14,12 +14,6 @@ const Container = styled(View)`
   background-color: ${(props) => props.theme.palette.background};
 `
 
-const BackButton = styled(TouchableOpacity)`
-  position: absolute;
-  top: 40px;
-  left: 10px;
-`
-
 const ImageContainer = styled(Image)`
   width: 200px; 
   height: 200px; 
@@ -119,9 +113,6 @@ const RecapLandingScreen: React.FC = () => {
   
   return (
     <Container>
-      <BackButton onPress={() => navigation.goBack()}>
-        <Ionicons name="arrow-back" size={24} color="#000" />
-      </BackButton>
       <View>
         <Animated.Image
             source={require('../../assets/illustration/ladle.png')}

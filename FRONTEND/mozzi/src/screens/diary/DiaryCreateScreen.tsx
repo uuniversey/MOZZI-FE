@@ -75,7 +75,7 @@ const ImageButton = styled(TouchableOpacity)`
 
 const ImagePlaceholderText = styled(Text)`
   font-size: 24px;
-  color: ${(props) => props.theme.palette.font};
+  color: ${(props) => props.theme.palette.light};
   font-family: ${(props) => props.theme.fonts.content};
 `
 
