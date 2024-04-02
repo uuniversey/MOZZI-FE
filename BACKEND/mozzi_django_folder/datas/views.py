@@ -956,7 +956,7 @@ def set_Category():
         df_foods_foods.to_pickle("df2.pkl")
 
 
-
+#진짜찐짜찐짜찐짜 추천
 @api_view(["GET"])
 def user_recommendation(request):
     # 0. 요청한 사용자를 특정한다.
@@ -992,30 +992,44 @@ def user_recommendation(request):
         
         
         # 냉장고에 있는 모든 재료들을 가져온다.
-        query = f'select * fron refri_ingredient where user_id = {userId}'
+        query = f'select * from mozzi.refri_ingredients where user_id = {userId}'
         cursor.execute(query)
         refri_ingredients_list = cursor.fetchall()
     
         # 모든 재료들에 대해서 모든 음식들과의 연관에 대해 + 해준다.
         for refri_ingredient in refri_ingredients_list:
             ingredient = refri_ingredient[1]
-            query = f'select food_id, ingredient_ratio from food_ingredient where ingredient_id = {ingredient}'
+            query = f'select food_id, ingredient_ratio from mozzi.food_ingredient where ingredient_id = {ingredient}'
             cursor.execute(query)
             foods_list = cursor.fetchall()
             for food in foods_list:
                 food_id, parameter = food
                 df.iloc[food_id] += parameter / 1000
-        df.sort_values()
+        print('결과물 출력')
+        print(df.sort_values(by = 'user_food_preference').nlargest(10, 'user_food_preference'))
+        return_list = df.sort_values(by = 'user_food_preference').nlargest(10, 'user_food_preference').index
+        food_names = []
+        food_pics = []
+        # foods = Foods.objects.all()
+        for arg in range(10):
+            food = Foods.objects.get(food_id = return_list[arg] + 1)
+            food_names.append(food.food_name)
+            food_pics.append(food.food_pic)
+
         
-        
 
 
 
-
+    data = {
+    'foods':[{
+    'foodName': food_names,
+    'photo': food_pics,
+    }
+    ]}
     
     # -1 저장된 파일을 삭제한다.
     
-    return
+    return JsonResponse(data)
 
 @api_view(["PUT"])
 def user_ingredient_affection(request):
@@ -1104,7 +1118,7 @@ def user_ingredient_affection(request):
             
 
             saveFilesToS3(df, filewewant)
-            print(df.sort_values)
+
 
     return JsonResponse({'ok' : 1})
  
