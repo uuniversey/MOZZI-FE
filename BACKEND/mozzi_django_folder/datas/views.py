@@ -34,7 +34,7 @@ from django.http import FileResponse
 from rest_framework.response import Response
 from .videomake import *
 from pathlib import Path
-
+import nltk
 import math
 
 from django.utils.http import urlsafe_base64_decode
@@ -1249,3 +1249,77 @@ def removeFilesFromS3(filename):
     s3 = boto3.resource('s3')
     s3.Object(settings.AWS_STORAGE_BUCKET_NAME, filename).delete()
     return
+
+
+
+import json
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.tag import pos_tag
+from konlpy.tag import Kkma
+kkma = Kkma()
+
+food_name = []
+foods = Foods.objects.all()
+for i in foods:
+    food_name.append(i.food_name)
+# print(food_name)
+# 1.json 파일 읽기
+with open('my_mongodb_database.mongo_food.json', 'r', encoding='utf-8') as file:
+    data = json.load(file)
+
+# MANUAL01부터 MANUAL19까지의 값을 문자열로 더하는 코드
+cnt = 1
+dic = {}
+for item in data:
+    total_manuals = ""
+    
+    manuals = [item["food_recipe"][f"MANUAL{i:02d}"] for i in range(1, 20) if item["food_recipe"][f"MANUAL{i:02d}"]]
+    food_nm = Foods.objects.filter(food_name=item["food_recipe"]['RCP_NM']).first()
+    print(food_nm.food_id)
+    food_id = FoodIngredient.objects.filter(food_id = food_nm)
+    print(food_id)
+    res=[]
+    for i in manuals:
+        res+=kkma.nouns(i)
+    # res = kkma.nouns(total_manuals)
+    print(item['food_recipe']['RCP_NM'],res)
+    dic = {}
+    for i in food_id:
+        dic[str(i.ingredient_id)] = 0
+        print(i.ingredient_id.id,i.food_id.food_id,i.ingredient_ratio,type(i.ingredient_id))
+        
+        # value = data.get(i.ingredient_id)
+        
+        # print(res.count(str(i.ingredient_id)))
+    for i in res:
+        with open('dict_json.json', 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        value = data.get(i)
+        if value in dic:
+            dic[value] +=1 
+    food_name_ten = kkma.nouns(item['food_recipe']['RCP_NM'])
+    print(food_name_ten)
+    for j in food_name_ten:
+        with open('dict_json.json', 'r', encoding='utf-8') as f:
+                data2 = json.load(f)
+                value2 = data2.get(j)
+                if value2 in dic:
+                    dic[value2] +=10
+    
+    
+    print()
+    
+    for i in food_id:
+        
+        print(i.ingredient_id.id,i.food_id.food_id,i.ingredient_ratio,type(i.ingredient_id))
+        print(dic)
+        save_food = FoodIngredient.objects.filter(food_id = i.food_id.food_id,ingredient_id=i.ingredient_id.id)
+        save_food = save_food.order_by('-ingredient_ratio').first()
+        if dic[str(i.ingredient_id)] == 0 :
+            dic[str(i.ingredient_id)] = 1
+        save_food.ingredient_count = dic[str(i.ingredient_id)]
+
+        save_food.save()
+
+    
