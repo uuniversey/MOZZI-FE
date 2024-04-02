@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ScrollView, Keyboard, Platform, Text, Alert, Touchable } from 'react-native';
+import { ScrollView, View, Keyboard, Platform, Text, Alert, Touchable } from 'react-native';
 import styled from 'styled-components/native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
@@ -29,7 +29,7 @@ const ClipImg = styled.Image`
 
 const NoteImg = styled.Image`
   width: 98%;
-  /* height: ${({ keyboardOpen }) => (keyboardOpen ? '300px' : '460px')}; */
+  height: 400px;
   box-shadow: 5px 5px 5px gray;
 `;
 
@@ -61,8 +61,7 @@ const MenuItem = styled(Text)`
   font-size: 20px;
 `;
 
-const InputContainer = styled.View`
-  margin-top: ${({ keyboardOpen }) => (keyboardOpen ? '200px' : '20px')};
+const InputContainer = styled(View)`
   width: 100%;
   align-items: center;
   padding: 0 16px 0 16px;
@@ -85,7 +84,7 @@ const DeleteButton = styled.TouchableOpacity`
 
 const SendButton = styled.TouchableOpacity`
   position: absolute;
-  top: 12;
+  top: 22;
   right: 30;
   bottom: 0; 
 `;
@@ -184,15 +183,7 @@ const FridgeDetailScreen = ({ route }) => {
       )}
 
       {/* 키보드가 열릴 때만 OCR 기능 활성화 버튼을 표시 */}
-      
-
       <InputContainer>
-        {keyboardOpen && (
-          <FridgeOCR 
-            onOcrComplete={handleOcrResult} 
-          />
-        )}
-        
         <SearchFood
           data={allFoods}
           setQuery={setText}

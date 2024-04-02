@@ -16,7 +16,8 @@ const Container = styled(View)`
 `
 
 const CustomAutoComplete = styled(Autocomplete)`
-  display: block;
+  color: ${(props) => props.theme.palette.font};
+  font-size: 16px;
   background-color: ${(props) => props.theme.palette.background};
   border-bottom-width: 1px;
   border-bottom-color: ${(props) => props.theme.palette.light};
@@ -26,14 +27,19 @@ const IngreList = styled(View)`
   background-color: ${(props) => props.theme.palette.background};
   width: 100%;
   flex-direction: row;
-  padding: 10px;
+  padding: 10px 0 10px 0;
   align-items: center;
 `
 
-const EmptySearchResults = styled(View)`
-  align-items: center;
-  justify-content: center;
-  margin: 20px;
+const ListItem = styled(Text)`
+  font-size: 16px;
+`
+
+const NoResText = styled(Text)`
+  font-size: 16;
+  font-family: ${(props) => props.theme.fonts.content};
+  margin-top: 10px;
+  margin-bottom: 20;
 `
 
 const JustifyView = styled(View)`
@@ -103,11 +109,12 @@ export const SearchBar = ({ data, onSelect, flag }) => {
               <TouchableOpacity
                 onPress={() => {handleSelect(item)}}>
                 <IngreList>
-                  <Text>{item}</Text>
+                  <ListItem>{item}</ListItem>
                 </IngreList>
               </TouchableOpacity>
             ),
             scrollEnabled: true,
+            style: {...styles.list, ...styles.shadow}
           }}
         />
       </Container>
@@ -115,9 +122,9 @@ export const SearchBar = ({ data, onSelect, flag }) => {
       {/* 서치바 하단 */}
       <View>
         {filteredData.length === 0 && searchQuery.length > 0 && recipeName !== searchQuery && (
-          <EmptySearchResults>
-            <Text>검색 결과가 없습니다.</Text>
-          </EmptySearchResults>
+          <View>
+            <NoResText>검색 결과가 없습니다.</NoResText>
+          </View>
         )}
 
         <JustifyView>
@@ -133,3 +140,14 @@ export const SearchBar = ({ data, onSelect, flag }) => {
     </View>
   )
 }
+
+
+const styles = StyleSheet.create({
+  list: {
+    zIndex: 1,
+    borderWidth: 0,
+    maxHeight: 200,
+  },
+  shadow: {
+  },
+})
