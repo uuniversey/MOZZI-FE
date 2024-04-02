@@ -16,6 +16,8 @@ type ButtonProps = {
   onPress: () => void
 }
 
+const imageSize = (Dimensions.get('window').width / 3) - 25;
+
 const ScreenContainer = styled(View)`
   flex: 1;
   background-color: ${(props) => props.theme.palette.background};
@@ -33,24 +35,23 @@ const HeaderTitle = styled(Text)`
 const ButtonContainer = styled(View)`
   flex-direction: column;
   margin-bottom: 20px;
-  padding: 16px;
+  padding: 12px;
   background-color: ${(props) => props.theme.palette.point};
   border-radius: 10px;
-  height: 129px;
 `
 
 const ButtonGroup = styled(View)`
-  margin-top: 20px;
+  margin-top: 16px;
   flex-direction: row;
   justify-content: space-between;
-  background-color: ${(props) => props.theme.palette.point};
-  border-radius: 10px;
 `
 
 const StyledButton = styled(TouchableOpacity)`
   background-color: ${(props) => props.theme.palette.pointDark};
   border-radius: 10px;
-  padding: 5px 7px;
+  padding: 3px 5px 3px 5px;
+  align-items: center;
+  align-self: flex-end;
 `
 
 const ButtonText = styled(Text)`
@@ -62,11 +63,11 @@ const ButtonText = styled(Text)`
 const ImageText = styled(Text)<{ excess?: boolean }>`
   font-size: 15px;
   font-family: ${(props) => props.theme.fonts.content};
-  color: ${({ excess }) => (excess ? 'red' : '#000')};
+  color: ${({ excess }) => (excess ? 'red' : 'props.theme.palette.font')};
 `
 
 const ImageContainer = styled(View)`
-  padding: 16px;
+  padding: 12px;
   background-color: ${(props) => props.theme.palette.point};
   border-radius: 10px;
 `
@@ -74,6 +75,7 @@ const ImageContainer = styled(View)`
 const ImageGroup = styled(View)`
   height: 100%;
   flex-direction: row;
+  align-items: center;
   justify-content: flex-start;
   flex-Wrap: wrap;
   background-color: ${(props) => props.theme.palette.point};
@@ -81,14 +83,14 @@ const ImageGroup = styled(View)`
 `
 
 const StyledImage = styled(Image)`
-  width: 100px;
-  aspect-ratio: 1;
+  width: ${imageSize}px;
+  height: ${imageSize}px;
   margin: 3px;
 `
 
 const StyledScrollView = styled(View)`
-  height: 270px;
-  margin-top: 16px;
+  height: 305px;
+  margin-top: 8px;
 `
 
 const SelectableImage = styled(StyledImage)<{ isSelected: boolean }>`
@@ -104,6 +106,10 @@ const SelectableMusic = styled(StyledButton)<{ isSelected: boolean }>`
 `
 
 const MoodButton: React.FC<ButtonProps> = ({ title, onPress }) => (
+  // <SmallButton
+  //   text={title}
+  //   onPress={onPress}
+  // />
   <StyledButton onPress={onPress}>
     <ButtonText>{title}</ButtonText>
   </StyledButton>
@@ -284,39 +290,41 @@ function SelectShortsImageScreen () {
       </Header>
       <ScreenContainer>
         <HeaderTitle>쇼츠 만들기 (1/2)</HeaderTitle>
+        {/* 노래 선택 */}
         <ButtonContainer>
-          <IconFontAwesome name="music" size={30}/>
+          <IconFontAwesome name="music" size={25}/>
           <ButtonGroup>
             {renderMusic()}
           </ButtonGroup>
         </ButtonContainer>
-          <ImageContainer>
-            <Icon name="photo-size-select-actual" size={30} />
-            <ImageText excess={excessImage}>
-              {imageCount} / 
-            10 {excessImage && "10개 이하로 선택해주세요."}
-            </ImageText>
-              <StyledScrollView>
-                <ScrollView>
-                  <ImageGroup>
-                    {renderImages()}
-                  </ImageGroup>
-                </ScrollView>
-              </StyledScrollView>
-          </ImageContainer>
-          <SmallButton
-            text="등록"
-            onPress={() => {
-              if (imageCount > 0 && selectedMusic !== null) {
-                      createShorts(profileData.id, selectedMusic, selectedImages)
-              } else {
-                Alert.alert("Missing Selection", "Please select at least one image and a music mood.");
-              }
-            }}
-            style={{
-              marginTop: 20,
-            }}
-          />
+        {/* 이미지 선택 */}
+        <ImageContainer>
+          <Icon name="photo-size-select-actual" size={25} />
+          <ImageText excess={excessImage}>
+            {imageCount} / 
+          10 {excessImage && "10개 이하로 선택해 주세요."}
+          </ImageText>
+          <StyledScrollView>
+            <ScrollView>
+              <ImageGroup>
+                {renderImages()}
+              </ImageGroup>
+            </ScrollView>
+          </StyledScrollView>
+        </ImageContainer>
+        <SmallButton
+          text="등록"
+          onPress={() => {
+            if (imageCount > 0 && selectedMusic !== null) {
+                    createShorts(profileData.id, selectedMusic, selectedImages)
+            } else {
+              Alert.alert("알림", "음악과 이미지가 전부 선택되지 않으면 모찌가 쇼츠를 만들 수 없어요! 😥");
+            }
+          }}
+          style={{
+            marginTop: 20,
+          }}
+        />
       </ScreenContainer>
     </>
   )
