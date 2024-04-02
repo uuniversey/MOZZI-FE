@@ -33,9 +33,9 @@ const SelectedText = styled(Text)`
 function SearchScreen () {
   
   const navigation = useNavigation()
-  const { getRecipe, recipeData, recipeDetailData, getRecipeDetail } = useRecipeStore()
+  const { getRecipe, recipeData, ingredientData, getRecipeDetail } = useRecipeStore()
 
-  const [selectedRecipeName, setSelectedRecipeName] = useState<string>('')
+  const [ selectedRecipeName, setSelectedRecipeName ] = useState<string>('')
 
   const handleSelectRecipe = (recipeName: string) => {
     setSelectedRecipeName(recipeName)
@@ -63,7 +63,7 @@ function SearchScreen () {
           <SearchBar data={recipeData} onSelect={handleSelectRecipe}/>
         </SearchView>
 
-        {selectedRecipeName ?
+        {selectedRecipeName && (selectedRecipeName === ingredientData) ?
         <SelectedText>
           {selectedRecipeName}의 레시피로 이동할까요?
         </SelectedText> : ''

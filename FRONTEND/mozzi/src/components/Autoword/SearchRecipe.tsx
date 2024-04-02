@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'rea
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import Autocomplete from 'react-native-autocomplete-input'
 import styled from 'styled-components/native'
+import useRecipeStore from '../../store/RecipeStore'
 
 interface FoodItem {
   photoUrl: string
@@ -77,22 +78,17 @@ export const SearchBar = ({ data, onSelect }: SearchBarProps) => {
   const [filteredData, setFilteredData] = useState<FoodItem[]>([])
   const [recipeName, setRecipeName] = useState<string>('')
 
+  const { setIngredientData } = useRecipeStore()
+
   // 자동 완성 데이터 필터링
   const handleAutoComplete = (text: string) => {
+    setIngredientData(text)
     setSearchQuery(text)
     const filtered = data.filter(item => item.foodName.includes(text))
     setFilteredData(filtered)
     console.log('----', filtered)
   }
 
-  useEffect(() => {
-    if (searchQuery) {
-      const selectedItem = filteredData.find(item => item.foodName === searchQuery);
-      if (selectedItem) {
-        onSelect(selectedItem.foodName)
-      }
-    }
-  }, [searchQuery, filteredData, onSelect])
 
   return (
     <View>
