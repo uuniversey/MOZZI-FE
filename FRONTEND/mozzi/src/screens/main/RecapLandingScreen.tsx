@@ -4,6 +4,8 @@ import { Image, Text, StyleSheet, TouchableOpacity, Animated, View } from 'react
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import styled from 'styled-components/native'
 import useVideoStore from '../../store/RecapStore'
+import useProfileStore from '../../store/ProfileStore'
+import useLoginStore from '../../store/LoginStore'
 
 const Container = styled(View)`
   flex: 1;
@@ -48,6 +50,8 @@ const RecapLandingScreen: React.FC = () => {
   const animatedValue = useRef(new Animated.Value(0)).current
   const navigation = useNavigation()
   const isVideoComplete = useVideoStore(state => state.isVideoComplete);
+  const { profileData } = useProfileStore()
+  const { userData } = useLoginStore()
 
   useEffect(() => {
     // const timer = setTimeout(() => {
@@ -121,7 +125,11 @@ const RecapLandingScreen: React.FC = () => {
           source={require('../../assets/illustration/pot.png')}
         />
       </View>
-      <Description>아우엉님 님의 {'\n'} 추억을 요리하고 있어요!</Description>
+      {profileData?.nickname? (
+            <Description>{profileData.nickname} 님의 {'\n'} 추억을 요리하고 있어요!</Description>
+          ) : (
+            <Description>{userData.nickname} 님의 {'\n'} 추억을 요리하고 있어요!</Description>
+          )}
       <OuterBar>
         <InnerBar style={{ transform: [{ translateX }] }} />
       </OuterBar>

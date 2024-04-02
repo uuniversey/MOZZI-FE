@@ -9,6 +9,7 @@ import useLoginStore from '../../store/LoginStore';
 
 import kakao from '../../assets/landing/kakao-login-icon.png';
 import wave from '../../assets/landing/wave-bg.png';
+import SmallButton from '../../components/Button/SmallButton';
 
 const icons = [
   require('../../assets/landing/icon1.png'),
@@ -170,21 +171,23 @@ function LandingScreen() {
       ))}
 
       <LoginContainer>
-      {/* 로그인 버튼 */}
-        <AnimatedLoginButton
+        {/* 로그인 버튼 */}
+        {/* <AnimatedLoginButton
           style={{ opacity: loginFadeAnim }}
           onPress={kakaoLogin}
         >
           <Image source={kakao} />
+        </AnimatedLoginButton> */}
+
+        {/* 임시 로그인 버튼 */}
+        <AnimatedLoginButton
+          style={{ opacity: loginFadeAnim }}
+          onPress={tmpHandle}
+        >
+          <Image source={kakao} />
         </AnimatedLoginButton>
+
       </LoginContainer>
-
-
-      
-      <TouchableOpacity >
-        <Text onPress={tmpHandle}>임시 로그인 버튼</Text>
-      </TouchableOpacity>
-
     </Container>
   );
 }

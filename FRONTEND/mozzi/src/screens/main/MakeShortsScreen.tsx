@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity, StyleSheet, Platform, PermissionsAndroid } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import Snackbar from 'react-native-snackbar'
 import { useNavigation } from '@react-navigation/native'
 import RNFetchBlob from 'rn-fetch-blob'
 import LongButton from '../../components/Button/LongButton'
@@ -79,6 +80,11 @@ function MakeShortsScreen () {
 
     setVideoPath(localFile)
     console.log('The file is save to:', response.path())
+     // 저장 성공 알림
+     Snackbar.show({
+      text: '동영상이 갤러리에 저장되었습니다.',
+      duration: Snackbar.LENGTH_SHORT,
+    })
   } catch (error) {
     console.error(error)
   }

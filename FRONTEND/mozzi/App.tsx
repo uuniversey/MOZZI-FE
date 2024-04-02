@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import { ThemeProvider, styled } from 'styled-components/native';
 import { setCustomText } from 'react-native-global-props'; 
-import { View, StyleSheet, TouchableOpacity, Dimensions, Animated } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, Dimensions, Animated, LogBox } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -41,7 +41,6 @@ const theme = {
   }
 };
 
-
 // 전역 폰트 설정 적용
 setCustomText(customTextProps)
 
@@ -49,7 +48,9 @@ const Tab = createBottomTabNavigator();
 const windowWidth = Dimensions.get('window').width
 
 const App: React.FC = () => {
-
+  // 로그 없애기
+  LogBox.ignoreAllLogs()
+  
   const { isLogin } = useLoginStore()
   const rotateAnim = useRef(new Animated.Value(0)).current;
 
