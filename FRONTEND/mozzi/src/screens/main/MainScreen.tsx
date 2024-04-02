@@ -105,7 +105,7 @@ function MainScreen() {
 
   const [recipe, setRecipe] = useState<RecipeItem | null>(null)
   const { userData } = useLoginStore()
-  const { profileData } = useProfileStore()
+  const { profileData, getProfile } = useProfileStore()
   const { getRecipeDetail } = useRecipeStore()
 
   // 로그인 유저 호출
@@ -145,6 +145,7 @@ function MainScreen() {
   useEffect(() => {
     console.log(userData)
     popularRecipe()
+    getProfile()
     return () => {
     }
   }, [])
