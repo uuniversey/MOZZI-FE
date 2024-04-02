@@ -963,14 +963,16 @@ def user_recommendation(request):
     # 0. 요청한 사용자를 특정한다.
     # 0. 요청한 사용자를 특정한다.
     token = request.headers['Authorization'].split(' ')[1]
-    if len(token) != 165 :
+    while len(token) != 165 :
         token = token[:-1]
-    data = base64.b64decode(token)
-    data = data.decode('latin-1')
     data=urlsafe_base64_decode(token)
     print(data,'token')
     data = data.decode('latin-1')
-
+    index_e = data.index('"e":') + len('"e":')  # "e": 다음 인덱스부터 시작
+ 
+    index_comma = data.index(',', index_e)  # 쉼표(,)가 나오는 인덱스 찾기
+    e_value = data[index_e:index_comma]
+    user_number = e_value[1:-1]
     # 사용자 user_code 가 나올 것
 
     # print(data)
@@ -1043,7 +1045,7 @@ def user_recommendation(request):
 def user_ingredient_affection(request):
     # print(request.data['foods'])
     token = request.headers['Authorization'].split(' ')[1]
-    if len(token) != 165 :
+    while len(token) != 165 :
         token = token[:-1]
     data=urlsafe_base64_decode(token)
     print(data,'token')
