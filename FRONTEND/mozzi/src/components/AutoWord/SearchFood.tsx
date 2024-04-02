@@ -12,34 +12,40 @@ interface FoodItem {
 
 const SearchSection = styled(View)`
   width: 100%;
+  flex-direction: row;
+  align-items: center;
+  margin: 10px 0px 5px 0px;
+  background-color: ${(props) => props.theme.palette.background};
+`
+
+const StyledAutocomplete = styled(Autocomplete)`
+  font-size: 16px;
+  z-index: 1001;
+  width: 100%;
+  border: transparent;
   height: 50px;
   flex-direction: row;
   align-items: center;
   background-color: #fff;
   border-width: 1;
   border-radius: 8px;
-  border-color: #E4E196;
-  margin-bottom: 15px;
-`
-
-const InputForm = styled(View)`
-  position: absolute;
-  top: 4;
-  left: 20;
-` 
-
-const StyledAutocomplete = styled(Autocomplete)`
-  z-index: 1001;
-  width: 300px;
-  background-color: rgba(255,255,255, 0.5);
-  border: transparent;
+  border-color: ${(props) => props.theme.palette.pointDark};
+  color: ${(props) => props.theme.palette.font};
+  margin-bottom: 5px;
+  padding-left: 15px;
 `;
 
 const ListButton = styled(TouchableOpacity)`
+  background-color: ${(props) => props.theme.palette.background};
+  width: 100%;
   flex-direction: row;
-  padding: 10px;
+  padding: 10px 0 10px 0;
+  align-items: center;
 `
-
+const ListItem = styled(Text)`
+  color: ${(props) => props.theme.palette.font};
+  font-size: 16px;
+`
 
 export const SearchFood: React.FC<{ setQuery: (query: string) => void }> = ({ setQuery }) => {
   const [query, setLocalQuery] = useState('');
@@ -104,32 +110,27 @@ export const SearchFood: React.FC<{ setQuery: (query: string) => void }> = ({ se
 
   return (
     <SearchSection>
-      <InputForm>
-        {/* {keyboardOpen ? ( */}
-          <StyledAutocomplete
-            data={filteredData}
-            defaultValue={query}
-            onChangeText={handleAutoComplete}
-            inputContainerStyle={{ borderWidth: 0 }}
-            flatListProps={{
-              keyExtractor: (item, index) => index.toString(),
-              renderItem: ({ item }) => (
-                <ListButton onPress={() => handleSelectItem(item)}>
-                  <Text>{item}</Text>
-                </ListButton>
-              ),
-              scrollEnabled: true,
-              style: { ...styles.list, ...styles.shadow },
-            }}
-            renderTextInput={(props) => <TextInput {...props} />}
-            listContainerStyle={{
-              // maxHeight: 500, // 조절 가능한 최대 
-              maxHeight: keyboardOpen ? 300 : 150 ,
-              minHeight: keyboardOpen ? 300 : 0,
-            }}
-          />
-        {/* ) : null} */}
-      </InputForm>
+      {/* {keyboardOpen ? ( */}
+      <StyledAutocomplete
+        data={filteredData}
+        defaultValue={query}
+        onChangeText={handleAutoComplete}
+        inputContainerStyle={{ borderWidth: 0 }}
+        flatListProps={{
+          keyExtractor: (item, index) => index.toString(),
+          renderItem: ({ item }) => (
+            <ListButton onPress={() => handleSelectItem(item)}>
+              <ListItem>{item}</ListItem>
+            </ListButton>
+          ),
+          scrollEnabled: true,
+          style: { ...styles.list, ...styles.shadow },
+        }}
+        renderTextInput={(props) => <TextInput {...props} />}
+        listContainerStyle={{
+          maxHeight: keyboardOpen ? 300 : 150 ,
+        }}
+      />
     </SearchSection>
   );
 };
@@ -137,22 +138,10 @@ export const SearchFood: React.FC<{ setQuery: (query: string) => void }> = ({ se
 
 const styles = StyleSheet.create({
   list: {
-    // position: 'absolute',
-    top: 5,
-    left: -16,
-    right: 0,
-    backgroundColor: 'white',
     borderWidth: 0,
-    borderColor: 'transparent',
     maxHeight: 300,
-    // maxHeight: keyboardOpen ? 500 : 150 ,
     zIndex: 1,
   },
-  shadow: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-    elevation: 5,
+  shadow: {    
   },
 })
