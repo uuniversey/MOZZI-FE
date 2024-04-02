@@ -71,7 +71,7 @@ const AnimatedLoginButton = Animated.createAnimatedComponent(TouchableOpacity);
 
 function LandingScreen() {
   const navigation = useNavigation();
-  const { login: storeLogin, userData, login } = useLoginStore()
+  const { login: storeLogin, userData } = useLoginStore()
 
   const kakaoLogin = async () => {
     console.log("테스팅 중")

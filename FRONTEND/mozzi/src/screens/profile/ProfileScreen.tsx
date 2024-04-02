@@ -15,7 +15,6 @@ const Container = styled(ScrollView).attrs(props => ({
   contentContainerStyle: {
     flexGrow: 1,
     justifyContent: 'center',
-    alignItems: 'center',
   }
   }))`
   flex: 1;
