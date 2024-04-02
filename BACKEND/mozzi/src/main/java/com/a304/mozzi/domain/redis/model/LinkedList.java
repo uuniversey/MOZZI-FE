@@ -83,7 +83,7 @@ public class LinkedList {
     {
         ValueOperations<String, Object> values = redisTemplate.opsForValue();
         String Head = values.get(userId + ":LinkedList:Diary:Head").toString();
-        while ()
+//        while ()
     }
     public void pushTail(String userId, String Id)
     {
