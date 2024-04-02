@@ -24,6 +24,23 @@ const useDiaryStore = create((set) => ({
       console.error('캘린더 데이터 요청 실패', error)
     }
   },
+  deleteCalendar: async (id) => {
+    console.log('딜리트 아이디 잘 받았나?', id)
+    const token = await AsyncStorage.getItem('accessToken')
+    try {
+      const response = await axios.delete('mozzi/diary/deletemydiary', {
+        headers: {
+          Authorization: `Bearer ${token}` // 헤더에 토큰 포함
+        },
+        params: { 
+          id,
+        }
+      })
+      console.log('다이어리 디테일 삭제 성공')
+    } catch (error) {
+      console.error('다이어리 디테일 삭제 실패', error)
+    }
+  }, 
 }))
 
 export default useDiaryStore

@@ -2,9 +2,12 @@ import { View, ScrollView, Text, TouchableOpacity, Image} from 'react-native'
 import React from 'react'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import styled from 'styled-components/native'
+
 import { Header } from '../../components/Header/Header'
 
 import { useNavigation } from '@react-navigation/native'
+import useProfileStore from '../../store/ProfileStore'
+import useDiaryStore from '../../store/DiaryStore'
 
 const Container = styled(View)`
   flex: 1;
@@ -74,8 +77,6 @@ const FoodImage = styled(Image)`
   border-radius: 5px;
 `
 
-
-
 const ItemContainer = styled(ScrollView)`
   display: flex;
   width: 100%;
@@ -83,6 +84,7 @@ const ItemContainer = styled(ScrollView)`
 `
 
 function DiaryDetailScreen ({ route }) {
+  const { deleteCalendar, getCalendar } = useDiaryStore()
   const { date, dayData } = route.params
   console.log(dayData, '받은 데이데이터')
   const navigation = useNavigation()
@@ -93,6 +95,14 @@ function DiaryDetailScreen ({ route }) {
     navigation.navigate('Stamp', {
       date,
       data,
+    })
+  }
+  
+  const deleteDiary = (id) => {
+    deleteCalendar(id)
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Diary' }],
     })
   }
 
@@ -117,6 +127,9 @@ function DiaryDetailScreen ({ route }) {
                   <BtnContainer>
                     <ShareBtn onPress={() => moveStamp(data)}>
                       <Icon name="ios-share" size={24} color="black" />
+                    </ShareBtn>
+                    <ShareBtn onPress={() => deleteDiary(data.id)}>
+                      <Icon name="delete" size={24} color="black" />
                     </ShareBtn>  
                   </BtnContainer>                  
                 </DiaryInfo>
