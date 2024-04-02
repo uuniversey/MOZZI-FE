@@ -18,7 +18,7 @@ const Label = styled(Text)`
 
 const StyledInput = styled(TextInput)`
   font-size: 16;
-  height: 40px;
+  min-height: 40px;
   margin: 10px 0px 10px 0px;
   border-bottom-width: 1px;
   border-bottom-color: ${(props) => props.theme.palette.light};
@@ -79,10 +79,11 @@ function EditScreen() {
 
       <Label>좋아하는 식재료</Label>
       <SearchBar data={allFoods} onSelect={handleLikeData} flag={1}/>
+      
 
       <Label>싫어하는 식재료</Label>
       <SearchBar data={allFoods} onSelect={handleUnlikeData} flag={0}/>
-
+      
       <Label>비건 여부</Label>
       <CustomDropdown
         data={isYes}
