@@ -128,11 +128,12 @@ function MakeShortsScreen () {
     }
     return true
   }
-
+  
   const previewVideo = async () => {
   
     try {
       const userId = "" + profileData.id
+      console.log(userId)
       const url = `https://a304.site/api/recommend/datas/download_video/${userId}/` // 서버의 엔드포인트 URL
       const localFile = `${RNFetchBlob.fs.dirs.DocumentDir}/${userId}.mp4` // 파일을 저장할 로컬 경로
       const response = await RNFetchBlob.config({

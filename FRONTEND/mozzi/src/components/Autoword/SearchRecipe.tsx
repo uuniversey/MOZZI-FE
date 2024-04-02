@@ -29,8 +29,8 @@ const SearchSection = styled(View)`
 
 const InputForm = styled(View)`
   position: absolute;
-  top: 4;
-  left: 30;
+  top: 4px;
+  left: 30px;
 ` 
 
 const StyledAutocomplete = styled(Autocomplete)`

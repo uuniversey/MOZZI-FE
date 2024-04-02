@@ -134,6 +134,7 @@ function RecapScreen() {
       console.log(response.data.foods)
       // response.data에 값이 들어가 있는지 확인 필요
       setMyRecipes(response.data.foods)
+      console.log("말도 안 돼~~~~~~~~~~~", myRecipes)
     } catch (error) {
       //응답 실패
       console.error(error)
@@ -141,7 +142,6 @@ function RecapScreen() {
   }
 
   useEffect(() => {
-    
     callRecapFood()
 
   }, [])
@@ -155,11 +155,16 @@ function RecapScreen() {
   }
 
   const moveRecapDetail = (foodName: string) => {
-    // if (foodName) {
-    //   getRecipeDetail(foodName)
-    // }
-    // navigation.navigate("Recipe")
+    if (foodName) {
+      getRecipeDetail(foodName)
+    }
+    navigation.navigate("Recipe")
   }
+
+  // const moveRecipe = () => {
+  //   getRecipeDetail(todayRecipe.foodName)
+  //   navigation.navigate("Recipe")
+  // }
 
   const convertDay = (day: string): string => {
     const today = new Date();
@@ -192,8 +197,8 @@ function RecapScreen() {
         {myRecipes?.length > 0 ? (
               myRecipes.map((recipe: RecipeCardProps, index) => (
                 <TouchableOpacity
-                  key={index} 
-                  onPress={moveRecapDetail(recipe.foodName)}>
+                  key={index}
+                  onPress={() => moveRecapDetail(recipe.foodName)}>
                     <RecipeCard
                       photoDate={convertDay(recipe.photoDate)}
                       foodName={recipe.foodName}
