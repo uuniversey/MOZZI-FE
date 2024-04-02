@@ -36,6 +36,7 @@ const theme = {
     gray: '#888',
     light: '#e1dfd4',
     point: '#F9F7BB',
+    point2: '#F9F7BB',
     pointDark: '#E4E196',
   }
 };

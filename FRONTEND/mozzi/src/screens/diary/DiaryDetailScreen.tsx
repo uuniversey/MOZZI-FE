@@ -39,14 +39,13 @@ const DiaryInfo = styled(View)`
   align-items: center;
   flex-direction: row;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 `
 
 const FoodTitle = styled(Text).attrs({
   numberOfLines: 1,
   ellipsizeMode: 'tail',
 })`
-  width: 300px;
   font-size: 16px;
   font-family: ${(props) => props.theme.fonts.content};
   color: ${(props) => props.theme.palette.font};

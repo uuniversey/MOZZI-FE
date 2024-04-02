@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome'
 import { Header } from '../../components/Header/Header'
 import { useNavigation } from '@react-navigation/native'
+import SmallButton from '../../components/Button/SmallButton'
 import useVideoStore from '../../store/RecapStore'
 import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -18,16 +19,15 @@ type ButtonProps = {
 const ScreenContainer = styled(View)`
   flex: 1;
   background-color: ${(props) => props.theme.palette.background};
-  padding: 20px;
+  padding: 0 16px 0 16px;
 `
 
 const HeaderTitle = styled(Text)`
-  font-size: 28px;
-  text-align: center;
-  margin-bottom: 20px;
-  align-self: flex-start;
   color: ${(props) => props.theme.palette.font};
   font-family: ${(props) => props.theme.fonts.title};
+  font-size: 28px;
+  margin-bottom: 20px;
+  align-self: flex-start;
 `
 
 const ButtonContainer = styled(View)`
@@ -69,8 +69,6 @@ const ImageContainer = styled(View)`
   padding: 16px;
   background-color: ${(props) => props.theme.palette.point};
   border-radius: 10px;
-  /* width: 350; */
-  /* height: 280; */
 `
 
 const ImageGroup = styled(View)`
@@ -83,36 +81,14 @@ const ImageGroup = styled(View)`
 `
 
 const StyledImage = styled(Image)`
-  width: 105px;
-  height: 105px;
+  width: 100px;
+  aspect-ratio: 1;
   margin: 3px;
 `
 
 const StyledScrollView = styled(View)`
   height: 270px;
   margin-top: 16px;
-`
-
-const EnterContainer = styled(View)`
-  width: 100%;
-  margin-top: 30px;
-  flex-direction: row;
-  justify-content: flex-end;
-`
-
-const EnterButton = styled(TouchableOpacity)`
-  background-color: ${(props) => props.theme.palette.point};
-  border-radius: 10px;
-  width: 80px;
-  height: 35px;
-  justify-content: center;
-`
-
-const EnterButtonText = styled(Text)`
-  font-size: 16px;
-  text-align: center;
-  color: ${(props) => props.theme.palette.font};
-  font-family: ${(props) => props.theme.fonts.content};
 `
 
 const SelectableImage = styled(StyledImage)<{ isSelected: boolean }>`
@@ -256,7 +232,7 @@ function SelectShortsImageScreen () {
       console.log(userId, selectedImages, selectedMusic)
       // useVideoStore.getState().setVideoComplete(true)
       navigation.navigate("RecapLanding")
-      const response = await axios.post('http://10.0.2.2:8000/datas/make_video/', {
+      const response = await axios.post('https://a304.site/api/recommend/datas/make_video/', {
         user_id: userId,
         image_list: selectedImages,
         bgm_category: selectedMusic
@@ -328,17 +304,19 @@ function SelectShortsImageScreen () {
                 </ScrollView>
               </StyledScrollView>
           </ImageContainer>
-          <EnterContainer>
-          <EnterButton onPress={() => {
-            if (imageCount > 0 && selectedMusic !== null) {
-                    createShorts(profileData.id, selectedMusic, selectedImages)
-            } else {
-              Alert.alert("Missing Selection", "Please select at least one image and a music mood.");
-            }
-          }}>
-            <EnterButtonText>등록</EnterButtonText>
-          </EnterButton>
-        </EnterContainer>
+          <SmallButton
+            text="등록"
+            onPress={() => {
+              if (imageCount > 0 && selectedMusic !== null) {
+                      createShorts(profileData.id, selectedMusic, selectedImages)
+              } else {
+                Alert.alert("Missing Selection", "Please select at least one image and a music mood.");
+              }
+            }}
+            style={{
+              marginTop: 20,
+            }}
+          />
       </ScreenContainer>
     </>
   )

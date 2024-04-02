@@ -32,7 +32,8 @@ def download_images(image_urls, user_id):
 def images_to_video_with_audio(filtered_images, audio_path, output_path, fadeout_duration=3):
     # 비디오 클립들을 저장할 리스트 생성
     video_clips = []
-    
+    print(audio_path,'audio')
+    print(output_path,'output')
     # 각 이미지를 비디오 클립으로 변환하여 리스트에 추가
     for img_path in filtered_images:
         image_clip = ImageClip(img_path).set_duration(5)  # 이미지의 지속 시간은 1초로 설정
@@ -42,7 +43,8 @@ def images_to_video_with_audio(filtered_images, audio_path, output_path, fadeout
     final_clip = concatenate_videoclips(video_clips, method="compose")
     
     # 오디오 클립 로드
-    audio_clip = AudioFileClip(audio_path)
+    # audio_clip = AudioFileClip(audio_path)
+    audio_clip = AudioFileClip(str(audio_path))
     
     # 전체 비디오의 길이에 맞게 오디오 클립 조정
     # 비디오 길이보다 오디오 길이가 길 경우, 오디오를 자름
@@ -60,7 +62,8 @@ def images_to_video_with_audio(filtered_images, audio_path, output_path, fadeout
     final_clip = final_clip.set_audio(audio_clip)
     
     # 동영상 파일로 저장
-    final_clip.write_videofile(output_path, codec="libx264", fps=24)
+    # final_clip.write_videofile(output_path, codec="libx264", fps=24)
+    final_clip.write_videofile(str(output_path), codec="libx264", fps=24)
 
 # 이미지 폴더 경로, 오디오 파일 경로, 출력 동영상 파일 경로 설정
 # image_folder = "../../images"

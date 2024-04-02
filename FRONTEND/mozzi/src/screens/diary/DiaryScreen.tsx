@@ -56,9 +56,14 @@ const CalendarContainer = styled(View)`
   padding: 0 16px 0 16px;
 ` 
 
-const MyCalendar = styled(Calendar)`
+const MyCalendar = styled(Calendar).attrs({
+  theme: {
+    // arrowColor: `${(props) => props.theme.palette.pointDark}`,
+    arrowColor: '#E4E196',
+  },
+})`
   width: 100%;
-`
+`;
 
 const DayStyle = styled(View)`
   width: 50px;

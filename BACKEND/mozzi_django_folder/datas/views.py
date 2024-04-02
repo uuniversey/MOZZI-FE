@@ -33,6 +33,7 @@ from botocore.config import Config
 from django.http import FileResponse
 from rest_framework.response import Response
 from .videomake import *
+from pathlib import Path
 
 import math
 
@@ -1130,25 +1131,56 @@ def make_video(request):
         user_id = request.data.get('user_id')
         bgm_category = request.data.get('bgm_category')
         image_list = request.data.get('image_list')  # 예: 이미지 파일의 전체 URL 리스트
-
+        print(1111)
         image_url = []
         for url in image_list:
             img_name = url.split('/')[-1]
             image_url.append(img_name)
-
+        print(2222)
         download_images(image_list, user_id)
+        print(3333)
         valid_extensions = ['.jpg', '.jpeg', '.png', '.gif']  # 유효한 이미지 확장자 목록
         # download_images 함수에서 이미지를 다운로드하는 로직이 실행됨
+        print(4444)
+        # BASE_DIR = Path(__file__).resolve().parent.parent.parent.parent.parent/home/ubuntu/project/S10P22A304/BACKEND/mozzi_django_folder/
+        
+        
+        BASE_DIR2 = Path(__file__).resolve().parent.parent
+        contents = os.listdir(BASE_DIR2)
 
-        image_folder = f"./user_id_{user_id}"
-        audio_path = f"./bgm/{bgm_category}.mp3"
-        output_path = f"./media/output/user_id_{user_id}.mp4"
+        # 결과 출력
+        for item in contents:
+            print(item,'item2')
+        print(BASE_DIR2,'base_dir2')
+        BASE_DIR3 = Path(__file__).resolve().parent.parent.parent
+        contents = os.listdir(BASE_DIR3)
+
+        # 결과 출력
+        for item in contents:
+            print(item,'item3')
+        # image_folder = BASE_DIR2 /"home"/"ubuntu"/"project"/"S10P22A304"/"BACKEND"/"mozzi_django_folder"/ f"user_id_{user_id}"
+        # audio_path = BASE_DIR2 /"home"/"ubuntu"/"project"/"S10P22A304"/"BACKEND"/"mozzi_django_folder"/ "bgm" / f"{bgm_category}.mp3"
+        # output_path = BASE_DIR2 /"home"/"ubuntu"/"project"/"S10P22A304"/"BACKEND"/"mozzi_django_folder"/ "media" / "output" / f"user_id_{user_id}.mp4"
+        image_folder = BASE_DIR2/f"user_id_{user_id}"
+        # image_folder = f"/user_id_{user_id}"
+        
+        audio_path = BASE_DIR2/"bgm"/f"{bgm_category}.mp3"
+        print(6666)
+        output_path = BASE_DIR2/"media"/"output"/f"user_id_{user_id}.mp4"
+        
+
+        output_dir = BASE_DIR2 / "media" / "output"
+        os.makedirs(output_dir, exist_ok=True)
+
+        print(audio_path)
+        print(output_path)
+        print(7777)
 
         filtered_images = []
         for filename in os.listdir(image_folder):
             if filename in image_url:
                 filtered_images.append(os.path.join(image_folder, filename))
-
+        print(88888)
         # 이미지 폴더에서 URL 리스트에 맞는 이미지 파일만 선택
         print(filtered_images)
         
@@ -1156,6 +1188,7 @@ def make_video(request):
             return JsonResponse({'error': 'No images found in the folder'}, status=404)
 
         # 비디오 생성 함수 실행
+        print(99999)
         images_to_video_with_audio(filtered_images, audio_path, output_path)
 
         # 완료 시 출력
