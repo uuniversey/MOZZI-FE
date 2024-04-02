@@ -75,6 +75,9 @@ const useRecipeStore = create((set) => ({
     }
   },
 
+  setIngredientData: (data) => {
+    set({ ingredientData: data })
+  },
 }))
 
 export default useRecipeStore

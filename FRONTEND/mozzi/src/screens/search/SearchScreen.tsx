@@ -14,7 +14,6 @@ import useRecipeStore from '../../store/RecipeStore'
 const Container = styled(View)`
   flex: 1;
   background-color: ${(props) => props.theme.palette.background};
-  align-items: center;
   padding: 10px 16px 0 16px;
 `
 
@@ -22,45 +21,21 @@ const SearchView = styled(View)`
   width: 100%;
 `
 
-const Card = styled(View)`
-  width: 100%;
-  height: 100%;
-  background-color: rgba(247, 207, 207, 0.7);
-  border-radius: 15px;
-  padding: 16px;
-  align-items: center;
-  /* margin-vertical: 8px; */
-  margin-top: 8px;
-  margin-bottom: 8px;
-`
-
-const StyledImage = styled(Image)`
-  width: 200px;
-  height: 200px;
-  border-radius: 200px;
-  margin-bottom: 8px;
-  /* border: 1px solid ${(props) => props.theme.palette.pointDark}; */
-`
-
-const MealName = styled(Text)`
-  font-size: 16px;
-  color: ${(props) => props.theme.palette.font};
-  margin-bottom: 8px;
-  font-family: ${(props) => props.theme.fonts.title};
-`
-
 const SelectedText = styled(Text)`
+  padding-left: 15px;
+  font-size: 16;
   font-family: ${(props) => props.theme.fonts.content};
   color: ${(props) => props.theme.palette.font};
+  margin-bottom: 20;
   z-index: -10;
 `
 
 function SearchScreen () {
   
   const navigation = useNavigation()
-  const { getRecipe, recipeData, recipeDetailData, getRecipeDetail } = useRecipeStore()
+  const { getRecipe, recipeData, ingredientData, getRecipeDetail } = useRecipeStore()
 
-  const [selectedRecipeName, setSelectedRecipeName] = useState<string>('')
+  const [ selectedRecipeName, setSelectedRecipeName ] = useState<string>('')
 
   const handleSelectRecipe = (recipeName: string) => {
     setSelectedRecipeName(recipeName)
@@ -88,14 +63,7 @@ function SearchScreen () {
           <SearchBar data={recipeData} onSelect={handleSelectRecipe}/>
         </SearchView>
 
-        {/* <Card>
-          <StyledImage
-            source={{ uri: recipeDetailData?.photo }}
-            />
-          <MealName>{recipeDetailData?.foodName}</MealName>
-        </Card> */}
-
-        {selectedRecipeName ?
+        {selectedRecipeName && (selectedRecipeName === ingredientData) ?
         <SelectedText>
           {selectedRecipeName}의 레시피로 이동할까요?
         </SelectedText> : ''
@@ -104,7 +72,7 @@ function SearchScreen () {
           text="이동"
           onPress={moveRecipe}
           style={{
-            marginTop: 70,
+            marginTop: 20,
             zIndex: -10,
           }}
         />

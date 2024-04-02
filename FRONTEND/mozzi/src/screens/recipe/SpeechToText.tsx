@@ -40,9 +40,6 @@ function SpeechToText({ onNext, onPrev }) {
     } else if (spokenText.includes("이전")) {
       onPrev && onPrev()
     }
-
-     // 음성 인식 결과 처리 후, 다시 음성 인식을 시작합니다.
-    startListening()
   }
 
   const startListening = () => {

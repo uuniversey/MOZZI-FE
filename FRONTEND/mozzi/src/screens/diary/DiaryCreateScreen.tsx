@@ -12,7 +12,8 @@ import SmallButton from '../../components/Button/SmallButton'
 import axios from 'axios'
 import styled from 'styled-components/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
+import ImagePicker from 'react-native-image-crop-picker'
+ 
 // Styled components definitions
 const Container = styled(View)`
   flex: 1;
@@ -74,7 +75,7 @@ const ImageButton = styled(TouchableOpacity)`
 
 const ImagePlaceholderText = styled(Text)`
   font-size: 24px;
-  color: ${(props) => props.theme.palette.font};
+  color: ${(props) => props.theme.palette.light};
   font-family: ${(props) => props.theme.fonts.content};
 `
 
@@ -159,22 +160,24 @@ function DiaryCreateScreen () {
   }
 
   const handleChoosePhoto = () => {
-    launchImageLibrary({
+    ImagePicker.openPicker({
+      width: 768,
+      height: 768,
+      cropping: true,
+      cropperCircleOverlay: false,
+      compressImageMaxWidth: 768,
+      compressImageMaxHeight: 768,
       mediaType: 'photo',
-      maxWidth: 768,
-      maxHeight: 768,
-      includeBase64: Platform.OS === 'android',
-    }, (response) => {
-      if (response.assets && response.assets[0].uri && response.assets[0].uri) {
-        console.log(response?.assets[0]?.uri)
-        setImageUri(response?.assets[0]?.uri)
-        setImageType(response?.assets[0]?.type)
-        // 파일명 한글이라 오류 날 경우, 임의로 파일명 부여할 것
-        setImageName(response?.assets[0]?.fileName)
-      } else if (response.didCancel) {
+    }).then(image => {
+      console.log(image.path)
+      setImageUri(image.path)
+      setImageType(image.mime)
+      setImageName(image.path.split('/').pop()) // 이미지 경로에서 파일명 추출
+    }).catch(error => {
+      if (error.code === 'E_PICKER_CANCELLED') {
         console.log('User cancelled image picker')
-      } else if (response.errorCode) {
-        console.error('ImagePicker Error: ', response.errorMessage)
+      } else {
+        console.error('ImagePicker Error: ', error.message)
       }
     })
   }
