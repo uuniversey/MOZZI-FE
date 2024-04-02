@@ -34,11 +34,10 @@ function RecommendLandingScreen() {
   const navigation = useNavigation();
 
   useEffect(() => {
-
     // 3.5초 후 화면 전환
     const timer = setTimeout(() => {
       navigation.navigate("Recommend")
-    }, 3500);
+    }, 3500)
 
     return () => {
       clearTimeout(timer)

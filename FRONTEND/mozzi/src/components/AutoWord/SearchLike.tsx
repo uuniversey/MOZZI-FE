@@ -8,7 +8,6 @@ import { Line } from 'react-native-svg'
 
 const Container = styled(View)`
   width: 100%;
-  max-height: 20%;
   flex-direction: row;
   align-items: center;
   margin: 10px 0px 5px 0px;
@@ -16,6 +15,7 @@ const Container = styled(View)`
 `
 
 const CustomAutoComplete = styled(Autocomplete)`
+  display: block;
   background-color: ${(props) => props.theme.palette.background};
   border-bottom-width: 1px;
   border-bottom-color: ${(props) => props.theme.palette.light};
@@ -31,6 +31,7 @@ const IngreList = styled(View)`
 const EmptySearchResults = styled(View)`
   align-items: center;
   justify-content: center;
+  margin: 20px;
 `
 
 const JustifyView = styled(View)`
@@ -89,42 +90,44 @@ export const SearchBar = ({ data, onSelect, flag }) => {
   }, [tmpData])
 
   return (
-    <>
-    <Container>
-      <CustomAutoComplete
-        data={filteredData}
-        onChangeText={handleAutoComplete}
-        inputContainerStyle={{ borderWidth: 0 }}
-        flatListProps={{
-          renderItem: ({ item }: { item: FoodItem }) => (
-            <TouchableOpacity
-              onPress={() => {handleSelect(item)}}>
-              <IngreList>
-                <Text>{item}</Text>
-              </IngreList>
-            </TouchableOpacity>
-          ),
-          scrollEnabled: true,
-        }}
-      />
-    </Container>
     <View>
-      {filteredData.length === 0 && searchQuery.length > 0 && recipeName !== searchQuery && (
-        <EmptySearchResults>
-          <Text>검색 결과가 없습니다.</Text>
-        </EmptySearchResults>
-      )}
+      <Container>
+        <CustomAutoComplete
+          data={filteredData}
+          onChangeText={handleAutoComplete}
+          inputContainerStyle={{ borderWidth: 0 }}
+          flatListProps={{
+            renderItem: ({ item }: { item: FoodItem }) => (
+              <TouchableOpacity
+                onPress={() => {handleSelect(item)}}>
+                <IngreList>
+                  <Text>{item}</Text>
+                </IngreList>
+              </TouchableOpacity>
+            ),
+            scrollEnabled: true,
+          }}
+        />
+      </Container>
 
-      <JustifyView>
-        {tmpData.map((item, index)=>(
-          <TouchableOpacity key={index} onPress={() => setTmpData(tmpData.filter(data => data !== item))}>
-            <SelectedStyle>
-              <TextSelectedStyle>{item}</TextSelectedStyle>
-            </SelectedStyle>
-          </TouchableOpacity>
-        ))}
-      </JustifyView>
+      {/* 서치바 하단 */}
+      <View>
+        {filteredData.length === 0 && searchQuery.length > 0 && recipeName !== searchQuery && (
+          <EmptySearchResults>
+            <Text>검색 결과가 없습니다.</Text>
+          </EmptySearchResults>
+        )}
+
+        <JustifyView>
+          {tmpData.map((item, index)=>(
+            <TouchableOpacity key={index} onPress={() => setTmpData(tmpData.filter(data => data !== item))}>
+              <SelectedStyle>
+                <TextSelectedStyle>{item}</TextSelectedStyle>
+              </SelectedStyle>
+            </TouchableOpacity>
+          ))}
+        </JustifyView>
+      </View>
     </View>
-  </>
   )
 }
