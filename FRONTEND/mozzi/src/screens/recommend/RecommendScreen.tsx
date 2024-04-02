@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import RecommendItemScreen from './RecommendItemScreen'
 import axios from 'axios'
@@ -6,12 +6,14 @@ import RecommendLandingScreen from './RecommendLandingScreen';
 import { nextDay } from 'date-fns';
 
 import useRecipeStore from '../../store/RecipeStore'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Text } from 'react-native';
 
-type Recipe = {
-  recipeId: number
-  dishName: string
-  imageUri: string
-};
+type Recipe = [{
+  // recipeId: number
+  foodName: string[]
+  photo: string[]
+}]
 
 function RecommendScreen () {
 
@@ -48,6 +50,9 @@ function RecommendScreen () {
     console.log('Retry button pressed')
   }
 
+  const [todayRecommendRecipe, setTodayRecommendRecipe] = useState([])
+  
+
   const dummyRecipe = [{
     recipeId: 1,
     dishName: "부추 콩가루 찜",
@@ -80,42 +85,81 @@ function RecommendScreen () {
     day: 'numeric', // "19일"
   })
 
-
-  const todayRecommend = (recipeIndex: number) => {
-    // dummyRecipe 배열에서 recipeIndex에 해당하는 레시피를 찾아 설정합니다.
-    // 배열 인덱스가 0부터 시작하므로 recipeIndex 값을 조정합니다.
-    const recipe = dummyRecipe[recipeIndex]
-    if (recipe) {
-      setTodayRecipe(recipe);
+  useLayoutEffect(() => {
+    console.log('---------------------------------')
+    const recommendRecipe = async () => {
+      const token = await AsyncStorage.getItem('accessToken')
+      try {
+        const response = await axios.get(`https://a304.site/api/recommend/datas/get_recommendation/`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-type': 'application/json',
+          },
+        })
+        console.log(response.data.foods)
+        const data = await response.data.foods
+        setTodayRecommendRecipe(data)
+        console.log('값이 들어와야지!', todayRecommendRecipe)
+        setLoading(false)
+      } catch (error) {
+        console.error(error)
+        setLoading(false)
+      }
     }
-  }
-
-  useEffect(() => {
-    // todayRecommend('baloo', 1)
-    console.log(index)
+    recommendRecipe()
     todayRecommend(index)
-
-    return () => {
-    // setLoading(false)  
-    // setIndex(1)
-    }
 
   }, [index])
 
-  if (!todayRecipe) {
-    return null
+  // const todayRecommend = (recipeIndex: number) => {
+  //   // dummyRecipe 배열에서 recipeIndex에 해당하는 레시피를 찾아 설정합니다.
+  //   // 배열 인덱스가 0부터 시작하므로 recipeIndex 값을 조정합니다.
+  //   const recipe = dummyRecipe[recipeIndex]
+  //   if (recipe) {
+  //     setTodayRecipe(recipe);
+  //   }
+  // }
+
+  const todayRecommend = (recipeIndex: number) => {
+    // Check that todayRecommendRecipe has data and the desired index exists
+    console.log('값이 들어왔나 볼까~~~~~~~~~~', todayRecommendRecipe)
+    if (todayRecommendRecipe.length > 0 && todayRecommendRecipe[0].foodName.length > recipeIndex) {
+      const recipe = {
+        foodName: todayRecommendRecipe[0].foodName[recipeIndex],
+        photo: todayRecommendRecipe[0].photo[recipeIndex]
+      }
+      setTodayRecipe(recipe)
+    }
   }
+
+  // useEffect(() => {
+  //   // todayRecommend('baloo', 1)
+  //   console.log(index)
+    
+
+  //   return () => {
+  //   // setLoading(false)  
+  //   // setIndex(1)
+  //   }
+
+  // }, [index])
+
+  // if (!todayRecipe) {
+  //   return null
+  // }
 
   if (loading) {
     return <RecommendLandingScreen />
   }
 
   return (
+
+    // <Text>ddd</Text>
     <RecommendItemScreen
       date={date}
       question="오늘의 추천 메뉴는?" // 아침?, 점심?, 저녁?
-      dishName={todayRecipe?.dishName} // 글자수가 긴 거에 대한 라인 수정 필요할 듯
-      imageUri={todayRecipe?.imageUri}
+      dishName={todayRecipe?.foodName} // 글자수가 긴 거에 대한 라인 수정 필요할 듯
+      imageUri={todayRecipe?.photo}
       onSharePress={moveRecipe}
       onRetryPress={moveRecommendLanding}
     />
