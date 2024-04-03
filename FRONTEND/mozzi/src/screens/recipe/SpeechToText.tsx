@@ -26,12 +26,21 @@ function SpeechToText({ onNext, onPrev }) {
     startListening()
     // 청소 함수
     return () => {
-      Voice.destroy().then(Voice.removeAllListeners)
+      // 음성 인식이 활성화되어 있으면 정지
+      Voice.isRecognizing().then(isRecognizing => {
+        if (isRecognizing) {
+          Voice.stop()
+        }
+      }).finally(() => {
+        // 음성 인식 리소스와 리스너 제거
+        Voice.destroy().then(Voice.removeAllListeners)
+      })
     }
   }, [])
 
   const onSpeechResults = (e) => {
     const spokenText = e.value[0]
+    console.log(e, '여러 데이터는 여기 담기나')
     console.log(e.value[0], '이거야?')
     setText(spokenText) // 화면에 표시할 텍스트 설정
     
@@ -39,7 +48,11 @@ function SpeechToText({ onNext, onPrev }) {
       onNext && onNext()
     } else if (spokenText.includes("이전")) {
       onPrev && onPrev()
+    } else if (spokenText.includes("종료")) {
+      stopListening()
     }
+    
+    startListening()
   }
 
   const startListening = () => {
@@ -59,11 +72,9 @@ function SpeechToText({ onNext, onPrev }) {
   }
   
   return (
-    <>
     <Btn onPress={isListening ? stopListening : startListening}>
       <Icon name={isListening ? "mic-off" : "mic"} size={30} />
     </Btn>
-    </>
   )
 }
 

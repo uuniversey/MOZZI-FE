@@ -8,6 +8,7 @@ import SearchScreen from '../screens/search/SearchScreen'
 import RecapLandingScreen from '../screens/main/RecapLandingScreen'
 import SelectShortsImageScreen from '../screens/main/SelectShortsImageScreen'
 import RecipeScreen from '../screens/recipe/RecipeScreen'
+import EventRecommendScreen from '../screens/recommend/EventRecommendScreen'
 
 export type TypecreateNativeStackNavigatorParams = {
   Main: undefined
@@ -36,6 +37,7 @@ function MainStack() {
       <Stack.Screen name="RecapLanding" component={RecapLandingScreen} />
       <Stack.Screen name="Search" component={SearchScreen} />
       <Stack.Screen name="Recipe" component={RecipeScreen} />
+      <Stack.Screen name="Event" component={EventRecommendScreen} />
     </Stack.Navigator>
   )
 }
