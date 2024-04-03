@@ -50,6 +50,7 @@ function EventRecommendScreen () {
       question="랜덤 레시피 추천"
       dishName={recipeData && recipeData[idx] ? recipeData[idx].foodName : undefined}
       imageUri={recipeData && recipeData[idx] ? recipeData[idx].photoUrl : undefined}
+      flag={true}
       onSharePress={moveRecipe}
       onRetryPress={moveRecommendLanding}
     />
