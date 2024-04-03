@@ -21,8 +21,9 @@ function SpeechToText({ onNext, onPrev }) {
 
     // 음성 인식 결과 이벤트 핸들러
     Voice.onSpeechError = onSpeechError
-
     Voice.onSpeechResults = onSpeechResults
+    Voice.onSpeechEnd = onSpeechEnd
+
     startListening()
     // 청소 함수
     return () => {
@@ -40,7 +41,6 @@ function SpeechToText({ onNext, onPrev }) {
 
   const onSpeechResults = (e) => {
     const spokenText = e.value[0]
-    console.log(e, '여러 데이터는 여기 담기나')
     console.log(e.value[0], '이거야?')
     setText(spokenText) // 화면에 표시할 텍스트 설정
     
@@ -63,6 +63,15 @@ function SpeechToText({ onNext, onPrev }) {
     console.log('음성 인식 종료')
     Voice.stop()
     setIsListening(false)
+  }
+
+  const onSpeechEnd = (e) => {
+    console.log('음성 인식이 종료되었습니다. 잠시 후 재시작합니다.')
+    setTimeout(() => {
+      if (!isListening) { // isListening 상태를 체크하여 현재 듣고 있지 않을 때만 재시작
+        startListening()
+      }
+    }, 1000) // 1초 후에 재시작
   }
   
   const onSpeechError = (e) => {
