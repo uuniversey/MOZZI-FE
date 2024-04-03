@@ -1151,7 +1151,7 @@ def user_ingredient_affection(request):
             print(food_id)
             query = f'select worldcup from mozzi.user where user_id = {userId}'
             cursor.execute(query)
-            N = math.log10(cursor.fetchall()[0][0]) * isWin
+            N = math.log2(cursor.fetchall()[0][0]) * isWin
 
             query = f'select * from mozzi.foods_foods where food_id = {food_id} or other_food_id = {food_id}'
             # query = f"SELECT distinct food_id, ingredient_ratio from mozzi.food_ingredient LEFT JOIN mozzi.datas_ingredient ON food_ingredient.ingredient_id = datas_ingredient.id \
