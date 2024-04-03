@@ -591,7 +591,7 @@ def add_ingredients_to_refrigerator(request):
     foodingredients = FoodIngredient.objects.all()
     # print(request.headers['Authorization'],'adddddddddddddddd')
     token = request.headers['Authorization'].split(' ')[1]
-    if len(token) != 165 :
+    while len(token) != 165 :
         token = token[:-1]
    
     data=urlsafe_base64_decode(token)
