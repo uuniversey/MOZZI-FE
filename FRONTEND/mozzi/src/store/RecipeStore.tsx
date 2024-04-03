@@ -8,7 +8,10 @@ const useRecipeStore = create((set) => ({
   worldcupData: [],
   recipeDetailData: [],
   ingredientData: [],
-  isReady: false,
+  idx: '',
+  setIdx: (idx) => {
+    set({ idx })
+  },
 
   getRecipe: async () => {
     try {

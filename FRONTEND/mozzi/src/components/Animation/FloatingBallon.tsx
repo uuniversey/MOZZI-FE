@@ -21,7 +21,7 @@ const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpaci
 
 const FloatingBalloon = ({ source, duration = 5000, startDelay = 0 }) => {
   const navigation = useNavigation()
-  const { recipeData, getRecipe, getRecipeDetail, isReady } = useRecipeStore()
+  const { recipeData, getRecipe, setIdx, idx } = useRecipeStore()
   const moveVertical = useRef(new Animated.Value(0)).current;
   const moveHorizontal = useRef(new Animated.Value(0)).current;
 
@@ -57,12 +57,8 @@ const FloatingBalloon = ({ source, duration = 5000, startDelay = 0 }) => {
 
   const moveRecipe = async() => {
     await getRecipe()
-    let idx = Math.floor(Math.random() * recipeData.length) 
-    await getRecipeDetail(recipeData[idx].foodName)
-    console.log(isReady)
-    if (isReady) {
-      navigation.navigate("Event")
-    }
+    await setIdx(Math.floor(Math.random() * 999))
+    navigation.navigate("Event")
   }
 
   return (

@@ -4,6 +4,7 @@ import styled from 'styled-components/native'
 
 import CustomDropdown from '../../components/Dropdown/CustomDropdown'
 import { SearchBar } from '../../components/AutoWord/SearchLike'
+import SmallButton from '../../components/Button/SmallButton'
 
 import useProfileStore from '../../store/ProfileStore'
 import useDropdownStore from '../../store/DropdownStore'
@@ -15,11 +16,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 const Container = styled(ScrollView)`
   flex: 1;
   background-color: ${(props) => props.theme.palette.background};
+  padding: 0px 16px 0px 16px;
 `
 
 const Title = styled(Text)`
   font-size: 36px;
-  margin: 20px 0px 0px 40px;
+  margin: 40px 0 20px 0;
   text-align: left;
   width: 100%;
   font-family: ${(props) => props.theme.fonts.title};
@@ -27,14 +29,11 @@ const Title = styled(Text)`
 `
 
 const BgText = styled(Text)`
+  margin: 30px 0 10px 0;
   background-color: ${(props) => props.theme.palette.point};
-  font-size: 18px;
+  font-size: 16px;
   font-family: ${(props) => props.theme.fonts.content};
   color: ${(props) => props.theme.palette.font}; 
-`
-
-const Body = styled(View)`
-  margin: 0px 40px 0px 40px;
 `
 
 const Label = styled(Text)`
@@ -54,24 +53,7 @@ const JustifyView = styled(View)`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-top: 20px;
-`
-
-const Btn = styled(TouchableOpacity)`
-  background-color: ${(props) => props.theme.palette.point};
-  border-radius: 10px;
-  width: 80px;
-  height: 35px;
-  justify-content: center;
-  align-self: flex-end;
-  margin-top: 30px;
-`
-
-const BtnText = styled(Text)`
-  font-size: 16px;
-  text-align: center;
-  font-family: ${(props) => props.theme.fonts.content};
-  color: ${(props) => props.theme.palette.font};
+  margin: 20px 0 20px 0;
 `
 
 function InputScreen () {
@@ -135,7 +117,6 @@ function InputScreen () {
     <Container>
       <Title>회원 정보 입력</Title>
       <KeyboardAvoidingView>
-        <Body>
           <Label>닉네임</Label>
           <StyledInput
             placeholder="닉네임을 입력하세요"
@@ -144,7 +125,7 @@ function InputScreen () {
             placeholderTextColor="#ccc"
           />
 
-          <BgText>모찌가 레시피를 잘 추천할 수 있도록 아래의 추가 정보를 입력해 주세요!</BgText>
+          <BgText>모찌가 레시피를 잘 추천할 수 있도록 아래의 정보를 추가로 입력해 주세요!</BgText>
           
           <Label>알레르기 정보</Label>
           <CustomDropdown
@@ -167,15 +148,15 @@ function InputScreen () {
           />
 
           <JustifyView>
-            <Btn onPress={goMain}>
-              <BtnText>스킵</BtnText>
-            </Btn>
-
-            <Btn onPress={completeInput}>
-              <BtnText>완료</BtnText>
-            </Btn>
+            <SmallButton
+              text="건너 뛰기"
+              onPress={goMain}
+            />
+            <SmallButton
+              text="완료"
+              onPress={completeInput}
+            />
           </JustifyView>
-        </Body>
       </KeyboardAvoidingView>
     </Container>
   )

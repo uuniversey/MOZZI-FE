@@ -28,7 +28,10 @@ const RecommendItemScreen = ({
   return (
     <>
       <Header>
-        <Header.Icon iconName="arrow-back" onPress={navigation.goBack} />
+        <Header.Icon iconName="arrow-back" onPress={() => {navigation.reset({
+        index: 0,
+        routes: [{ name: 'Worldcup' }],
+      })}} />
       </Header>
       <Container>
         <TextContainer>
