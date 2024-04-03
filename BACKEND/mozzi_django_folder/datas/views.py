@@ -1049,6 +1049,7 @@ def user_recommendation(request):
             foods_list = cursor.fetchall()
             for food in foods_list:
                 food_id, parameter = food
+                print(food_id, parameter)
                 df.iloc[food_id] += parameter / 1000
         # print('결과물 출력')
         # print(df.sort_values(by = 'user_food_preference').nlargest(10, 'user_food_preference'))
