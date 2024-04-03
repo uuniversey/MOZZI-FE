@@ -331,9 +331,9 @@ def recipe_detail(request):
    
         end_time = datetime.now()
         # print(end_time - start_time)
-        print(food.food_views)
+        # print(food.food_views)
         food.food_views+=1
-        print(food.food_views)
+        # print(food.food_views)
         food.food_today_views+=1
         food.save()
         return JsonResponse({'data': {
@@ -396,7 +396,7 @@ def recipe_detail(request):
 
 def get_recipe_list(request):
     authorization_header = request.headers.get('Authorization')
-    print('Authorization header:', authorization_header)
+    # print('Authorization header:', authorization_header)
     foods = Foods.objects.all()
    
     data = []
@@ -412,7 +412,7 @@ def get_recipe_list(request):
 
 def get_ingredient_list(request):
     foods = Foods.objects.all()
-    print(len(foods))
+    # print(len(foods))
     ingredients = Ingredient.objects.all()
     ingredient_names = [ingredient.ingredient_name for ingredient in ingredients]
     return JsonResponse({'data': {'ingredients': ingredient_names}},json_dumps_params={'ensure_ascii': False})
@@ -647,7 +647,7 @@ def add_ingredients_to_refrigerator(request):
 
         return JsonResponse({"message": "Ingredients added to refrigerator successfully."}, status=201)
     elif request.method == 'GET':
-        print(1)
+        # print(1)
         foods = []
         # print(request)
         # print(request.data,'data')
@@ -897,17 +897,17 @@ def recommendFoods():
                 # print(result)
                 # break
             # break
-        print(df_foods)
+        # print(df_foods)
         df_foods.to_pickle("df.pkl")
 
         
 def readPkl():
 
-    print(pd.read_pickle("df.pkl"))
+    # print(pd.read_pickle("df.pkl"))
     df = pd.read_pickle("df2.pkl")
 
-    print(df)    
-    print(df.sort_values(by=[0]))
+    # print(df)    
+    # print(df.sort_values(by=[0]))
     # print(pd.read_sql( "select * from mozzi.datas_foods" ,db))
     
 def set_Category():
@@ -936,7 +936,7 @@ def set_Category():
         df_foods_foods = pd.read_pickle("df.pkl")
 
         for foodId1 in range(maxFoodsIndex):
-            print(foodId1)
+            # print(foodId1)
             for foodId2 in range(foodId1 + 1, maxFoodsIndex):
                 np1 = df_foods_categories.loc[[foodId1], :].to_numpy()
                 np2 = df_foods_categories.loc[[foodId2], :].T.to_numpy()
@@ -967,22 +967,22 @@ def user_recommendation(request):
     # foods = Foods.objects.all()
     # 시간 정보 가져오기
     hour = dt_obj.hour
-    print(hour)
+    # print(hour)
     token = request.headers['Authorization'].split(' ')[1]
     while len(token) != 165 :
         token = token[:-1]
     data=urlsafe_base64_decode(token)
-    print(data,'token')
+    # print(data,'token')
     data = data.decode('latin-1')
-    print(111111111)
+    # print(111111111)
     index_e = data.index('"e":') + len('"e":')  # "e": 다음 인덱스부터 시작
-    print(2222222222222)
+    # print(2222222222222)
     index_comma = data.index(',', index_e)  # 쉼표(,)가 나오는 인덱스 찾기
-    print(33333333333333)
+    # print(33333333333333)
     e_value = data[index_e:index_comma]
-    print(44444444444)
+    # print(44444444444)
     user_number = e_value[1:-1]
-    print(555555555)
+    # print(555555555)
 
     # 1. 저장되어 있을 파일을 읽는다
     db = pymysql.connect(
@@ -994,12 +994,12 @@ def user_recommendation(request):
     with db.cursor() as cursor:
         query = f"select user_id from mozzi.user where user_code = {user_number}"
         cursor.execute(query)
-        print(66666666666)
+        # print(66666666666)
         userId = cursor.fetchall()[0][0]
-        print(7777777777)
+        # print(7777777777)
 
         filewewant = f"{userId}-df.csv"
-        print(8888888888)
+        # print(8888888888)
         try:
             obj =  takeFilesFromS3(filewewant)
             df = pd.read_csv(BytesIO(obj["Body"].read()))
@@ -1007,7 +1007,7 @@ def user_recommendation(request):
             print("에러발생")
             df = pd.read_sql(f"select user_food_preference from mozzi.user_food where user_id = {userId}" ,db)
         cnt = []
-        print(df)
+        # print(df)
         for i in range(len(df)):
             food = Foods.objects.get(food_id = i+1)
             # print(food.food_category)
@@ -1031,11 +1031,11 @@ def user_recommendation(request):
                 cnt.append(i)
                 df.iloc[i] -= 1000000
 
-        print(9999999)
+        # print(9999999)
         # df.drop(cnt)
-        print(df)
-        print(121212121212)
-        print(cnt,'cnt')
+        # print(df)
+        # print(121212121212)
+        # print(cnt,'cnt')
         # 냉장고에 있는 모든 재료들을 가져온다.
         query = f'select * from mozzi.refri_ingredients where user_id = {userId}'
         cursor.execute(query)
@@ -1049,7 +1049,7 @@ def user_recommendation(request):
             foods_list = cursor.fetchall()
             for food in foods_list:
                 food_id, parameter = food
-                print(food_id, parameter)
+                # print(food_id, parameter)
                 df.iloc[food_id-1] += parameter / 1000
         # print('결과물 출력')
         # print(df.sort_values(by = 'user_food_preference').nlargest(10, 'user_food_preference'))
@@ -1066,7 +1066,6 @@ def user_recommendation(request):
         
 
 
-    removeFilesFromS3(filewewant)
     data = {
     'foods':[{
     'foodName': food_names,
@@ -1075,6 +1074,7 @@ def user_recommendation(request):
     ]}
     
     # -1 저장된 파일을 삭제한다.
+    removeFilesFromS3(filewewant)
     
     return JsonResponse(data)
 
@@ -1085,7 +1085,7 @@ def user_ingredient_affection(request):
     while len(token) != 165 :
         token = token[:-1]
     data=urlsafe_base64_decode(token)
-    print(data,'token')
+    # print(data,'token')
     data = data.decode('latin-1')
 
 
@@ -1096,14 +1096,13 @@ def user_ingredient_affection(request):
     index_comma = data.index(',', index_e)  # 쉼표(,)가 나오는 인덱스 찾기
     e_value = data[index_e:index_comma]
     user_number = e_value[1:-1]
-    print(user_number)
 
    
     # data = base64.b64decode(token)
    
     
 
-    print(user_number)
+    # print(user_number)
     # print(type(user))
     db = pymysql.connect(
                         host = "a304.site",
@@ -1222,8 +1221,8 @@ def make_video(request):
         output_dir = BASE_DIR2 / "media" / "output"
         os.makedirs(output_dir, exist_ok=True)
 
-        print(audio_path)
-        print(output_path)
+        # print(audio_path)
+        # print(output_path)
         print(7777)
 
         filtered_images = []
