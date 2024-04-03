@@ -36,7 +36,7 @@ from .videomake import *
 from pathlib import Path
 import nltk
 import math
-
+from datetime import datetime
 from django.utils.http import urlsafe_base64_decode
 from . import tasks
 # result = tasks.reset_food_views.delay()
@@ -962,6 +962,12 @@ def set_Category():
 def user_recommendation(request):
     # 0. 요청한 사용자를 특정한다.
     # 0. 요청한 사용자를 특정한다.
+    now = datetime.now()
+    dt_obj = datetime.strptime(str(now), "%Y-%m-%d %H:%M:%S.%f")
+    # foods = Foods.objects.all()
+    # 시간 정보 가져오기
+    hour = dt_obj.hour
+    print(hour)
     token = request.headers['Authorization'].split(' ')[1]
     while len(token) != 165 :
         token = token[:-1]
@@ -973,13 +979,7 @@ def user_recommendation(request):
     index_comma = data.index(',', index_e)  # 쉼표(,)가 나오는 인덱스 찾기
     e_value = data[index_e:index_comma]
     user_number = e_value[1:-1]
-    # 사용자 user_code 가 나올 것
 
-    # print(data)
-
-    # 사용자 user_code 가 나올 것
-    
-    
     # 1. 저장되어 있을 파일을 읽는다
     db = pymysql.connect(
                     host = "a304.site",
@@ -999,13 +999,34 @@ def user_recommendation(request):
         except:
             print("에러발생")
             df = pd.read_sql(f"select user_food_preference from mozzi.user_food where user_id = {userId}" ,db)
+        cnt = []
+        print(df)
+        for i in range(len(df)):
+            food = Foods.objects.get(food_id = i+1)
+            # print(food.food_category)
+            if hour in [21,22,23,0,1,2,3,4,5,6,7,8,9,10] and food.food_category == '국&찌개':
+                # df = df.drop(i)
+                cnt.append(i)
+                continue
+                
+            if hour in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,17,18,19,21,22,23] and food.food_category == '후식':
+                # df = df.drop(i)
+                cnt.append(i)
+
+                
+                continue
+                
+            if hour in [21,22,23,0,1,2,3,4,5,6,7,8,9,10] and food.food_category == '일품':
+                # df = df.drop(i)
+                cnt.append(i)
+
         
-        
+        print(cnt,'cnt')
         # 냉장고에 있는 모든 재료들을 가져온다.
         query = f'select * from mozzi.refri_ingredients where user_id = {userId}'
         cursor.execute(query)
         refri_ingredients_list = cursor.fetchall()
-    
+        
         # 모든 재료들에 대해서 모든 음식들과의 연관에 대해 + 해준다.
         for refri_ingredient in refri_ingredients_list:
             ingredient = refri_ingredient[1]
