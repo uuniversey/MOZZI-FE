@@ -172,7 +172,9 @@ function RecapScreen() {
     const difference = today.getTime() - inputDate.getTime();
     const days = difference / (1000 * 3600 * 24);
   
-    if (days < 7) {
+    if (days === 0) {
+      return `오늘 먹은 음식`
+    } else if (days < 7) {
       return `${Math.floor(days)}일 전 먹은 음식`
     } else if (days < 30) {
       return "지난 주 먹은 음식"
