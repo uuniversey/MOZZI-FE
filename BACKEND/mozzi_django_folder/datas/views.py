@@ -1007,11 +1007,14 @@ def user_recommendation(request):
             if hour in [21,22,23,0,1,2,3,4,5,6,7,8,9,10] and food.food_category == '국&찌개':
                 # df = df.drop(i)
                 cnt.append(i)
+                df.iloc[i] -= 1000000
                 continue
                 
             if hour in [0,1,2,3,4,5,6,7,8,9,10,11,12,13,17,18,19,21,22,23] and food.food_category == '후식':
                 # df = df.drop(i)
                 cnt.append(i)
+                df.iloc[i] -= 1000000
+
 
                 
                 continue
@@ -1019,8 +1022,11 @@ def user_recommendation(request):
             if hour in [21,22,23,0,1,2,3,4,5,6,7,8,9,10] and food.food_category == '일품':
                 # df = df.drop(i)
                 cnt.append(i)
+                df.iloc[i] -= 1000000
 
-        
+
+        # df.drop(cnt)
+        print(df)
         print(cnt,'cnt')
         # 냉장고에 있는 모든 재료들을 가져온다.
         query = f'select * from mozzi.refri_ingredients where user_id = {userId}'
