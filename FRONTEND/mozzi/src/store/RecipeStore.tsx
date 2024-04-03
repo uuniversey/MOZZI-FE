@@ -8,6 +8,10 @@ const useRecipeStore = create((set) => ({
   worldcupData: [],
   recipeDetailData: [],
   ingredientData: [],
+  idx: '',
+  setIdx: (idx) => {
+    set({ idx })
+  },
 
   getRecipe: async () => {
     try {
@@ -31,6 +35,7 @@ const useRecipeStore = create((set) => ({
         }
       )
       set({ recipeDetailData: response.data.data })
+      set({ isReady: true })
       console.log('레시피 상세 데이터 얻기 성공')
     } catch (error) {
       console.error('레시피 상세 데이터 얻기 실패:', error)

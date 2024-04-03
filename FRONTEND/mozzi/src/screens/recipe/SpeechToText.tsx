@@ -21,12 +21,21 @@ function SpeechToText({ onNext, onPrev }) {
 
     // 음성 인식 결과 이벤트 핸들러
     Voice.onSpeechError = onSpeechError
-
     Voice.onSpeechResults = onSpeechResults
+    Voice.onSpeechEnd = onSpeechEnd
+
     startListening()
     // 청소 함수
     return () => {
-      Voice.destroy().then(Voice.removeAllListeners)
+      // 음성 인식이 활성화되어 있으면 정지
+      Voice.isRecognizing().then(isRecognizing => {
+        if (isRecognizing) {
+          Voice.stop()
+        }
+      }).finally(() => {
+        // 음성 인식 리소스와 리스너 제거
+        Voice.destroy().then(Voice.removeAllListeners)
+      })
     }
   }, [])
 
@@ -39,6 +48,8 @@ function SpeechToText({ onNext, onPrev }) {
       onNext && onNext()
     } else if (spokenText.includes("이전")) {
       onPrev && onPrev()
+    } else if (spokenText.includes("종료")) {
+      stopListening()
     }
   }
 
@@ -53,17 +64,24 @@ function SpeechToText({ onNext, onPrev }) {
     Voice.stop()
     setIsListening(false)
   }
+
+  const onSpeechEnd = (e) => {
+    console.log('음성 인식이 종료되었습니다. 잠시 후 재시작합니다.')
+    setTimeout(() => {
+      if (!isListening) { // isListening 상태를 체크하여 현재 듣고 있지 않을 때만 재시작
+        startListening()
+      }
+    }, 1000) // 1초 후에 재시작
+  }
   
   const onSpeechError = (e) => {
     console.log('onSpeechError: ', e)
   }
   
   return (
-    <>
     <Btn onPress={isListening ? stopListening : startListening}>
       <Icon name={isListening ? "mic-off" : "mic"} size={30} />
     </Btn>
-    </>
   )
 }
 

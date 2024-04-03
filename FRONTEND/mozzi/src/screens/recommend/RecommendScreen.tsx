@@ -79,7 +79,7 @@ function RecommendScreen () {
     recommendRecipe()
     return () => {
     }
-  }, [index])
+  }, [])
   
   useEffect(() => {
     const todayRecommend = (recipeIndex: number) => {
@@ -142,6 +142,7 @@ function RecommendScreen () {
       question="오늘의 추천 메뉴는?" // 아침?, 점심?, 저녁?
       dishName={todayRecipe?.foodName} // 글자수가 긴 거에 대한 라인 수정 필요할 듯
       imageUri={todayRecipe?.photo}
+      flag={false}
       onSharePress={moveRecipe}
       onRetryPress={moveRecommendLanding}
     />
