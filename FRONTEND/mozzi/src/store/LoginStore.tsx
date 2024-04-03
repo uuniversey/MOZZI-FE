@@ -9,6 +9,7 @@ const useLoginStore = create((set) => ({
   
   userData: '',
 
+  // 가짜 로그인 axios
   // // 가짜 로그인 axios
   // login: async (token) => {
   //   console.log('카카오가 준 토큰:', token) // 토큰이 잘 받아와지는지 확인
@@ -33,6 +34,7 @@ const useLoginStore = create((set) => ({
   //     const response = fakeResponse;
   //     console.log('Backend response:', response.data) // 백엔드 응답 로깅
   
+  
   //     // 유저 데이터 저장
   //     if (response.data.data.info.isRegistered) {
   //       set({ isLogin: true })
@@ -40,17 +42,49 @@ const useLoginStore = create((set) => ({
   //       console.log('유저 데이터입니다아아아아', response.data.data.info)
   //     }
   
+  
   //     // 토큰 스토리지에 저장
   //     await Promise.all([
   //       AsyncStorage.setItem('accessToken', response.data.data.token.accessToken),
   //       AsyncStorage.setItem('refreshToken', response.data.data.token.refreshToken)
+  //       AsyncStorage.setItem('accessToken', response.data.data.token.accessToken),
+  //       AsyncStorage.setItem('refreshToken', response.data.data.token.refreshToken)
   //     ])
+  
   
   //   } catch (error) {
   //     console.error('로그인 실패:', error)
   //     set({ isLogin: false, userData: null })
+  //     set({ isLogin: false, userData: null })
   //   }
   // },
+
+  login: async (token) => {
+    console.log('카카오가 준 토큰:', token) // 토큰이 잘 받아와지는지 확인
+    try {
+      const response = await axios.get('mozzi/auth/Oauth2/KakaoToken', { 
+        params : { code : token },
+      });
+      console.log('Backend response:', response.data) // 백엔드 응답 로깅
+
+      // 유저 데이터 저장
+      if (response.data.data.info.isRegistered) {
+        set({ isLogin: true })
+        set({ userData: response.data.data.info })
+        console.log('유저 데이터입니다아아아아', response.data.data.info)
+      }
+
+      // 토큰 스토리지에 저장
+      await Promise.all([
+        AsyncStorage.setItem('accessToken', JSON.stringify(response.data.data.token.accessToken).slice(1, -1)),
+        AsyncStorage.setItem('refreshToken', JSON.stringify(response.data.data.token.refreshToken).slice(1, -1))
+      ])
+
+    } catch (error) {
+      console.error('로그인 실패:', error)
+      set({ isLogin: false, user: null })
+    }
+  },
 
   login: async (token) => {
     console.log('카카오가 준 토큰:', token) // 토큰이 잘 받아와지는지 확인
