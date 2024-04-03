@@ -1164,7 +1164,7 @@ def user_ingredient_affection(request):
                 # print(fooddd)
                 synchronize = fooddd[2]
                 affectedFoodNumber = fooddd[0] + fooddd[1] - food_id
-                df.iloc[affectedFoodNumber - 1] = df.iloc[affectedFoodNumber - 1] + 1 / N * synchronize
+                df.iloc[affectedFoodNumber - 1] = df.iloc[affectedFoodNumber - 1] + 1 /(100 * N) * synchronize
             
 
             saveFilesToS3(df, filewewant)
