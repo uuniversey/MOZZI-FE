@@ -1120,6 +1120,9 @@ def user_ingredient_affection(request):
     with db.cursor() as cursor:
         query = f"select user_id from mozzi.user where user_code = {user_number}"
         cursor.execute(query)
+        query = f"UPDATE mozzi.user SET worldcup = worldcup + 1 WHERE user_code = {user_number};"
+        cursor.execute(query)
+
         userId = cursor.fetchall()[0][0]
 
         filewewant = f"{userId}-df.csv"
