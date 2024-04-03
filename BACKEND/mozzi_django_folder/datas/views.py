@@ -974,11 +974,15 @@ def user_recommendation(request):
     data=urlsafe_base64_decode(token)
     print(data,'token')
     data = data.decode('latin-1')
+    print(111111111)
     index_e = data.index('"e":') + len('"e":')  # "e": 다음 인덱스부터 시작
- 
+    print(2222222222222)
     index_comma = data.index(',', index_e)  # 쉼표(,)가 나오는 인덱스 찾기
+    print(33333333333333)
     e_value = data[index_e:index_comma]
+    print(44444444444)
     user_number = e_value[1:-1]
+    print(555555555)
 
     # 1. 저장되어 있을 파일을 읽는다
     db = pymysql.connect(
@@ -990,9 +994,12 @@ def user_recommendation(request):
     with db.cursor() as cursor:
         query = f"select user_id from mozzi.user where user_code = {user_number}"
         cursor.execute(query)
+        print(66666666666)
         userId = cursor.fetchall()[0][0]
+        print(7777777777)
 
         filewewant = f"{userId}-df.csv"
+        print(8888888888)
         try:
             obj =  takeFilesFromS3(filewewant)
             df = pd.read_csv(BytesIO(obj["Body"].read()))
@@ -1045,6 +1052,7 @@ def user_recommendation(request):
         # print('결과물 출력')
         # print(df.sort_values(by = 'user_food_preference').nlargest(10, 'user_food_preference'))
         return_list = df.sort_values(by = 'user_food_preference').nlargest(10, 'user_food_preference').index
+        print(return_list)
         food_names = []
         food_pics = []
         # foods = Foods.objects.all()
