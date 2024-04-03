@@ -33,11 +33,13 @@ const IngreList = styled(View)`
 
 const ListItem = styled(Text)`
   font-size: 16px;
+  color: ${(props) => props.theme.palette.font};
 `
 
 const NoResText = styled(Text)`
   font-size: 16;
   font-family: ${(props) => props.theme.fonts.content};
+  color: ${(props) => props.theme.palette.font}; 
   margin-top: 10px;
   margin-bottom: 20;
 `

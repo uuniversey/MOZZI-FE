@@ -79,7 +79,7 @@ function RecommendScreen () {
     recommendRecipe()
     return () => {
     }
-  }, [index])
+  }, [])
   
   useEffect(() => {
     const todayRecommend = (recipeIndex: number) => {

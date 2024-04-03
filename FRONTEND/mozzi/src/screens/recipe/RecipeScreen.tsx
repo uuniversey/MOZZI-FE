@@ -148,9 +148,11 @@ function RecipeScreen () {
 
   // "다음" 명령 처리
   const handleNext = () => {
+    console.log('다음 명령 처리', 'idx:', idx, 'strIdx:', strIdx)
     const nextIdx = (parseInt(strIdx) + 1).toString().padStart(2, '0')
-    if (recipeDetailData[`MANUAL${nextIdx}`]) {
-      setIdx(prevIdx => prevIdx + 1)
+    console.log('이게 뭐야?', recipeDetailData[`MANUAL${nextIdx}`])
+    if (recipeDetailData[`MANUAL${nextIdx}`] !== '') {
+      setIdx(prev => prev + 1)
       setStrIdx(nextIdx)
     }
   }
@@ -159,7 +161,7 @@ function RecipeScreen () {
   const handlePrev = () => {
     const prevIdx = (parseInt(strIdx) - 1).toString().padStart(2, '0')
     if (prevIdx !== '00') {
-      setIdx(prevIdx => prevIdx - 1)
+      setIdx(prev => prev - 1)
       setStrIdx(prevIdx)
     }
   }
@@ -176,6 +178,7 @@ function RecipeScreen () {
   
   // 끝에 도착하면 화살표 없애기
   useEffect(() => {
+    console.log('유즈이펙트 발동', strIdx)
     const nextIdx = (parseInt(strIdx)+1).toString().padStart(2, '0')
     if (recipeDetailData[`MANUAL${nextIdx}`] === "" || nextIdx == '21')
       {
