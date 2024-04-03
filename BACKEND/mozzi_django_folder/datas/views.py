@@ -1123,6 +1123,7 @@ def user_ingredient_affection(request):
 
         user = User.objects.get(user_code = user_number)
         user.worldcup += 1
+        user.save()
         userId = cursor.fetchall()[0][0]
 
         filewewant = f"{userId}-df.csv"
@@ -1364,5 +1365,3 @@ def removeFilesFromS3(filename):
 #         save_food.ingredient_count = dic[str(i.ingredient_id)]
 
 #         save_food.save()
-
-    
