@@ -172,20 +172,20 @@ function LandingScreen() {
 
       <LoginContainer>
         {/* 로그인 버튼 */}
-        {/* <AnimatedLoginButton
+        <AnimatedLoginButton
           style={{ opacity: loginFadeAnim }}
           onPress={kakaoLogin}
         >
           <Image source={kakao} />
-        </AnimatedLoginButton> */}
+        </AnimatedLoginButton>
 
         {/* 임시 로그인 버튼 */}
-        <AnimatedLoginButton
+        {/* <AnimatedLoginButton
           style={{ opacity: loginFadeAnim }}
           onPress={tmpHandle}
         >
           <Image source={kakao} />
-        </AnimatedLoginButton>
+        </AnimatedLoginButton> */}
 
       </LoginContainer>
     </Container>

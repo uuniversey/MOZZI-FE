@@ -1,6 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components/native';
-import { Animated, Easing } from 'react-native';
+import { Animated, View, TouchableOpacity } from 'react-native';
+
+import { useNavigation } from '@react-navigation/native';
+import useRecipeStore from '../../store/RecipeStore';
 
 const BalloonImage = styled.Image`
   width: 150px;
@@ -14,7 +17,11 @@ const AnimatedView = styled(Animated.View)`
   bottom: 0;
 `;
 
+const AnimatedTouchableOpacity = Animated.createAnimatedComponent(TouchableOpacity)
+
 const FloatingBalloon = ({ source, duration = 5000, startDelay = 0 }) => {
+  const navigation = useNavigation()
+  const { recipeData, getRecipe, getRecipeDetail, isReady } = useRecipeStore()
   const moveVertical = useRef(new Animated.Value(0)).current;
   const moveHorizontal = useRef(new Animated.Value(0)).current;
 
@@ -48,13 +55,26 @@ const FloatingBalloon = ({ source, duration = 5000, startDelay = 0 }) => {
     startVerticalAnimation(); // 수직 애니메이션 시작
   }, [duration]);
 
+  const moveRecipe = async() => {
+    await getRecipe()
+    let idx = Math.floor(Math.random() * recipeData.length) 
+    await getRecipeDetail(recipeData[idx].foodName)
+    console.log(isReady)
+    if (isReady) {
+      navigation.navigate("Event")
+    }
+  }
+
   return (
-    <AnimatedView
+    <AnimatedTouchableOpacity
+      onPress={moveRecipe}
       style={{
+        position: 'absolute',
+        bottom: 0,
         transform: [{ translateY: moveVertical }, { translateX: moveHorizontal }],
       }}>
       <BalloonImage source={source} />
-    </AnimatedView>
+    </AnimatedTouchableOpacity>
   );
 };
 
