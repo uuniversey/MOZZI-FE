@@ -1031,9 +1031,10 @@ def user_recommendation(request):
                 cnt.append(i)
                 df.iloc[i] -= 1000000
 
-
+        print(9999999)
         # df.drop(cnt)
         print(df)
+        print(121212121212)
         print(cnt,'cnt')
         # 냉장고에 있는 모든 재료들을 가져온다.
         query = f'select * from mozzi.refri_ingredients where user_id = {userId}'
