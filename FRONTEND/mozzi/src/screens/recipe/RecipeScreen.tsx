@@ -199,14 +199,6 @@ function RecipeScreen () {
     }).start()
   }, [isOpen, tipHeight])
 
-
-  useEffect(() => {
-    // 예를 들어, strIdx가 변경될 때 마다 로직 실행
-    // 여기서는 단순히 로그를 출력하는 예제로 사용
-    console.log(`현재 페이지 인덱스: ${strIdx}`)
-    // 이 위치에서 필요한 로직을 구현할 수 있습니다.
-  }, [strIdx])
-  
   return (
     <Container>
       <Header>

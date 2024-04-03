@@ -51,8 +51,6 @@ function SpeechToText({ onNext, onPrev }) {
     } else if (spokenText.includes("종료")) {
       stopListening()
     }
-    
-    startListening()
   }
 
   const startListening = () => {

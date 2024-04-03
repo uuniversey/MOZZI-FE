@@ -6,33 +6,26 @@ import RecommendLandingScreen from './RecommendLandingScreen'
 import useRecipeStore from '../../store/RecipeStore'
 
 
-function RecommendScreen () {
+function EventRecommendScreen () {
 
   const navigation = useNavigation()
-  const { getRecipeDetail, recipeDetailData } = useRecipeStore()
-  
-  const [todayRecipe, setTodayRecipe] = useState(null)
+  const { getRecipeDetail, recipeData, idx, setIdx } = useRecipeStore()
   const [index, setIndex] = useState(0)
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    console.log('굿')
-  }, [recipeDetailData])
+    console.log(idx, recipeData[idx])
+  }, [idx])
 
   const moveRecipe = () => {
-    getRecipeDetail(recipeDetailData.foodName)
+    getRecipeDetail(recipeData[idx].foodName)
     navigation.navigate("Recipe")
   }
 
   const moveRecommendLanding = async () => {
     setLoading(true) // 로딩 시작
     // navigation.navigate("RecommendLanding"); // RecommendLanding 페이지로 네비게이션
-    let newIndex;
-    do {
-      newIndex = Math.floor(Math.random() * 10);
-    } while (newIndex === index);
-
-    setIndex(newIndex)
+    setIdx(Math.floor(Math.random() * 999))
   
     // 여기에 레시피 로딩을 위한 비동기 로직 추가 (예: setTimeout 사용)
     setTimeout(() => {
@@ -53,14 +46,14 @@ function RecommendScreen () {
 
   return (
     <RecommendItemScreen
-      date={date}
-      question="오늘의 추천 메뉴는?"
-      dishName={recipeDetailData?.foodName} 
-      imageUri={recipeDetailData?.photo}
+      // date={date}
+      question="랜덤 레시피 추천"
+      dishName={recipeData && recipeData[idx] ? recipeData[idx].foodName : undefined}
+      imageUri={recipeData && recipeData[idx] ? recipeData[idx].photoUrl : undefined}
       onSharePress={moveRecipe}
       onRetryPress={moveRecommendLanding}
     />
   )
 }
 
-export default RecommendScreen
+export default EventRecommendScreen
