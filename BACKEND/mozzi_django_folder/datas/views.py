@@ -1065,7 +1065,7 @@ def user_recommendation(request):
         
 
 
-
+    removeFilesFromS3(filewewant)
     data = {
     'foods':[{
     'foodName': food_names,
