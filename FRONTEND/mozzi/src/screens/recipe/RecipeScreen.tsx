@@ -10,6 +10,7 @@ import { Header } from '../../components/Header/Header'
 import { useNavigation } from '@react-navigation/native'
 import { GestureHandlerRootView, PanGestureHandler, State } from 'react-native-gesture-handler'
 import useRecipeStore from '../../store/RecipeStore'
+import { Colors } from 'react-native/Libraries/NewAppScreen'
 
 const Container = styled(View)`
   flex: 1;
@@ -32,16 +33,27 @@ const Content = styled(View)`
 const Title = styled(Text)`
   font-size: 36px;
   align-self: center;
-  margin: 20px 0px 10px 0px;
+  margin: 5px 0px 10px 0px;
   font-family: ${(props) => props.theme.fonts.title};
   color: ${(props) => props.theme.palette.font}; 
 `
 
+const OrderContainer = styled(View)`
+  align-self: center;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  border-radius: 10px;
+  background-color: #ecebe0;
+  /* background-color: ${(props) => props.theme.palette.light}; */
+  padding: 10px;
+  margin-bottom: 20px;
+`
+
 const Order = styled(Text)`
-  font-size: 18px;
+  font-size: 16px;
   align-self: center;
   padding: 0 8px 0 8px;
-  margin-bottom: 20px;
   font-family: ${(props) => props.theme.fonts.content};
   color: ${(props) => props.theme.palette.font};
 `
@@ -57,9 +69,9 @@ const Body = styled(View)`
 `
 
 const FoodImage = styled(Image)`
-  width: 290px;
-  height: 290px;
-  border-radius: 5px;
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 10px;
 `
 
 const Tip = styled(Text)`
@@ -90,11 +102,11 @@ const Btn = styled(TouchableOpacity)`
 `
 
 const Line = styled(View)`
-  border-bottom-color: #000;
-  border-bottom-width: 1px;
-  width: 50%;
+  border-bottom-color: ${(props) => props.theme.palette.font};
+  border-bottom-width: 2px;
+  width: 70%;
   align-self: center;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 `
 
 function RecipeScreen () {
@@ -225,8 +237,10 @@ function RecipeScreen () {
               </IconContainer>
               <Title>{recipeDetailData.RCP_NM}</Title>
               <Line />
-              <Order>{recipeDetailData[`MANUAL${strIdx}`]}</Order>
-              <Body>  
+              <OrderContainer>
+                <Order>{recipeDetailData[`MANUAL${strIdx}`]}</Order>
+              </OrderContainer>
+              <Body>
                 <FoodImage
                   source={{ uri: recipeDetailData[`MANUAL_IMG${strIdx}`] }}
                 />

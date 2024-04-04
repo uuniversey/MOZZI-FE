@@ -154,7 +154,7 @@ const Stamp = ({ navigation, route }) => {
   // 프레임 이미지 경로를 객체로 관리
   const frameImages = {
     '기본': require('../../assets/frames/defaultframe.png'),
-    '화이트': require('../../assets/frames/whiteframe.png'),
+    '화이트': require('../../assets/frames/whiteframe_1.png'),
     '스페셜': require('../../assets/frames/speacialframe.png'),
   };
 

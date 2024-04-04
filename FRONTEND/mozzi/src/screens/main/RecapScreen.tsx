@@ -93,7 +93,7 @@ const ActionButton = styled(TouchableOpacity)`
   padding: 16px;
   align-items: center;
   justify-content: center;
-  background-color: ${(props) => props.theme.palette.point2};
+  background-color: ${(props) => props.theme.palette.pointDark};
 `
 
 const ButtonText = styled(Text)`
