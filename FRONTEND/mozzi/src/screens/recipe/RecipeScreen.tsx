@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import styled from 'styled-components/native'
 import SpeechToText from './SpeechToText'
 import TextToSpeech from './TextToSppeech'
+import SmallButton from '../../components/Button/SmallButton'
 import { Header } from '../../components/Header/Header'
 
 import { useNavigation } from '@react-navigation/native'
@@ -232,10 +233,15 @@ function RecipeScreen () {
               </Body>
               {isOpen ? (
                   <Animated.View style={{height: tipHeight}}>
-                    <Tip onPress={handleIsOpen}>TIP: {recipeDetailData.RCP_NA_TIP}</Tip>
+                    <Tip onPress={handleIsOpen}>{recipeDetailData.RCP_NA_TIP}</Tip>
                   </Animated.View>
                 ) : (
-                  <Tip onPress={handleIsOpen}>TIP</Tip>
+                  <Tip>
+                    <SmallButton
+                      text="tip"
+                      onPress={handleIsOpen}
+                    />                    
+                  </Tip>
                 )
               }
               {isLast ? ( 
