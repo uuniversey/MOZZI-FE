@@ -62,10 +62,10 @@
     </td>
     <td width="33%" align="center">
       git 관리<br>
-      프로필 스크린<br>
       요리일기 RD<br>
-      레시피 스크린(STT, TTS)<br> 
-      서치 스크린
+      레시피 스크린<br> 
+      STT, TTS<br>
+      유저 스크린
     </td>
   </tr>
 </table>
@@ -126,11 +126,12 @@ src
 - 카카오 소셜 로그인
 
 메인 스크린
+- 랜덤 레시피 추천
 - 최다 조회 레시피
 
 냉장고 스크린
 - 재료 등록/삭제
-- 재료 텍스트 자동 완성
+- 재료 검색 텍스트 자동 완성
 
 요리일기 스크린
 - 게시글 CRD
@@ -145,4 +146,146 @@ src
 리캡/쇼츠 스크린
 - 비디오 생성(moviepy 활용)
 
+유저 스크린 
+- 로그아웃
+- 회원 탈퇴
+- 재료 검색 텍스트 자동 완성
+
+검색 스크린
+- 레시피 검색 텍스트 자동 완성
+
 ### 7. 서비스 화면
+* 랜딩 스크린
+  <table>
+    <tr>
+      <td>
+        <img src="img/screen/랜딩_로그인.gif" width="100%" />
+      </td>
+      <td>
+        <img src="img/screen/empty.png" />
+      </td>
+      <td>
+        <img src="img/screen/empty.png" />
+      </td>
+    </tr>
+  </table>
+
+* 냉장고 스크린
+  <table>
+    <tr>
+      <td>
+        <img src="img/screen/냉장고1.jpg" width="490px" />
+      </td>
+      <td>
+        <img src="img/screen/냉장고2.jpg" width="490px" />
+      </td>
+      <td>
+        <img src="img/screen/empty.png" />
+      </td>
+    </tr>
+  </table>
+
+* 메인 스크린
+  <table>
+    <tr>
+      <td>
+        <img src="img/screen/메인_풍선.gif" width="100%" />
+      </td>
+      <td>
+        <img src="img/screen/empty.png" />
+      </td>
+      <td>
+        <img src="img/screen/empty.png" />
+      </td>
+    </tr>
+  </table>
+
+* 리캡 스크린
+  <table>
+    <tr>
+      <td>
+        <img src="img/screen/리캡.jpg" width="490px" />
+      </td>
+      <td>
+        <img src="img/screen/쇼츠.gif" width="100%" />
+      </td>
+      <td>
+        <img src="img/screen/empty.png" />
+      </td>
+    </tr>
+  </table>
+
+* 추천 스크린
+  <table>
+    <tr>
+      <td>
+        <img src="img/screen/월드컵.gif" width="100%" />
+      </td>
+      <td>
+        <img src="img/screen/추천.gif" width="100%" />
+      </td>
+      <td>
+        <img src="img/screen/추천.jpg" width="490px" />
+      </td>
+    </tr>
+  </table>
+
+* 레시피 크린
+  <table>
+    <tr>
+      <td>
+        <img src="img/screen/레시피.gif" width="100%" />
+      </td>
+      <td>
+        <img src="img/screen/레시피.jpg" width="490px" />
+      </td>      
+      <td>
+        <img src="img/screen/레시피.gif" width="100%" />
+      </td>
+    </tr>
+  </table>
+
+* 요리일기 스크린
+  <table>
+    <tr>
+      <td>
+        <img src="img/screen/다이어리c.jpg" width="490px" />
+      </td>
+      <td>
+        <img src="img/screen/다이어리r.jpg" width="490px" />
+      </td>
+      <td>
+        <img src="img/screen/공유.gif" width="100%" />
+      </td>
+    </tr>
+  </table>
+
+* 검색 스크린
+  <table>
+    <tr>
+      <td>
+        <img src="img/screen/자동완성.jpg" width="490px" />
+      </td>
+      <td>
+        <img src="img/screen/empty.png" />
+      </td>
+      <td>
+        <img src="img/screen/empty.png" />
+      </td>
+    </tr>
+  </table>
+
+* 유저 스크린
+  <table>
+    <tr>
+      <td>
+        <img src="img/screen/회원관리.jpg" width="490px" />
+      </td>    
+      <td>
+        <img src="img/screen/프로필.jpg" width="490px" />
+      </td>
+      <td>
+        <img src="img/screen/탈퇴.jpg" width="490px" />
+      </td>
+    </tr>
+  </table>
