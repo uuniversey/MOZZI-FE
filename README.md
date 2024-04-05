@@ -288,7 +288,7 @@ src
         <img src="img/screen/회원관리.jpg" width="490px" />
       </td>    
       <td>
-        <img src="img/screen/회원정보입력1.jpg" width="490px" />
+        <img src="img/screen/내정보관리.jpg" width="490px" />
       </td>
       <td>
         <img src="img/screen/탈퇴.jpg" width="490px" />
