@@ -162,6 +162,9 @@ src
         <img src="img/screen/랜딩_로그인.gif" width="100%" />
       </td>
       <td>
+        <img src="img/screen/회원정보입력.jpg" width="490px" />
+      </td>
+      <td>
         <img src="img/screen/empty.png" />
       </td>
       <td>
@@ -180,16 +183,22 @@ src
         <img src="img/screen/냉장고2.jpg" width="490px" />
       </td>
       <td>
+        <img src="img/screen/냉장고입력.jpg" width="490px" />
+      </td>
+      <td>
         <img src="img/screen/empty.png" />
       </td>
     </tr>
   </table>
 
-* 메인 스크린
+* 메인/검색 스크린
   <table>
     <tr>
       <td>
         <img src="img/screen/메인_풍선.gif" width="100%" />
+      </td>
+      <td>
+        <img src="img/screen/자동완성.jpg" width="490px" />
       </td>
       <td>
         <img src="img/screen/empty.png" />
@@ -212,6 +221,9 @@ src
       <td>
         <img src="img/screen/empty.png" />
       </td>
+      <td>
+        <img src="img/screen/empty.png" />
+      </td>
     </tr>
   </table>
 
@@ -219,13 +231,16 @@ src
   <table>
     <tr>
       <td>
-        <img src="img/screen/월드컵.gif" width="100%" />
+        <img src="img/screen/월드컵.jpg" width="490px" />
       </td>
       <td>
         <img src="img/screen/추천.gif" width="100%" />
       </td>
       <td>
         <img src="img/screen/추천.jpg" width="490px" />
+      </td>
+      <td>
+        <img src="img/screen/empty.png" />
       </td>
     </tr>
   </table>
@@ -234,13 +249,16 @@ src
   <table>
     <tr>
       <td>
-        <img src="img/screen/레시피.gif" width="100%" />
-      </td>
-      <td>
         <img src="img/screen/레시피.jpg" width="490px" />
       </td>      
       <td>
         <img src="img/screen/레시피.gif" width="100%" />
+      </td>
+      <td>
+        <img src="img/screen/empty.png" />
+      </td>
+      <td>
+        <img src="img/screen/empty.png" />
       </td>
     </tr>
   </table>
@@ -252,25 +270,13 @@ src
         <img src="img/screen/다이어리c.jpg" width="490px" />
       </td>
       <td>
-        <img src="img/screen/다이어리r.jpg" width="490px" />
+        <img src="img/screen/요리달력.jpg" width="490px" />
+      </td>
+      <td>
+        <img src="img/screen/요리디테일.jpg" width="490px" />
       </td>
       <td>
         <img src="img/screen/공유.gif" width="100%" />
-      </td>
-    </tr>
-  </table>
-
-* 검색 스크린
-  <table>
-    <tr>
-      <td>
-        <img src="img/screen/자동완성.jpg" width="490px" />
-      </td>
-      <td>
-        <img src="img/screen/empty.png" />
-      </td>
-      <td>
-        <img src="img/screen/empty.png" />
       </td>
     </tr>
   </table>
@@ -282,10 +288,13 @@ src
         <img src="img/screen/회원관리.jpg" width="490px" />
       </td>    
       <td>
-        <img src="img/screen/프로필.jpg" width="490px" />
+        <img src="img/screen/회원정보입력1.jpg" width="490px" />
       </td>
       <td>
         <img src="img/screen/탈퇴.jpg" width="490px" />
+      </td>
+      <td>
+        <img src="img/screen/empty.png" />
       </td>
     </tr>
   </table>
