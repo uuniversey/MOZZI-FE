@@ -1,79 +1,148 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
-# Getting Started
+# 👩‍🍳모찌🍳
+오늘 뭐 먹을지 매일 고민하는 사람,
+<br>
+늘 냉장고에 있는 식재료를 처리하지 못해서 그대로 버리는 사람,
+<br>
+색다른 레시피를 도전하고 싶은 사람,
+<br>
+그들을 위한 사용자 빅데이터 기반 🍽레시피 추천 서비스🥘
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+### 목차
+1. [프로젝트 기간](#1-프로젝트-기간)
+2. [사용한 기술 스택](#2-사용한-기술-스택)
+3. [팀원 소개](#3-팀원-소개)
+4. [폴더 구조](#4-폴더-구조)
+5. [설계](#5-설계)
+6. [주요 기능 설명](#6-주요-기능-설명)
+7. [서비스 화면](#7-서비스-화면)
 
-## Step 1: Start the Metro Server
+----
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+### 1. 프로젝트 기간
+  - 2024.02.26 ~ 2024.04.05 (6주)
 
-To start Metro, run the following command from the _root_ of your React Native project:
+### 2. 사용한 기술 스택
+  * React-Native
+  * node.js
+  * zustand
+  * styled-component
+  * axios
 
-```bash
-# using npm
-npm start
+### 3. 팀원 소개
+<table width="100%">
+  <tr>
+    <td width="33%" align="center">
+      <img src="img/nyk.jpg" width="100%"/>
+      <b><a href="https://github.com/baloo365">나유경</a></b> 
+    </td>
+    <td width="33%" align="center">
+      <img src="img/lgh.jpg" width="100%"/>
+      <b><a href="https://github.com/goldbutnew">이금현</a></b> 
+    </td>
+    <td width="33%" align="center">
+      <img src="img/lwj.png" width="100%"/>
+      <b><a href="https://github.com/uuniversey">이우주</a></b> 
+    </td>
+  </tr>
+  <tr>
+    <td width="33%" align="center">
+      메인 스크린<br>
+      리캡 스크린(쇼츠 제작)<br>
+      로딩 스크린<br>
+      추천 스크린<br>
+      요리일기 C
+    </td>
+    <td width="33%" align="center">
+      UI/UX<br>
+      랜딩 스크린(소셜 로그인)<br>
+      냉장고 스크린<br>
+      요리일기 공유/저장<br>
+      요리 월드컵
+    </td>
+    <td width="33%" align="center">
+      git 관리<br>
+      프로필 스크린<br>
+      요리일기 RD<br>
+      레시피 스크린(STT, TTS)<br> 
+      서치 스크린
+    </td>
+  </tr>
+</table>
 
-# OR using Yarn
-yarn start
+### 4. 폴더 구조
+```
+src
+├─assets
+│  ├─fonts
+│  ├─frames
+│  ├─fridge
+│  ├─illustration
+│  └─landing
+├─components
+│  ├─Animation
+│  ├─AutoWord
+│  ├─Button
+│  ├─Carousel
+│  ├─Dropdown
+│  ├─Fonts
+│  ├─Header
+│  └─Loading
+├─navigation
+├─screens
+│  ├─diary
+│  ├─fridge
+│  ├─landing
+│  ├─main
+│  ├─profile
+│  ├─recipe
+│  ├─recommend
+│  └─search
+├─store
+└─typings
 ```
 
-## Step 2: Start your Application
+### 5. 설계
+* 목업
+  <table>
+    <tr>
+      <td>
+        <img src="img/mokup.png" width="100%" />
+      </td>
+    </tr>
+  </table>
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+* 플로우차트
+  <table>
+    <tr>
+      <td>
+        <img src="img/flowchart.png" width="100%"/>
+      </td>
+    </tr>
+  </table>
 
-### For Android
+### 6. 주요 기능 설명
+랜딩 스크린
+- 카카오 소셜 로그인
 
-```bash
-# using npm
-npm run android
+메인 스크린
+- 최다 조회 레시피
 
-# OR using Yarn
-yarn android
-```
+냉장고 스크린
+- 재료 등록/삭제
+- 재료 텍스트 자동 완성
 
-### For iOS
+요리일기 스크린
+- 게시글 CRD
+- 게시글 커스텀 공유/저장
 
-```bash
-# using npm
-npm run ios
+추천 스크린
+- 요리 월드컵이 포함된 랜딩 스크린
 
-# OR using Yarn
-yarn ios
-```
+레시피 스크린
+- tts/stt 음성 인식 구현
 
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
+리캡/쇼츠 스크린
+- 비디오 생성(moviepy 활용)
 
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
-
-## Step 3: Modifying your App
-
-Now that you have successfully run the app, let's modify it.
-
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+### 7. 서비스 화면
