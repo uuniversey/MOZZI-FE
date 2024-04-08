@@ -140,11 +140,11 @@ const FridgeDetailScreen: FC<FridgeDetailScreenProps> = ({ route }) => {
 
   const handleSend = () => {
     // allFoods 내에서 text 문자열이 존재하는지 확인
-    const isIngredientInList = text ? allFoods.includes(text.food) : false;
+    const isIngredientInList = allFoods.includes(text);
   
     if (text && isIngredientInList) {
-      addFridge(text.food, storedPos); // text.food를 직접 전달
-      setText(null); // 상태를 null로 초기화
+      addFridge(text, storedPos) // Zustand 스토어 업데이트 및 DB 업데이트
+      setText('') // 텍스트 입력 필드 초기화
       Keyboard.dismiss() // 키보드를 닫음
       scrollViewRef.current?.scrollToEnd({ animated: true }) // 스크롤을 맨 아래로 이동
     } else {
@@ -175,7 +175,7 @@ const FridgeDetailScreen: FC<FridgeDetailScreenProps> = ({ route }) => {
       {!keyboardOpen && ( // 키보드가 열려있지 않을 때만 노트와 그 내용을 렌더링
         <Note>
           <ClipImg source={clip} />
-          <NoteImg source={note} keyboardOpen={keyboardOpen}/>
+          <NoteImg source={note} />
           <TitleContainer>
             {img && <TitleImg source={img} />}
             <MenuItem>
