@@ -25,7 +25,8 @@ interface FridgeDetailScreenProps {
         img: ImageSourcePropType;
         storedPos: string;
       };
-    };
+    },
+    item: string,
   };
 }
 
@@ -189,7 +190,7 @@ const FridgeDetailScreen: FC<FridgeDetailScreenProps> = ({ route }) => {
             }}
             ref={scrollViewRef}
           >
-            {savedFoods.map((item, index) => (
+            {savedFoods.map((item: FoodItem, index: number) => (
               <MyFoodText key={index}>
                 {item.foodName}
                 <DeleteButton onPress={() => handleDelete(item.foodName)}>
