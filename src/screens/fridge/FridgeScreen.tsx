@@ -1,20 +1,26 @@
 import React from 'react';
-import { Dimensions, Text } from 'react-native';
-import Svg, { Rect, Circle } from 'react-native-svg';
-import styled from 'styled-components/native';
-import { useNavigation } from '@react-navigation/native';
+import { Dimensions, Text, TouchableOpacityProps, TouchableOpacity } from 'react-native';
+import Svg, { Rect, Circle } from 'react-native-svg'
+import styled from 'styled-components/native'
+import { useNavigation } from '@react-navigation/native'
 
 // 이미지 리소스 import
-import bread from '../../assets/fridge/bread.png';
-import fruit from '../../assets/fridge/fruit.png';
-import meat from '../../assets/fridge/meat.png';
-import milk from '../../assets/fridge/milk.png';
-import noodle from '../../assets/fridge/noodle.png';
-import rice from '../../assets/fridge/rice.png';
-import sauce from '../../assets/fridge/sauce.png';
-import seafood from '../../assets/fridge/seafood.png';
-import vege from '../../assets/fridge/vege.png';
+import bread from '../../assets/fridge/bread.png'
+import fruit from '../../assets/fridge/fruit.png'
+import meat from '../../assets/fridge/meat.png'
+import milk from '../../assets/fridge/milk.png'
+import noodle from '../../assets/fridge/noodle.png'
+import rice from '../../assets/fridge/rice.png'
+import sauce from '../../assets/fridge/sauce.png'
+import seafood from '../../assets/fridge/seafood.png'
+import vege from '../../assets/fridge/vege.png'
 
+// TouchableItem의 props에 대한 인터페이스 정의
+interface TouchableItemProps extends TouchableOpacityProps {
+  top: number;
+  left?: number;
+  right?: number;
+}
 
 // 화면 크기에 따른 상대적 위치 계산을 위한 변수들
 const windowWidth = Dimensions.get('window').width;
@@ -61,7 +67,7 @@ const ShelfItemText = styled(Text)`
   text-align: center;
 `;
 
-const TouchableItem = styled.TouchableOpacity`
+const TouchableItem = styled.TouchableOpacity<TouchableItemProps>`
   position: absolute;
   top: ${props => props.top}px;
   left: ${props => props.left ? props.left + 'px' : undefined};
